@@ -4,6 +4,7 @@ import os
 import pandas as pd
 import numpy as np
 
+from pypower.ppoption import ppoption
 from pypower.makePTDF import makePTDF
 from pypower.runpf import runpf
 from pypower.rundcpf import rundcpf
@@ -109,9 +110,10 @@ def solve_dcopf(case, hour=None,
 
 def solve_dcpf(case, hour=None,
         results=None,
-        ppopt={'VERBOSE': False},
+        ppopt=None,
         fname='./runpf.log'):
 
+    ppopt = ppoption(ppopt)
     fname = os.path.abspath(fname)
 
     baseMVA = case.baseMVA
@@ -153,9 +155,11 @@ def solve_dcpf(case, hour=None,
 
 def solve_pf(case, hour=None,
         results=None,
-        ppopt={'VERBOSE': False},
+        ppopt=None,
         set_generator_status=False,
         fname='./runpf.log'):
+
+    ppopt = ppoption(ppopt)
 
     fname = os.path.abspath(fname)
 
