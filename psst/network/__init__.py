@@ -7,7 +7,7 @@ from ..utils import dict_to_repr
 
 class PSSTNetwork(object):
 
-    def __init__(self, case, prog='sfdp'):
+    def __init__(self, case, prog='neato'):
         self._case = case
         self.regenerate_network()
         self.recalculate_positions(prog=prog)
