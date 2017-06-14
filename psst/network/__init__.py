@@ -5,9 +5,10 @@ import pandas as pd
 
 from ..utils import dict_to_repr
 
+
 class PSSTNetwork(object):
 
-    def __init__(self, case, prog='neato'):
+    def __init__(self, case, prog='sfdp'):
         self._case = case
         self.regenerate_network()
         self.recalculate_positions(prog=prog)
@@ -101,7 +102,12 @@ class PSSTNetwork(object):
         self.recalculate_positions()
 
     def recalculate_positions(self, prog='sfdp', *args, **kwargs):
-        self.positions = graphviz_layout(self._G, prog=prog, *args, **kwargs)
+        try:
+            self.positions = graphviz_layout(self._G, prog=prog, *args, **kwargs)
+        except ImportError:
+            import warnings
+            warnings.warn("Unable to use graphviz, please install pygraphviz. Using networkx spring layout by default")
+            self.positions = nx.spring_layout(self._G, *args, **kwargs)
         return self.positions
 
     def draw_buses(self, **kwargs):
