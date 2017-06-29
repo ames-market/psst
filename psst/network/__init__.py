@@ -48,28 +48,32 @@ class PSSTNetwork(object):
         self.positions = pos
 
     def __repr__(self):
-        d = {'nodes': len(self._G.nodes()),
-            'edges': len(self._G.edges())}
+        d = {
+            'nodes': len(self._G.nodes()),
+            'edges': len(self._G.edges())
+        }
         repr_string = dict_to_repr(d)
-        return '<{}.{}({})>'.format(self.__class__.__module__,
-                                self.__class__.__name__,
-                                repr_string)
+        return '<{}.{}({})>'.format(
+            self.__class__.__module__,
+            self.__class__.__name__,
+            repr_string
+        )
 
     def regenerate_network(self, gen_names=None, load_names=None, branch_names=None, bus_names=None):
         case = self._case
-        if bus_names is None or bus_names == True:
+        if bus_names is None or bus_names is True:
             bus_names = case.bus_name
         else:
             bus_names = list()
-        if gen_names is None or gen_names == True:
+        if gen_names is None or gen_names is True:
             gen_names = case.gen_name
         elif gen_names is False:
             gen_names = list()
-        if branch_names is None or branch_names == True:
+        if branch_names is None or branch_names is True:
             branch_names = case.branch_name
         elif branch_names is False:
             branch_names = list()
-        if load_names is None or load_names == True:
+        if load_names is None or load_names is True:
             load_names = case.load.columns
         elif load_names is False:
             load_names = list()
@@ -123,11 +127,11 @@ class PSSTNetwork(object):
         return self._draw_nodes(nodelist, **kwargs)
 
     def draw_branches(self, **kwargs):
-        edgelist = kwargs.pop('edgelist', [(f, t) for f, t, e in self._G.edges(data=True) if e['kind']=='branch'])
+        edgelist = kwargs.pop('edgelist', [(f, t) for f, t, e in self._G.edges(data=True) if e['kind'] == 'branch'])
         return self._draw_edges(edgelist, **kwargs)
 
     def draw_connections(self, connection_kind, **kwargs):
-        edgelist = kwargs.pop('edgelist', [(f, t) for f, t, e in self._G.edges(data=True) if e['kind']==connection_kind])
+        edgelist = kwargs.pop('edgelist', [(f, t) for f, t, e in self._G.edges(data=True) if e['kind'] == connection_kind])
         return self._draw_edges(edgelist, **kwargs)
 
     def _draw_nodes(self, nodelist, **kwargs):
