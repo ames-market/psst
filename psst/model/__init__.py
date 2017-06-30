@@ -156,17 +156,24 @@ def build_model(case,
     # TODO : Add segments to config
 
     for i, g in generator_df.iterrows():
-        if g['NCOST'] == 2:
-            logger.debug("NCOST=2")
-            if g['PMIN'] == g['PMAX']:
-                small_increment = 1
-            else:
-                small_increment = 0
-            points[i] = pd.np.linspace(g['PMIN'], g['PMAX'] + small_increment, num=2)
-            values[i] = g['COST_0'] + g['COST_1'] * points[i]
-        if g['NCOST'] == 3:
-            points[i] = pd.np.linspace(g['PMIN'], g['PMAX'], num=segments)
-            values[i] = g['COST_0'] + g['COST_1'] * points[i] + g['COST_2'] * points[i] ** 2
+
+        if g['MODEL'] == 2:
+
+            if g['NCOST'] == 2:
+                logger.debug("NCOST=2")
+                if g['PMIN'] == g['PMAX']:
+                    small_increment = 1
+                else:
+                    small_increment = 0
+                points[i] = pd.np.linspace(g['PMIN'], g['PMAX'] + small_increment, num=2)
+                values[i] = g['COST_0'] + g['COST_1'] * points[i]
+            if g['NCOST'] == 3:
+                points[i] = pd.np.linspace(g['PMIN'], g['PMAX'], num=segments)
+                values[i] = g['COST_0'] + g['COST_1'] * points[i] + g['COST_2'] * points[i] ** 2
+
+        if g['MODEL'] == 3:
+
+            raise NotImplementedError("Unable to parse model 2 in matpower. Please contact developer")
 
     for k, v in points.items():
         points[k] = [float(i) for i in v]
