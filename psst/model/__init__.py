@@ -261,12 +261,13 @@ def build_model(case,
 
     model.dual = Suffix(direction=Suffix.IMPORT)
 
-    return PSSTModel(model)
+    return PSSTModel(model, case=case)
 
 
 class PSSTModel(object):
 
-    def __init__(self, model, is_solved=False):
+    def __init__(self, model, case=None, is_solved=False):
+        self._case = case
         self._model = model
         self._is_solved = is_solved
         self._status = None
@@ -277,16 +278,31 @@ class PSSTModel(object):
         repr_string = 'status={}'.format(self._status)
 
         string = '<{}.{}({})>'.format(
-                    self.__class__.__module__,
-                    self.__class__.__name__,
-                    repr_string,)
-
+            self.__class__.__module__,
+            self.__class__.__name__,
+            repr_string
+        )
 
         return string
 
-    def solve(self, solver='glpk', verbose=False, keepfiles=False, **kwargs):
+    def solve(self, solver='glpk', verbose=False, keepfiles=False, resolve=False, **kwargs):
+        if solver == 'xpress':
+            resolve = True
+
         solve_model(self._model, solver=solver, verbose=verbose, keepfiles=keepfiles, **kwargs)
-        self._results = PSSTResults(self._model)
+        self._results = PSSTResults(self)
+
+        if resolve:
+            for t, row in self.results.unit_commitment.iterrows():
+                for g, v in row.iteritems():
+                    if not pd.isnull(v):
+                        self._model.UnitOn[g, t].fixed = True
+                        self._model.UnitOn[g, t] = int(float(v))
+
+            solve_model(self._model, solver=solver, verbose=verbose, keepfiles=keepfiles, is_mip=False, **kwargs)
+            self._results = PSSTResults(self)
+
+        self._status = 'solved'
 
     @property
     def results(self):

@@ -4,7 +4,8 @@ class PSSTResults(object):
 
     def __init__(self, model):
 
-        self._model = model
+        self.model = model
+        self._model = model._model
         self._maximum_hours = 24
 
     @property
@@ -24,6 +25,16 @@ class PSSTResults(object):
         m = self._model
         st = 'FirstStage'
         return sum([sum([m.UnitOn[g, t].value for t in m.CommitmentTimeInStage[st] if t < self._maximum_hours]) * m.MinimumProductionCost[g].value * m.TimePeriodLength.value for g in m.Generators])
+
+    @property
+    def expected_profit(self):
+        gen_bus = list(self.model._case.gen.loc[self.power_generated.columns, 'GEN_BUS'])
+        df2 = self.lmp.loc[:, gen_bus]
+        df1 = self.power_generated
+        df = pd.DataFrame(df1.values * df2.values)
+        df.columns = df1.columns
+        df.index = df1.index
+        return df
 
     @property
     def unit_commitment(self):
