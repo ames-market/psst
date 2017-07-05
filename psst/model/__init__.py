@@ -1,4 +1,5 @@
 import logging
+import warnings
 
 import pandas as pd
 
@@ -73,6 +74,10 @@ def build_model(case,
     bus_df = bus_df.astype(object)
     load_df = load_df.astype(object)
 
+    zero_generation = list(generator_df[generator_df['PMAX'] == 0].index)
+    if zero_generation:
+        warnings.warn("Generators with zero PMAX found: {}".format(zero_generation))
+    generator_df.loc[generator_df['PMAX'] == 0, 'PMAX'] = 0.01
 
     # Build model information
 
@@ -171,9 +176,25 @@ def build_model(case,
                 points[i] = pd.np.linspace(g['PMIN'], g['PMAX'], num=segments)
                 values[i] = g['COST_0'] + g['COST_1'] * points[i] + g['COST_2'] * points[i] ** 2
 
-        if g['MODEL'] == 3:
+        if g['MODEL'] == 1:
+            p = pd.np.zeros(g['NCOST'])
+            v = pd.np.zeros(g['NCOST'])
 
-            raise NotImplementedError("Unable to parse model 2 in matpower. Please contact developer")
+            for n in range(0, g['NCOST']):
+                p[n] = g['COST_{}'.format(2 * n + 1)]
+                v[n] = g['COST_{}'.format(2 * n)]
+
+            points[i] = p
+            values[i] = v
+
+        if g['MODEL'] == 0:
+            p = pd.np.zeros(2)
+            v = pd.np.zeros(2)
+            p[1] = 0.01
+            v[1] = g['PMAX']
+            points[i] = p
+            values[i] = v
+
 
     for k, v in points.items():
         points[k] = [float(i) for i in v]
