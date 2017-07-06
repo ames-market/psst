@@ -32,6 +32,7 @@ def generate_segments(case, number_of_segments):
             segments.append(p_seg)
     return segments
 
+
 def sort_segments(segments):
     minimum = sorted(segments, key=lambda x: x['slope'])[0]['segment'][0]
     for i, d in enumerate(sorted(segments, key=lambda x: x['slope'])):
@@ -207,16 +208,21 @@ def find_violated_lines(original_case_branch, results_case_branch):
     return s[s==True].index
 
 
-def convert_to_model_one(gencost, index=None, number=None):
+def convert_to_model_one(gencost, index=None, number_of_columns=None):
     if index is None:
         index = gencost.index
-    if number is None:
-        number = gencost.loc[index, 'NCOST'].max()
-    existing = max([int(i.split('_')[1]) for i in gencost.columns[4:]])
+    if number_of_columns is None:
+        number_of_columns = gencost.loc[index, 'NCOST'].max()
 
-    for i in range(0, number - existing):
-        gencost['COST_{}'.format(existing + i + 1)] = pd.np.nan
+    assert (number_of_columns % 2 == 0) and (number_of_columns != 0), "Only even number_of_columns supported"
+
+    existing_columns = max([int(i.split('_')[1]) for i in gencost.columns[4:]]) + 1
+
+    for i in range(0, number_of_columns - existing_columns):
+        gencost['COST_{}'.format(existing_columns + i)] = pd.np.nan
 
     gencost = gencost[list(gencost.columns[:4]) + list(gencost.columns[4:].sort_values(ascending=False))]
+    gencost.loc[index, 'NCOST'] = int(number_of_columns / 2)
+    gencost.loc[index, 'MODEL'] = 1
 
     return gencost

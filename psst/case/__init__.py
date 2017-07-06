@@ -9,6 +9,8 @@ from .descriptors import (Name, Version, BaseMVA, BusName, Bus, Branch, BranchNa
 
 from . import matpower
 
+from .utils import convert_to_model_one
+
 logger = logging.getLogger(__name__)
 pd.options.display.max_rows = 999
 pd.options.display.max_columns = 999
@@ -126,5 +128,75 @@ class PSSTCase(object):
 
         return mpc
 
+    @classmethod
+    def _read_festiv(cls, mpc):
+        if not isinstance(mpc, cls):
+            filename = mpc
+            mpc = cls(filename=os.path.abspath(os.path.join(current_directory, '../../cases/case.m')))
+
+        config = dict()
+        config['SYSTEM'] = pd.read_excel(filename, sheetname='SYSTEM', index_col=0, header=None, skiprows=1).to_dict()[1]
+
+        gen = pd.read_excel(filename, sheetname='GEN')
+
+        for name, row in gen.iterrows():
+            mpc.gen.loc[name] = mpc.gen.loc['GenCo0']
+            mpc.gencost.loc[name] = mpc.gencost.loc['GenCo0']
+
+        mpc.gen = mpc.gen.drop('GenCo0', axis=0)
+        mpc.gencost = mpc.gencost.drop('GenCo0', axis=0)
+
+        mpc.gen['PMAX'] = gen['CAPACITY']
+
+        gencost = pd.read_excel(filename, sheetname='COST')
+
+        number_of_segments = int(len(gencost.columns)/2/2)
+
+        mpc.gencost = convert_to_model_one(mpc.gencost, number_of_columns=number_of_segments*2)
+
+        for i, col in enumerate(gencost.columns):
+            if gencost[col].isnull().all():
+                continue
+            if 'COST' in col:
+                mpc.gencost['COST_{}'.format(i+1)] = gencost[col]
+            if 'MW' in col:
+                mpc.gencost['COST_{}'.format(i-1)] = gencost[col]
+
+        genbus = pd.read_excel(filename, sheetname='GENBUS')
+
+        genbus = pd.concat([genbus['GENBUS'].str.split('.').apply(lambda x: x[1]), genbus['GENBUS'].str.split('.').apply(lambda x: x[0])], axis=1)
+        genbus.columns = ['GEN', 'BUS']
+        genbus = genbus.set_index('GEN')
+
+        mpc.gen.loc[genbus['BUS'].index, 'GEN_BUS'] = genbus['BUS']
+
+        for i, b in enumerate(mpc.gen['GEN_BUS'].unique()):
+            if i == 1:
+                bus = 'Bus1'
+            else:
+                bus = 'Bus2'
+            mpc.bus.loc[b] = mpc.bus.loc[bus]
+
+        mpc.bus = mpc.bus.drop('Bus1')
+        mpc.bus = mpc.bus.drop('Bus2')
+
+        branch = pd.read_excel(filename, sheetname='BRANCHDATA')
+
+        for i, row in branch.iterrows():
+            mpc.branch.loc[i] = mpc.branch.loc[0]
+
+        mpc.branch = mpc.branch.drop(0)
+
+        mpc.branch['F_BUS'] = branch['BRANCHBUS'].str.split('.').apply(lambda x: x[1])
+        mpc.branch['T_BUS'] = branch['BRANCHBUS'].str.split('.').apply(lambda x: x[2])
+
+        mpc.branch['BR_R'] = branch['RESISTANCE']
+        mpc.branch['BR_X'] = branch['REACTANCE']
+        mpc.branch['BR_B'] = branch['SUSCEPTANCE']
+        mpc.branch['RATE_A'] = branch['LINE_RATING']
+
+        return mpc
+
 
 read_matpower = PSSTCase._read_matpower
+read_festiv = PSSTCase._read_festiv
