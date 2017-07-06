@@ -205,3 +205,18 @@ def solve_pf(case, hour=None,
 def find_violated_lines(original_case_branch, results_case_branch):
     s = (pd.Series(abs(results_case_branch[:, 13])) > original_case_branch['RATE_A']) & (original_case_branch['RATE_A'] != 0)
     return s[s==True].index
+
+
+def convert_to_model_one(gencost, index=None, number=None):
+    if index is None:
+        index = gencost.index
+    if number is None:
+        number = gencost.loc[index, 'NCOST'].max()
+    existing = max([int(i.split('_')[1]) for i in gencost.columns[4:]])
+
+    for i in range(0, number - existing):
+        gencost['COST_{}'.format(existing + i + 1)] = pd.np.nan
+
+    gencost = gencost[list(gencost.columns[:4]) + list(gencost.columns[4:].sort_values(ascending=False))]
+
+    return gencost
