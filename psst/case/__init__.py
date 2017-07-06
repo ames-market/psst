@@ -170,8 +170,9 @@ class PSSTCase(object):
 
         mpc.gen.loc[genbus['BUS'].index, 'GEN_BUS'] = genbus['BUS']
 
-        for i, b in enumerate(mpc.gen['GEN_BUS'].unique()):
-            if i == 1:
+        bus = pd.read_excel(filename, sheetname='BUS')
+        for i, b in enumerate(bus['BUSES'].unique()):
+            if i == 0:
                 bus = 'Bus1'
             else:
                 bus = 'Bus2'
@@ -194,6 +195,12 @@ class PSSTCase(object):
         mpc.branch['BR_X'] = branch['REACTANCE']
         mpc.branch['BR_B'] = branch['SUSCEPTANCE']
         mpc.branch['RATE_A'] = branch['LINE_RATING']
+
+        for c in mpc.bus_name:
+            mpc.load[c] = 0
+        t = mpc.load.drop('Bus1', axis=1)
+        t = t.drop('Bus2', axis=1)
+        mpc.load = t
 
         return mpc
 
