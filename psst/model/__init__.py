@@ -181,8 +181,8 @@ def build_model(case,
             v = pd.np.zeros(g['NCOST'])
 
             for n in range(0, g['NCOST']):
-                p[n] = g['COST_{}'.format(2 * n + 1)]
-                v[n] = g['COST_{}'.format(2 * n)]
+                v[n] = g['COST_{}'.format(2 * n + 1)]
+                p[n] = g['COST_{}'.format(2 * n)]
 
             points[i] = p
             values[i] = v
@@ -194,7 +194,6 @@ def build_model(case,
             v[1] = g['PMAX']
             points[i] = p
             values[i] = v
-
 
     for k, v in points.items():
         points[k] = [float(i) for i in v]
