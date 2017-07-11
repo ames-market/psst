@@ -162,6 +162,7 @@ def build_model(case,
 
     for i, g in generator_df.iterrows():
 
+
         if g['MODEL'] == 2:
 
             if g['NCOST'] == 2:
@@ -172,11 +173,18 @@ def build_model(case,
                     small_increment = 0
                 points[i] = pd.np.linspace(g['PMIN'], g['PMAX'] + small_increment, num=2)
                 values[i] = g['COST_0'] + g['COST_1'] * points[i]
-            if g['NCOST'] == 3:
+
+            elif g['NCOST'] == 3:
                 points[i] = pd.np.linspace(g['PMIN'], g['PMAX'], num=segments)
                 values[i] = g['COST_0'] + g['COST_1'] * points[i] + g['COST_2'] * points[i] ** 2
 
+            else:
+                raise NotImplementedError("Unable to build cost function for {ncost}".format(ncost=g['NCOST']))
+
         if g['MODEL'] == 1:
+
+            assert g['NCOST'] != 1, "Unable to form cost curve with a single point for generator {} because NCOST = {}".format(i, g['NCOST'])
+
             p = pd.np.zeros(g['NCOST'])
             v = pd.np.zeros(g['NCOST'])
 
@@ -190,15 +198,17 @@ def build_model(case,
         if g['MODEL'] == 0:
             p = pd.np.zeros(2)
             v = pd.np.zeros(2)
-            p[1] = 0.01
-            v[1] = g['PMAX']
+            p[1] = g['PMAX']
+            v[1] = 0.01
             points[i] = p
             values[i] = v
 
     for k, v in points.items():
         points[k] = [float(i) for i in v]
+        assert len(points) >= 2
     for k, v in values.items():
         values[k] = [float(i) for i in v]
+        assert len(values) >= 2
 
     piece_wise_linear_cost(model, points, values)
 
