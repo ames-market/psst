@@ -88,6 +88,7 @@ class PSSTCase(object):
                     if cols > len(columns):
                         if attribute != 'gencost':
                             logger.warning('Number of columns greater than expected number.')
+                        # Based on MODEL 2
                         columns = columns[:-1] + ['{}_{}'.format(columns[-1], i) for i in range(cols - len(columns), -1, -1)]
                     df = pd.DataFrame(_list, columns=columns)
 
