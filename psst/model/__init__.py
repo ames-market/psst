@@ -205,10 +205,10 @@ def build_model(case,
 
     for k, v in points.items():
         points[k] = [float(i) for i in v]
-        assert len(points) >= 2
+        assert len(points[k]) >= 2, "Points must be of length 2 but instead found {points} for {genco}".format(points=points[k], genco=k)
     for k, v in values.items():
         values[k] = [float(i) for i in v]
-        assert len(values) >= 2
+        assert len(values[k]) >= 2, "Values must be of length 2 but instead found {values} for {genco}".format(values=values[k], genco=k)
 
     piece_wise_linear_cost(model, points, values)
 
