@@ -17,5 +17,5 @@ mpc.branch = [
 ];
 
 mpc.gencost = [
-	1	0	0	2	14	0;
+	2	0	0	2	14	0;
 ];

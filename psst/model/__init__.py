@@ -179,7 +179,7 @@ def build_model(case,
                 values[i] = g['COST_0'] + g['COST_1'] * points[i] + g['COST_2'] * points[i] ** 2
 
             else:
-                raise NotImplementedError("Unable to build cost function for {ncost}".format(ncost=g['NCOST']))
+                raise NotImplementedError("Unable to build cost function for ncost={ncost}".format(ncost=g['NCOST']))
 
         if g['MODEL'] == 1:
 
