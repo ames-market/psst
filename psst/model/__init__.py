@@ -79,6 +79,8 @@ def build_model(case,
         warnings.warn("Generators with zero PMAX found: {}".format(zero_generation))
     generator_df.loc[generator_df['PMAX'] == 0, 'PMAX'] = 0.01
 
+    generator_df['RAMP'] = generator_df['RAMP_10'] * 6
+
     # Build model information
 
     model = create_model()
@@ -116,7 +118,7 @@ def build_model(case,
                                         minimum_power_output=generator_df['PMIN'].to_dict(),
                                         maximum_power_output=generator_df['PMAX'].to_dict())
 
-    ramp_up_ramp_down_limits(model, ramp_up_limits=generator_df['RAMP_10'].to_dict(), ramp_down_limits=generator_df['RAMP_10'].to_dict())
+    ramp_up_ramp_down_limits(model, ramp_up_limits=generator_df['RAMP'].to_dict(), ramp_down_limits=generator_df['RAMP'].to_dict())
 
     start_up_shut_down_ramp_limits(model, start_up_ramp_limits=generator_df['STARTUP_RAMP'].to_dict(), shut_down_ramp_limits=generator_df['SHUTDOWN_RAMP'].to_dict())
 
