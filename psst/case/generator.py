@@ -8,6 +8,7 @@ class Generator(T.HasTraits):
 
     '''Generator Model'''
 
+    name = T.CUnicode(default_value='GenCo0', help='Name of Generator (str)')
     capacity = T.CFloat(default_value=0, min=0, help='Capacity of Generator (MW)')
     noload_cost = T.CFloat(default_value=0, min=0, help='No-Load Cost of a Generator ($/hr)')
     startup_cost = T.CFloat(default_value=0, min=0, help='Startup Cost of a Generator ($/hr)')
@@ -62,7 +63,8 @@ class GeneratorView(ipyw.Box):
 
         self._name = ipyw.Text(
             value='GenCo0',
-            description='Name'
+            description='Name',
+            style={'description_width': 'initial'}
         )
 
         self._capacity = ipyw.BoundedFloatText(
@@ -179,6 +181,7 @@ class GeneratorView(ipyw.Box):
 
         children = [
             self._title,
+            self._name,
             self._initial_status,
             self._generation_type,
             self._capacity,
@@ -201,10 +204,11 @@ class GeneratorView(ipyw.Box):
         T.link((self._capacity, 'value'), (self._ramp_up_rate, 'max'), )
         T.link((self._capacity, 'value'), (self._ramp_down_rate, 'max'), )
 
+        T.link((self.model, 'name'), (self._name, 'value'), )
         T.link((self.model, 'generation_type'), (self._generation_type, 'value'), )
         T.link((self.model, 'initial_status'), (self._initial_status, 'value'), )
         T.link((self.model, 'capacity'), (self._capacity, 'value'), )
-        T.link((self.model, 'minimum_generation'), (self._initial_generation, 'value'), )
+        T.link((self.model, 'minimum_generation'), (self._minimum_generation, 'value'), )
         T.link((self.model, 'initial_generation'), (self._initial_generation, 'value'), )
         T.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
         T.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
