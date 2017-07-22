@@ -20,7 +20,7 @@ def test_generator_input():
 
     g = Generator()
 
-    g.capacity = 100
+    g.maximum_real_power = 100
 
     with pt.raises(T.TraitError):
         g.ramp_up_rate = 100.5

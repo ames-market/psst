@@ -14,7 +14,7 @@ class Generator(t.HasTraits):
     '''Generator Model'''
 
     name = t.CUnicode(default_value='GenCo0', help='Name of Generator (str)')
-    capacity = t.CFloat(default_value=0, min=0, help='Capacity of Generator (MW)')
+    maximum_real_power = t.CFloat(default_value=0, min=0, help='Capacity of Generator (MW)')
     noload_cost = t.CFloat(default_value=0, min=0, help='No-Load Cost of a Generator ($/hr)')
     startup_cost = t.CFloat(default_value=0, min=0, help='Startup Cost of a Generator ($/hr)')
     minimum_up_time = t.CInt(default_value=0, min=0, help='Minimum up time (hrs)')
@@ -54,12 +54,12 @@ class Generator(t.HasTraits):
     @t.observe('minimum_generation')
     def _callback_minimum_generation_update_points_values(self, change):
 
-        self.cost_curve_points = np.linspace(change['new'], self.capacity, self._npoints)
+        self.cost_curve_points = np.linspace(change['new'], self.maximum_real_power, self._npoints)
 
         return change['new']
 
-    @t.observe('capacity')
-    def _callback_capacity_update_points_values(self, change):
+    @t.observe('maximum_real_power')
+    def _callback_maximum_real_power_update_points_values(self, change):
 
         self.cost_curve_points = np.linspace(self.minimum_generation, change['new'], self._npoints)
 
@@ -68,7 +68,7 @@ class Generator(t.HasTraits):
     @t.observe('nsegments')
     def _callback_nsegments_update_points_values(self, change):
 
-        self.cost_curve_points = np.linspace(self.minimum_generation, self.capacity, change['new'] + 1)
+        self.cost_curve_points = np.linspace(self.minimum_generation, self.maximum_real_power, change['new'] + 1)
         self.cost_curve_values = [self.noload_cost] * (change['new'] + 1)
 
         return change['new']
@@ -90,10 +90,10 @@ class Generator(t.HasTraits):
         'ramp_down_rate',
         'initial_generation'
     )
-    def _less_than_capacity_check(self, proposal):
-        if proposal['value'] > self.capacity:
+    def _less_than_maximum_real_power_check(self, proposal):
+        if proposal['value'] > self.maximum_real_power:
             raise t.TraitError(
-                '{class_name}().{trait_name} must be a less than or equal to {class_name}().capacity.'.format(
+                '{class_name}().{trait_name} must be a less than or equal to {class_name}().maximum_real_power.'.format(
                     class_name=proposal['owner'].__class__.__name__,
                     trait_name=proposal['trait'].name
                 )
@@ -123,8 +123,8 @@ class GeneratorView(ipyw.Box):
             # style={'description_width': 'initial'}
         )
 
-        self._capacity = ipyw.BoundedFloatText(
-            value=self.model.capacity,
+        self._maximum_real_power = ipyw.BoundedFloatText(
+            value=self.model.maximum_real_power,
             min=0,
             max=M,
             description='Capacity (MW):',
@@ -250,7 +250,7 @@ class GeneratorView(ipyw.Box):
             self._name,
             self._initial_status,
             self._generation_type,
-            self._capacity,
+            self._maximum_real_power,
             self._minimum_generation,
             self._initial_generation,
             self._minimum_up_time,
@@ -266,11 +266,11 @@ class GeneratorView(ipyw.Box):
 
         self.children = children
 
-        t.link((self._capacity, 'value'), (self._initial_generation, 'max'), )
-        t.link((self._capacity, 'value'), (self._minimum_generation, 'max'), )
-        t.link((self._capacity, 'value'), (self._ramp_up_rate, 'max'), )
-        t.link((self._capacity, 'value'), (self._ramp_down_rate, 'max'), )
-        t.link((self.model, 'capacity'), (self._capacity, 'value'), )
+        t.link((self._maximum_real_power, 'value'), (self._initial_generation, 'max'), )
+        t.link((self._maximum_real_power, 'value'), (self._minimum_generation, 'max'), )
+        t.link((self._maximum_real_power, 'value'), (self._ramp_up_rate, 'max'), )
+        t.link((self._maximum_real_power, 'value'), (self._ramp_down_rate, 'max'), )
+        t.link((self.model, 'maximum_real_power'), (self._maximum_real_power, 'value'), )
         t.link((self.model, 'name'), (self._name, 'value'), )
         t.link((self.model, 'generation_type'), (self._generation_type, 'value'), )
         t.link((self.model, 'initial_status'), (self._initial_status, 'value'), )
@@ -314,7 +314,7 @@ class GeneratorCostView(ipyw.VBox):
 
         self._scale_x = bq.LinearScale(
             min=self.model.minimum_generation,
-            max=self.model.capacity
+            max=self.model.maximum_real_power
         )
 
         self._scale_y = bq.LinearScale(
@@ -348,7 +348,7 @@ class GeneratorCostView(ipyw.VBox):
 
         self.children = children
 
-        t.link((self.model, 'capacity'), (self._scale_x, 'max'))
+        t.link((self.model, 'maximum_real_power'), (self._scale_x, 'max'))
         t.link((self.model, 'cost_curve_points'), (self._scatter, 'x'))
         t.link((self.model, 'cost_curve_values'), (self._scatter, 'y'))
         t.link((self.model, 'cost_curve_points'), (self._lines, 'x'))
