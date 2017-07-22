@@ -44,11 +44,24 @@ class Generator(T.HasTraits):
     def _npoints(self):
         return self.nsegments + 1
 
+    @T.observe('noload_cost')
+    def _callback_noload_cost_update_points_values(self, change):
+
+        self._values = [change['new']] * self._npoints
+
+        return change['new']
+
+    @T.observe('minimum_generation')
+    def _callback_minimum_generation_update_points_values(self, change):
+
+        self._points = np.linspace(change['new'], self.capacity, self._npoints)
+
+        return change['new']
+
     @T.observe('capacity')
     def _callback_capacity_update_points_values(self, change):
 
         self._points = np.linspace(self.minimum_generation, change['new'], self._npoints)
-        self._values = [self.startup_cost] * self._npoints
 
         return change['new']
 
