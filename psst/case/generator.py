@@ -1,3 +1,4 @@
+import warnings
 import ipywidgets as ipyw
 import traitlets as T
 
@@ -36,13 +37,55 @@ class Generator(T.HasTraits):
     shutdown_time = T.CInt(default_value=0, min=0, help='Shutdown time (hrs)')
     initial_status = T.CBool(default_value=True, min=0, help='Initial status (bool)')
     initial_generation = T.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
-    ncost = T.CInt(default_value=2, min=0, help='number of cost coefficients for polynomial cost function, or number of data points for piecewise linear')
+    ncost = T.CInt(default_value=2, min=2, help='number of cost coefficients for polynomial cost function, or number of data points for piecewise linear')
+    _points = T.List(T.Float(), default_value=[0, 0], minlen=2)
+    _values = T.List(T.Float(), default_value=[0, 0], minlen=2)
     inertia = T.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
     droop = T.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
+    _max_ncost = T.CInt(
+        default_value=3,
+        max=50,
+        help='Maximum number of cost coefficients for polynomial cost function or number of data points for piecewise linear'
+    )
+
+    @T.observe('ncost')
+    def _callback_ncost(self, change):
+
+        if len(self._points) > self.ncost:
+            warnings.warn("Number of points greater than ncost, trimming higher values")
+            self._points = self._points[:self.ncost]
+
+        if len(self._values) > self.ncost:
+            warnings.warn("Number of values greater than ncost, trimming higher values")
+            self._values = self._values[:self.ncost]
+
+    @T.validate('_points', '_values')
+    def _validate_max_length(self, proposal):
+        if len(proposal['value']) > self.ncost:
+            raise T.TraitError(
+                '{class_name}().{trait_name} must be a less than or equal to {class_name}().ncost.'.format(
+                    class_name=proposal['owner'].__class__.__name__,
+                    trait_name=proposal['trait'].name
+                )
+            )
+        if sorted(proposal['value']) != proposal['value']:
+            raise T.TraitError(
+                '{class_name}().{trait_name} must be a sorted list of floats.'.format(
+                    class_name=proposal['owner'].__class__.__name__,
+                    trait_name=proposal['trait'].name
+                )
+            )
+
+        return proposal['value']
 
     @T.observe('bid_offer_type')
     def _callback_bid_offer_type(self, change):
-        print(change)
+        if change['new'] == 'POLYNOMIAL':
+            if self.ncost > 3:
+                self.ncost = 3
+            self._max_ncost = 3
+        else:
+            self._max_ncost = 50
 
     @T.validate(
         'ramp_up_rate',
@@ -201,6 +244,16 @@ class GeneratorView(ipyw.Box):
             style={'description_width': 'initial'}
         )
 
+        self._ncost = ipyw.IntSlider(
+            value=self.model.ncost,
+            min=2,
+            max=self.model._max_ncost,
+            step=1,
+            description='Number Cost Coeff',
+            disabled=False,
+            style={'description_width': 'initial'}
+        )
+
         children = [
             self._title,
             self._name,
@@ -218,6 +271,7 @@ class GeneratorView(ipyw.Box):
             self._noload_cost,
             self._startup_cost,
             self._bid_offer_type,
+            self._ncost,
         ]
 
         self.children = children
@@ -226,16 +280,17 @@ class GeneratorView(ipyw.Box):
         T.link((self._capacity, 'value'), (self._minimum_generation, 'max'), )
         T.link((self._capacity, 'value'), (self._ramp_up_rate, 'max'), )
         T.link((self._capacity, 'value'), (self._ramp_down_rate, 'max'), )
-
+        T.link((self.model, 'capacity'), (self._capacity, 'value'), )
         T.link((self.model, 'name'), (self._name, 'value'), )
         T.link((self.model, 'generation_type'), (self._generation_type, 'value'), )
         T.link((self.model, 'initial_status'), (self._initial_status, 'value'), )
-        T.link((self.model, 'capacity'), (self._capacity, 'value'), )
         T.link((self.model, 'minimum_generation'), (self._minimum_generation, 'value'), )
         T.link((self.model, 'initial_generation'), (self._initial_generation, 'value'), )
         T.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
         T.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
         T.link((self.model, 'bid_offer_type'), (self._bid_offer_type, 'value'), )
+        T.link((self.model, 'ncost'), (self._ncost, 'value'), )
+        T.link((self.model, '_max_ncost'), (self._ncost, 'max'), )
 
 
 class GeneratorRowView(GeneratorView):
