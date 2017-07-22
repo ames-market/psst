@@ -1,5 +1,5 @@
 import ipywidgets as ipyw
-import traitlets as T
+import traitlets as t
 import numpy as np
 import bqplot as bq
 import traittypes as tt
@@ -9,20 +9,20 @@ MAXIMUM_COST_CURVE_SEGMENTS = 50
 MINIMUM_COST_CURVE_SEGMENTS = 1
 
 
-class Generator(T.HasTraits):
+class Generator(t.HasTraits):
 
     '''Generator Model'''
 
-    name = T.CUnicode(default_value='GenCo0', help='Name of Generator (str)')
-    capacity = T.CFloat(default_value=0, min=0, help='Capacity of Generator (MW)')
-    noload_cost = T.CFloat(default_value=0, min=0, help='No-Load Cost of a Generator ($/hr)')
-    startup_cost = T.CFloat(default_value=0, min=0, help='Startup Cost of a Generator ($/hr)')
-    minimum_up_time = T.CInt(default_value=0, min=0, help='Minimum up time (hrs)')
-    minimum_down_time = T.CInt(default_value=0, min=0, help='Minimum down time (hrs)')
-    ramp_up_rate = T.CFloat(default_value=0, min=0, help='Ramp up rate (MW/hr)')
-    ramp_down_rate = T.CFloat(default_value=0, min=0, help='Ramp down rate (MW/hr)')
-    minimum_generation = T.CFloat(default_value=0, min=0, help='Minimum generation (MW)')
-    generation_type = T.Enum(
+    name = t.CUnicode(default_value='GenCo0', help='Name of Generator (str)')
+    capacity = t.CFloat(default_value=0, min=0, help='Capacity of Generator (MW)')
+    noload_cost = t.CFloat(default_value=0, min=0, help='No-Load Cost of a Generator ($/hr)')
+    startup_cost = t.CFloat(default_value=0, min=0, help='Startup Cost of a Generator ($/hr)')
+    minimum_up_time = t.CInt(default_value=0, min=0, help='Minimum up time (hrs)')
+    minimum_down_time = t.CInt(default_value=0, min=0, help='Minimum down time (hrs)')
+    ramp_up_rate = t.CFloat(default_value=0, min=0, help='Ramp up rate (MW/hr)')
+    ramp_down_rate = t.CFloat(default_value=0, min=0, help='Ramp down rate (MW/hr)')
+    minimum_generation = t.CFloat(default_value=0, min=0, help='Minimum generation (MW)')
+    generation_type = t.Enum(
         [
             'COAL',
             'NATURALGAS',
@@ -30,42 +30,42 @@ class Generator(T.HasTraits):
         ],
         default_value='COAL'
     )
-    startup_time = T.CInt(default_value=0, min=0, help='Startup time (hrs)')
-    shutdown_time = T.CInt(default_value=0, min=0, help='Shutdown time (hrs)')
-    initial_status = T.CBool(default_value=True, min=0, help='Initial status (bool)')
-    initial_generation = T.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
-    nsegments = T.CInt(default_value=2, min=MINIMUM_COST_CURVE_SEGMENTS, max=MAXIMUM_COST_CURVE_SEGMENTS, help='Number of data points for piecewise linear')
+    startup_time = t.CInt(default_value=0, min=0, help='Startup time (hrs)')
+    shutdown_time = t.CInt(default_value=0, min=0, help='Shutdown time (hrs)')
+    initial_status = t.CBool(default_value=True, min=0, help='Initial status (bool)')
+    initial_generation = t.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
+    nsegments = t.CInt(default_value=2, min=MINIMUM_COST_CURVE_SEGMENTS, max=MAXIMUM_COST_CURVE_SEGMENTS, help='Number of data points for piecewise linear')
     cost_curve_points = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
     cost_curve_values = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
-    inertia = T.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
-    droop = T.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
+    inertia = t.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
+    droop = t.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
 
     @property
     def _npoints(self):
         return self.nsegments + 1
 
-    @T.observe('noload_cost')
+    @t.observe('noload_cost')
     def _callback_noload_cost_update_points_values(self, change):
 
         self.cost_curve_values = [change['new']] * self._npoints
 
         return change['new']
 
-    @T.observe('minimum_generation')
+    @t.observe('minimum_generation')
     def _callback_minimum_generation_update_points_values(self, change):
 
         self.cost_curve_points = np.linspace(change['new'], self.capacity, self._npoints)
 
         return change['new']
 
-    @T.observe('capacity')
+    @t.observe('capacity')
     def _callback_capacity_update_points_values(self, change):
 
         self.cost_curve_points = np.linspace(self.minimum_generation, change['new'], self._npoints)
 
         return change['new']
 
-    @T.observe('nsegments')
+    @t.observe('nsegments')
     def _callback_nsegments_update_points_values(self, change):
 
         self.cost_curve_points = np.linspace(self.minimum_generation, self.capacity, change['new'] + 1)
@@ -73,10 +73,10 @@ class Generator(T.HasTraits):
 
         return change['new']
 
-    @T.validate('cost_curve_points', 'cost_curve_values')
+    @t.validate('cost_curve_points', 'cost_curve_values')
     def _validate_max_length(self, proposal):
         if len(proposal['value']) > self._npoints:
-            raise T.TraitError(
+            raise t.TraitError(
                 'len({class_name}().{trait_name}) must be equal to {class_name}().nsegments + 1.'.format(
                     class_name=proposal['owner'].__class__.__name__,
                     trait_name=proposal['trait'].name
@@ -85,14 +85,14 @@ class Generator(T.HasTraits):
 
         return proposal['value']
 
-    @T.validate(
+    @t.validate(
         'ramp_up_rate',
         'ramp_down_rate',
         'initial_generation'
     )
     def _less_than_capacity_check(self, proposal):
         if proposal['value'] > self.capacity:
-            raise T.TraitError(
+            raise t.TraitError(
                 '{class_name}().{trait_name} must be a less than or equal to {class_name}().capacity.'.format(
                     class_name=proposal['owner'].__class__.__name__,
                     trait_name=proposal['trait'].name
@@ -104,7 +104,7 @@ class Generator(T.HasTraits):
 
 class GeneratorView(ipyw.Box):
 
-    model = T.Instance(Generator)
+    model = t.Instance(Generator)
 
     def __init__(self, model=None, *args, **kwargs):
 
@@ -266,42 +266,42 @@ class GeneratorView(ipyw.Box):
 
         self.children = children
 
-        T.link((self._capacity, 'value'), (self._initial_generation, 'max'), )
-        T.link((self._capacity, 'value'), (self._minimum_generation, 'max'), )
-        T.link((self._capacity, 'value'), (self._ramp_up_rate, 'max'), )
-        T.link((self._capacity, 'value'), (self._ramp_down_rate, 'max'), )
-        T.link((self.model, 'capacity'), (self._capacity, 'value'), )
-        T.link((self.model, 'name'), (self._name, 'value'), )
-        T.link((self.model, 'generation_type'), (self._generation_type, 'value'), )
-        T.link((self.model, 'initial_status'), (self._initial_status, 'value'), )
-        T.link((self.model, 'minimum_generation'), (self._minimum_generation, 'value'), )
-        T.link((self.model, 'initial_generation'), (self._initial_generation, 'value'), )
-        T.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
-        T.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
-        T.link((self.model, 'nsegments'), (self._nsegments, 'value'), )
-        T.link((self.model, 'ramp_up_rate'), (self._ramp_up_rate, 'value'), )
-        T.link((self.model, 'ramp_down_rate'), (self._ramp_down_rate, 'value'), )
-        T.link((self.model, 'startup_time'), (self._startup_time, 'value'), )
-        T.link((self.model, 'shutdown_time'), (self._shutdown_time, 'value'), )
-        T.link((self.model, 'noload_cost'), (self._noload_cost, 'value'), )
-        T.link((self.model, 'startup_cost'), (self._startup_cost, 'value'), )
+        t.link((self._capacity, 'value'), (self._initial_generation, 'max'), )
+        t.link((self._capacity, 'value'), (self._minimum_generation, 'max'), )
+        t.link((self._capacity, 'value'), (self._ramp_up_rate, 'max'), )
+        t.link((self._capacity, 'value'), (self._ramp_down_rate, 'max'), )
+        t.link((self.model, 'capacity'), (self._capacity, 'value'), )
+        t.link((self.model, 'name'), (self._name, 'value'), )
+        t.link((self.model, 'generation_type'), (self._generation_type, 'value'), )
+        t.link((self.model, 'initial_status'), (self._initial_status, 'value'), )
+        t.link((self.model, 'minimum_generation'), (self._minimum_generation, 'value'), )
+        t.link((self.model, 'initial_generation'), (self._initial_generation, 'value'), )
+        t.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
+        t.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
+        t.link((self.model, 'nsegments'), (self._nsegments, 'value'), )
+        t.link((self.model, 'ramp_up_rate'), (self._ramp_up_rate, 'value'), )
+        t.link((self.model, 'ramp_down_rate'), (self._ramp_down_rate, 'value'), )
+        t.link((self.model, 'startup_time'), (self._startup_time, 'value'), )
+        t.link((self.model, 'shutdown_time'), (self._shutdown_time, 'value'), )
+        t.link((self.model, 'noload_cost'), (self._noload_cost, 'value'), )
+        t.link((self.model, 'startup_cost'), (self._startup_cost, 'value'), )
 
 
 class GeneratorRowView(GeneratorView):
 
-    _model_name = T.Unicode('HBoxModel').tag(sync=True)
-    _view_name = T.Unicode('HBoxView').tag(sync=True)
+    _model_name = t.Unicode('HBoxModel').tag(sync=True)
+    _view_name = t.Unicode('HBoxView').tag(sync=True)
 
 
 class GeneratorColumnView(GeneratorView):
 
-    _model_name = T.Unicode('VBoxModel').tag(sync=True)
-    _view_name = T.Unicode('VBoxView').tag(sync=True)
+    _model_name = t.Unicode('VBoxModel').tag(sync=True)
+    _view_name = t.Unicode('VBoxView').tag(sync=True)
 
 
 class GeneratorCostView(ipyw.VBox):
 
-    model = T.Instance(Generator)
+    model = t.Instance(Generator)
 
     def __init__(self, model=None, *args, **kwargs):
 
@@ -348,11 +348,11 @@ class GeneratorCostView(ipyw.VBox):
 
         self.children = children
 
-        T.link((self.model, 'capacity'), (self._scale_x, 'max'))
-        T.link((self.model, 'cost_curve_points'), (self._scatter, 'x'))
-        T.link((self.model, 'cost_curve_values'), (self._scatter, 'y'))
-        T.link((self.model, 'cost_curve_points'), (self._lines, 'x'))
-        T.link((self.model, 'cost_curve_values'), (self._lines, 'y'))
+        t.link((self.model, 'capacity'), (self._scale_x, 'max'))
+        t.link((self.model, 'cost_curve_points'), (self._scatter, 'x'))
+        t.link((self.model, 'cost_curve_values'), (self._scatter, 'y'))
+        t.link((self.model, 'cost_curve_points'), (self._lines, 'x'))
+        t.link((self.model, 'cost_curve_values'), (self._lines, 'y'))
 
         # self._scatter.observe(self._callback_ydata, names=['y'])
 
