@@ -15,16 +15,20 @@ class Generator(T.HasTraits):
     minimum_generation = T.CFloat(default_value=0, min=0, help='Minimum generation (MW)')
     generation_type = T.Enum([
         'COAL',
-        'GAS',
+        'NATURALGAS',
         'WIND'
-    ])
+    ], default_value='COAL')
     startup_time = T.CInt(default_value=0, min=0, help='Startup time (hrs)')
     shutdown_time = T.CInt(default_value=0, min=0, help='Shutdown time (hrs)')
     initial_status = T.CBool(default_value=True, min=0, help='Initial status (bool)')
+    initial_generation = T.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
+    inertia = T.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
+    droop = T.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
 
     @T.validate(
         'ramp_up_rate',
-        'ramp_down_rate'
+        'ramp_down_rate',
+        'initial_generation'
     )
     def _less_than_capacity_check(self, proposal):
         if proposal['value'] > self.capacity:
