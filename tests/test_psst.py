@@ -43,13 +43,13 @@ def test_generator_input():
         g.nsegments = 0
 
     g.nsegments = 10
-    assert len(g._points) == 11
-    assert len(g._values) == 11
+    assert len(g.cost_curve_points) == 11
+    assert len(g.cost_curve_values) == 11
 
     g.nsegments = 2
-    assert len(g._points) == 3
-    assert len(g._values) == 3
+    assert len(g.cost_curve_points) == 3
+    assert len(g.cost_curve_values) == 3
 
     g.nsegments = 1
-    assert len(g._points) == 2
-    assert len(g._values) == 2
+    assert len(g.cost_curve_points) == 2
+    assert len(g.cost_curve_values) == 2

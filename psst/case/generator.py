@@ -35,8 +35,8 @@ class Generator(T.HasTraits):
     initial_status = T.CBool(default_value=True, min=0, help='Initial status (bool)')
     initial_generation = T.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
     nsegments = T.CInt(default_value=2, min=MINIMUM_COST_CURVE_SEGMENTS, max=MAXIMUM_COST_CURVE_SEGMENTS, help='Number of data points for piecewise linear')
-    _points = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
-    _values = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
+    cost_curve_points = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
+    cost_curve_values = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
     inertia = T.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
     droop = T.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
 
@@ -47,33 +47,33 @@ class Generator(T.HasTraits):
     @T.observe('noload_cost')
     def _callback_noload_cost_update_points_values(self, change):
 
-        self._values = [change['new']] * self._npoints
+        self.cost_curve_values = [change['new']] * self._npoints
 
         return change['new']
 
     @T.observe('minimum_generation')
     def _callback_minimum_generation_update_points_values(self, change):
 
-        self._points = np.linspace(change['new'], self.capacity, self._npoints)
+        self.cost_curve_points = np.linspace(change['new'], self.capacity, self._npoints)
 
         return change['new']
 
     @T.observe('capacity')
     def _callback_capacity_update_points_values(self, change):
 
-        self._points = np.linspace(self.minimum_generation, change['new'], self._npoints)
+        self.cost_curve_points = np.linspace(self.minimum_generation, change['new'], self._npoints)
 
         return change['new']
 
     @T.observe('nsegments')
     def _callback_nsegments_update_points_values(self, change):
 
-        self._points = np.linspace(self.minimum_generation, self.capacity, change['new'] + 1)
-        self._values = [self.noload_cost] * (change['new'] + 1)
+        self.cost_curve_points = np.linspace(self.minimum_generation, self.capacity, change['new'] + 1)
+        self.cost_curve_values = [self.noload_cost] * (change['new'] + 1)
 
         return change['new']
 
-    @T.validate('_points', '_values')
+    @T.validate('cost_curve_points', 'cost_curve_values')
     def _validate_max_length(self, proposal):
         if len(proposal['value']) > self._npoints:
             raise T.TraitError(
@@ -319,7 +319,7 @@ class GeneratorCostView(ipyw.VBox):
 
         self._scale_y = bq.LinearScale(
             min=0,
-            max=(max(self.model._values) * 1.5 + 50)
+            max=(max(self.model.cost_curve_values) * 1.5 + 50)
         )
 
         self._scales = {
@@ -328,14 +328,14 @@ class GeneratorCostView(ipyw.VBox):
         }
 
         self._scatter = bq.Scatter(
-            x=self.model._points,
-            y=self.model._values,
+            x=self.model.cost_curve_points,
+            y=self.model.cost_curve_values,
             scales=self._scales
         )
 
         self._lines = bq.Lines(
-            x=self.model._points,
-            y=self.model._values,
+            x=self.model.cost_curve_points,
+            y=self.model.cost_curve_values,
             scales=self._scales
         )
 
@@ -349,10 +349,10 @@ class GeneratorCostView(ipyw.VBox):
         self.children = children
 
         T.link((self.model, 'capacity'), (self._scale_x, 'max'))
-        T.link((self.model, '_points'), (self._scatter, 'x'))
-        T.link((self.model, '_values'), (self._scatter, 'y'))
-        T.link((self.model, '_points'), (self._lines, 'x'))
-        T.link((self.model, '_values'), (self._lines, 'y'))
+        T.link((self.model, 'cost_curve_points'), (self._scatter, 'x'))
+        T.link((self.model, 'cost_curve_values'), (self._scatter, 'y'))
+        T.link((self.model, 'cost_curve_points'), (self._lines, 'x'))
+        T.link((self.model, 'cost_curve_values'), (self._lines, 'y'))
 
         # self._scatter.observe(self._callback_ydata, names=['y'])
 
