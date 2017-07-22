@@ -6,7 +6,7 @@ from .generator import Generator
 M = 1e10
 
 
-class GeneratorView(ipyw.VBox):
+class GeneratorView(ipyw.Box):
 
     def __init__(self, *args, **kwargs):
         super(GeneratorView, self).__init__(*args, **kwargs)
@@ -21,7 +21,7 @@ class GeneratorView(ipyw.VBox):
             description='Name'
         )
 
-        self._capacity = ipyw.LowerBoundedFloatText(
+        self._capacity = ipyw.BoundedFloatText(
             value=0,
             min=0,
             max=M,
@@ -165,4 +165,3 @@ class GeneratorView(ipyw.VBox):
         T.link((self.model, 'initial_generation'), (self._initial_generation, 'value'), )
         T.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
         T.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
-
