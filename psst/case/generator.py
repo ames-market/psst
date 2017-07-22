@@ -1,4 +1,3 @@
-import warnings
 import ipywidgets as ipyw
 import traitlets as T
 import numpy as np
@@ -47,19 +46,15 @@ class Generator(T.HasTraits):
     def _callback_nsegments(self, change):
 
         if len(self._points) > self._npoints:
-            warnings.warn("Number of points greater than nsegments points, trimming higher values")
             self._points = self._points[:self._npoints]
 
         if len(self._values) > self._npoints:
-            warnings.warn("Number of values greater than nsegments points, trimming higher values")
             self._values = self._values[:self._npoints]
 
         if len(self._points) < self._npoints:
-            warnings.warn("Number of points lesser than nsegments points, padding points with maximum capacity point")
             self._points = self._points + [max(self._points)] * (self._npoints - len(self._points))
 
         if len(self._values) < self._npoints:
-            warnings.warn("Number of values lesser than nsegments points, padding values with maximum cost value")
             self._values = self._values + [max(self._values)] * (self._npoints - len(self._values))
 
         if self._points == [0.0] * self._npoints:
