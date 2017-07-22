@@ -120,7 +120,7 @@ class GeneratorView(ipyw.Box):
         self._name = ipyw.Text(
             value='GenCo0',
             description='Name',
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._capacity = ipyw.BoundedFloatText(
@@ -129,20 +129,20 @@ class GeneratorView(ipyw.Box):
             max=M,
             description='Capacity (MW):',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._generation_type = ipyw.Dropdown(
             value=self.model.generation_type,
             options=Generator.generation_type.values,
             description='Generation Type:',
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._initial_status = ipyw.Checkbox(
             value=self.model.initial_status,
             description='Initial Status:',
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._initial_generation = ipyw.BoundedFloatText(
@@ -151,7 +151,7 @@ class GeneratorView(ipyw.Box):
             max=0,
             description='Initial Generation (MW):',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._minimum_up_time = ipyw.BoundedFloatText(
@@ -160,7 +160,7 @@ class GeneratorView(ipyw.Box):
             max=24,
             description='Minimum Up Time (hr):',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._minimum_down_time = ipyw.BoundedFloatText(
@@ -169,7 +169,7 @@ class GeneratorView(ipyw.Box):
             max=24,
             description='Minimum Down Time (hr):',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._minimum_generation = ipyw.BoundedFloatText(
@@ -178,7 +178,7 @@ class GeneratorView(ipyw.Box):
             max=0,
             description='Minimum Generation (MW):',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._noload_cost = ipyw.BoundedFloatText(
@@ -187,7 +187,7 @@ class GeneratorView(ipyw.Box):
             max=M,
             description='No-Load Cost ($/hr):',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._startup_cost = ipyw.BoundedFloatText(
@@ -196,7 +196,7 @@ class GeneratorView(ipyw.Box):
             max=M,
             description='Startup Cost ($/hr):',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._ramp_up_rate = ipyw.BoundedFloatText(
@@ -205,7 +205,7 @@ class GeneratorView(ipyw.Box):
             max=0,
             description='Ramp Up Rate (MW/hr):',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._ramp_down_rate = ipyw.BoundedFloatText(
@@ -214,7 +214,7 @@ class GeneratorView(ipyw.Box):
             max=0,
             description='Ramp Down Rate (MW/hr):',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._startup_time = ipyw.BoundedFloatText(
@@ -223,7 +223,7 @@ class GeneratorView(ipyw.Box):
             max=24,
             description='Startup Time (hr):',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._shutdown_time = ipyw.BoundedFloatText(
@@ -232,7 +232,7 @@ class GeneratorView(ipyw.Box):
             max=24,
             description='Shutdown Time (hr):',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         self._nsegments = ipyw.IntSlider(
@@ -242,7 +242,7 @@ class GeneratorView(ipyw.Box):
             step=1,
             description='Number of Cost Curve Segments',
             disabled=False,
-            style={'description_width': 'initial'}
+            # style={'description_width': 'initial'}
         )
 
         children = [
