@@ -51,15 +51,14 @@ lint: ## check style with flake8
 	flake8 psst tests
 
 test: ## run tests quickly with the default Python
-	py.test
-	
+	@cd tests; PYTHONPATH=.. py.test -v --tb=short
 
 test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source psst py.test
-	
+
 		coverage report -m
 		coverage html
 		$(BROWSER) htmlcov/index.html

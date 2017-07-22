@@ -8,33 +8,31 @@ test_psst
 Tests for `psst` module.
 """
 
-import pytest
+import pytest as pt
+import traitlets as T
 
-from contextlib import contextmanager
-from click.testing import CliRunner
+import psst
 
-from psst import psst
-from psst import cli
+from psst.case.generator import Generator
 
 
-class TestPsst(object):
+def test_generator_input():
 
-    @classmethod
-    def setup_class(cls):
-        pass
+    g = Generator()
 
-    def test_something(self):
-        pass
-    def test_command_line_interface(self):
-        runner = CliRunner()
-        result = runner.invoke(cli.main)
-        assert result.exit_code == 0
-        assert 'psst.cli.main' in result.output
-        help_result = runner.invoke(cli.main, ['--help'])
-        assert help_result.exit_code == 0
-        assert '--help  Show this message and exit.' in help_result.output
+    g.capacity = 100
 
-    @classmethod
-    def teardown_class(cls):
-        pass
+    with pt.raises(T.TraitError):
+        g.ramp_up_rate = 100.5
 
+    with pt.raises(T.TraitError):
+        g.ramp_down_rate = 100.5
+
+    assert g.ramp_up_rate == 0
+    assert g.ramp_down_rate == 0
+
+    g.ramp_down_rate = 100
+    g.ramp_up_rate = 100
+
+    assert g.ramp_down_rate == 100.0
+    assert g.ramp_up_rate == 100.0
