@@ -46,38 +46,42 @@ class Generator(T.HasTraits):
     inertia = T.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
     droop = T.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
 
+    @property
+    def _npoints(self):
+        return self.nsegments + 1
+
     @T.observe('nsegments')
     def _callback_nsegments(self, change):
 
-        if len(self._points) > self.nsegments:
-            warnings.warn("Number of points greater than nsegments, trimming higher values")
-            self._points = self._points[:self.nsegments]
+        if len(self._points) > self._npoints:
+            warnings.warn("Number of points greater than nsegments points, trimming higher values")
+            self._points = self._points[:self._npoints]
 
-        if len(self._values) > self.nsegments:
-            warnings.warn("Number of values greater than nsegments, trimming higher values")
-            self._values = self._values[:self.nsegments]
+        if len(self._values) > self._npoints:
+            warnings.warn("Number of values greater than nsegments points, trimming higher values")
+            self._values = self._values[:self._npoints]
 
-        if len(self._points) < self.nsegments:
-            warnings.warn("Number of points lesser than nsegments, padding points with maximum capacity point")
-            self._points = self._points + [max(self._points)] * (self.nsegments - len(self._points))
+        if len(self._points) < self._npoints:
+            warnings.warn("Number of points lesser than nsegments points, padding points with maximum capacity point")
+            self._points = self._points + [max(self._points)] * (self._npoints - len(self._points))
 
-        if len(self._values) < self.nsegments:
-            warnings.warn("Number of values lesser than nsegments, padding values with maximum cost value")
-            self._values = self._values + [max(self._values)] * (self.nsegments - len(self._values))
+        if len(self._values) < self._npoints:
+            warnings.warn("Number of values lesser than nsegments points, padding values with maximum cost value")
+            self._values = self._values + [max(self._values)] * (self._npoints - len(self._values))
 
-        if self._points == [0.0] * self.nsegments:
-            self._points = list(np.linspace(self.minimum_generation, self.capacity, self.nsegments))
+        if self._points == [0.0] * self._npoints:
+            self._points = list(np.linspace(self.minimum_generation, self.capacity, self._npoints))
 
-        if self._values == [0.0] * self.nsegments:
-            self._values = [self.startup_cost] * self.nsegments
+        if self._values == [0.0] * self._npoints:
+            self._values = [self.startup_cost] * self._npoints
 
         return change['new']
 
     @T.validate('_points', '_values')
     def _validate_max_length(self, proposal):
-        if len(proposal['value']) > self.nsegments:
+        if len(proposal['value']) > self._npoints:
             raise T.TraitError(
-                'len({class_name}().{trait_name}) must be a less than or equal to {class_name}().nsegments.'.format(
+                'len({class_name}().{trait_name}) must be equal to {class_name}().nsegments + 1.'.format(
                     class_name=proposal['owner'].__class__.__name__,
                     trait_name=proposal['trait'].name
                 )

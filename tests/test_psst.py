@@ -42,4 +42,14 @@ def test_generator_input():
     with pt.raises(T.TraitError):
         g.nsegments = 0
 
-    assert g.nsegments == 2
+    g.nsegments = 10
+    assert len(g._points) == 11
+    assert len(g._values) == 11
+
+    g.nsegments = 2
+    assert len(g._points) == 3
+    assert len(g._values) == 3
+
+    g.nsegments = 1
+    assert len(g._points) == 2
+    assert len(g._values) == 2
