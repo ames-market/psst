@@ -1,8 +1,10 @@
 import warnings
 import ipywidgets as ipyw
 import traitlets as T
+import numpy as np
 
 M = 1e10
+MAXIMUM_COST_CURVE_SEGMENTS = 50
 
 
 class Generator(T.HasTraits):
@@ -37,33 +39,42 @@ class Generator(T.HasTraits):
     shutdown_time = T.CInt(default_value=0, min=0, help='Shutdown time (hrs)')
     initial_status = T.CBool(default_value=True, min=0, help='Initial status (bool)')
     initial_generation = T.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
-    ncost = T.CInt(default_value=2, min=2, help='number of cost coefficients for polynomial cost function, or number of data points for piecewise linear')
+    nsegments = T.CInt(default_value=2, min=2, help='Number of data points for piecewise linear')
     _points = T.List(T.Float(), default_value=[0, 0], minlen=2)
     _values = T.List(T.Float(), default_value=[0, 0], minlen=2)
     inertia = T.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
     droop = T.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
-    _max_ncost = T.CInt(
-        default_value=3,
-        max=50,
-        help='Maximum number of cost coefficients for polynomial cost function or number of data points for piecewise linear'
-    )
 
-    @T.observe('ncost')
-    def _callback_ncost(self, change):
+    @T.observe('nsegments')
+    def _callback_nsegments(self, change):
 
-        if len(self._points) > self.ncost:
-            warnings.warn("Number of points greater than ncost, trimming higher values")
-            self._points = self._points[:self.ncost]
+        if len(self._points) > self.nsegments:
+            warnings.warn("Number of points greater than nsegments, trimming higher values")
+            self._points = self._points[:self.nsegments]
 
-        if len(self._values) > self.ncost:
-            warnings.warn("Number of values greater than ncost, trimming higher values")
-            self._values = self._values[:self.ncost]
+        if len(self._values) > self.nsegments:
+            warnings.warn("Number of values greater than nsegments, trimming higher values")
+            self._values = self._values[:self.nsegments]
+
+        if len(self._points) < self.nsegments:
+            warnings.warn("Number of points lesser than nsegments, padding points with maximum capacity point")
+            self._points = self._points + [max(self._points)] * ( self.nsegments - len(self._points) )
+
+        if len(self._values) < self.nsegments:
+            warnings.warn("Number of values lesser than nsegments, padding values with maximum cost value")
+            self._values = self._values + [max(self._values)] * ( self.nsegments - len(self._values) )
+
+        if self._points == [0.0] * self.nsegments:
+            self._points = list(np.linspace(self.minimum_generation, self.capacity, self.nsegments))
+
+        if self._values == [0.0] * self.nsegments:
+            self._values = [self.startup_cost] * self.nsegments
 
     @T.validate('_points', '_values')
     def _validate_max_length(self, proposal):
-        if len(proposal['value']) > self.ncost:
+        if len(proposal['value']) > self.nsegments:
             raise T.TraitError(
-                '{class_name}().{trait_name} must be a less than or equal to {class_name}().ncost.'.format(
+                '{class_name}().{trait_name} must be a less than or equal to {class_name}().nsegments.'.format(
                     class_name=proposal['owner'].__class__.__name__,
                     trait_name=proposal['trait'].name
                 )
@@ -81,11 +92,9 @@ class Generator(T.HasTraits):
     @T.observe('bid_offer_type')
     def _callback_bid_offer_type(self, change):
         if change['new'] == 'POLYNOMIAL':
-            if self.ncost > 3:
-                self.ncost = 3
-            self._max_ncost = 3
+            pass
         else:
-            self._max_ncost = 50
+            pass
 
     @T.validate(
         'ramp_up_rate',
@@ -244,10 +253,10 @@ class GeneratorView(ipyw.Box):
             style={'description_width': 'initial'}
         )
 
-        self._ncost = ipyw.IntSlider(
-            value=self.model.ncost,
+        self._nsegments = ipyw.IntSlider(
+            value=self.model.nsegments,
             min=2,
-            max=self.model._max_ncost,
+            max=MAXIMUM_COST_CURVE_SEGMENTS,
             step=1,
             description='Number Cost Coeff',
             disabled=False,
@@ -271,7 +280,7 @@ class GeneratorView(ipyw.Box):
             self._noload_cost,
             self._startup_cost,
             self._bid_offer_type,
-            self._ncost,
+            self._nsegments,
         ]
 
         self.children = children
@@ -289,8 +298,7 @@ class GeneratorView(ipyw.Box):
         T.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
         T.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
         T.link((self.model, 'bid_offer_type'), (self._bid_offer_type, 'value'), )
-        T.link((self.model, 'ncost'), (self._ncost, 'value'), )
-        T.link((self.model, '_max_ncost'), (self._ncost, 'max'), )
+        T.link((self.model, 'nsegments'), (self._nsegments, 'value'), )
 
 
 class GeneratorRowView(GeneratorView):

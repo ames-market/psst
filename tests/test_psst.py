@@ -37,9 +37,9 @@ def test_generator_input():
     assert g.ramp_down_rate == 100.0
     assert g.ramp_up_rate == 100.0
 
-    assert g.ncost == 2
+    assert g.nsegments == 2
 
     with pt.raises(T.TraitError):
-        g.ncost = 1
+        g.nsegments = 1
 
-    assert g.ncost == 2
+    assert g.nsegments == 2
