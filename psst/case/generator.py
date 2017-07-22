@@ -39,7 +39,7 @@ class Generator(T.HasTraits):
     shutdown_time = T.CInt(default_value=0, min=0, help='Shutdown time (hrs)')
     initial_status = T.CBool(default_value=True, min=0, help='Initial status (bool)')
     initial_generation = T.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
-    nsegments = T.CInt(default_value=2, min=2, help='Number of data points for piecewise linear')
+    nsegments = T.CInt(default_value=2, min=2, max=MAXIMUM_COST_CURVE_SEGMENTS, help='Number of data points for piecewise linear')
     _points = T.List(T.Float(), default_value=[0, 0], minlen=2)
     _values = T.List(T.Float(), default_value=[0, 0], minlen=2)
     inertia = T.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
@@ -58,11 +58,11 @@ class Generator(T.HasTraits):
 
         if len(self._points) < self.nsegments:
             warnings.warn("Number of points lesser than nsegments, padding points with maximum capacity point")
-            self._points = self._points + [max(self._points)] * ( self.nsegments - len(self._points) )
+            self._points = self._points + [max(self._points)] * (self.nsegments - len(self._points))
 
         if len(self._values) < self.nsegments:
             warnings.warn("Number of values lesser than nsegments, padding values with maximum cost value")
-            self._values = self._values + [max(self._values)] * ( self.nsegments - len(self._values) )
+            self._values = self._values + [max(self._values)] * (self.nsegments - len(self._values))
 
         if self._points == [0.0] * self.nsegments:
             self._points = list(np.linspace(self.minimum_generation, self.capacity, self.nsegments))
@@ -74,7 +74,7 @@ class Generator(T.HasTraits):
     def _validate_max_length(self, proposal):
         if len(proposal['value']) > self.nsegments:
             raise T.TraitError(
-                '{class_name}().{trait_name} must be a less than or equal to {class_name}().nsegments.'.format(
+                'len({class_name}().{trait_name}) must be a less than or equal to {class_name}().nsegments.'.format(
                     class_name=proposal['owner'].__class__.__name__,
                     trait_name=proposal['trait'].name
                 )
@@ -258,7 +258,7 @@ class GeneratorView(ipyw.Box):
             min=2,
             max=MAXIMUM_COST_CURVE_SEGMENTS,
             step=1,
-            description='Number Cost Coeff',
+            description='Number of Cost Curve Segments',
             disabled=False,
             style={'description_width': 'initial'}
         )
