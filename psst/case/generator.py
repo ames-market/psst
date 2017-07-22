@@ -69,7 +69,7 @@ class Generator(T.HasTraits):
     def _callback_nsegments_update_points_values(self, change):
 
         self._points = np.linspace(self.minimum_generation, self.capacity, change['new'] + 1)
-        self._values = [self.startup_cost] * (change['new'] + 1)
+        self._values = [self.noload_cost] * (change['new'] + 1)
 
         return change['new']
 
@@ -255,13 +255,13 @@ class GeneratorView(ipyw.Box):
             self._initial_generation,
             self._minimum_up_time,
             self._minimum_down_time,
-            self._ramp_down_rate,
+            self._nsegments,
             self._ramp_up_rate,
+            self._ramp_down_rate,
             self._startup_time,
             self._shutdown_time,
             self._noload_cost,
             self._startup_cost,
-            self._nsegments,
         ]
 
         self.children = children
@@ -279,6 +279,12 @@ class GeneratorView(ipyw.Box):
         T.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
         T.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
         T.link((self.model, 'nsegments'), (self._nsegments, 'value'), )
+        T.link((self.model, 'ramp_up_rate'), (self._ramp_up_rate, 'value'), )
+        T.link((self.model, 'ramp_down_rate'), (self._ramp_down_rate, 'value'), )
+        T.link((self.model, 'startup_time'), (self._startup_time, 'value'), )
+        T.link((self.model, 'shutdown_time'), (self._shutdown_time, 'value'), )
+        T.link((self.model, 'noload_cost'), (self._noload_cost, 'value'), )
+        T.link((self.model, 'startup_cost'), (self._startup_cost, 'value'), )
 
 
 class GeneratorRowView(GeneratorView):
