@@ -40,6 +40,6 @@ def test_generator_input():
     assert g.nsegments == 2
 
     with pt.raises(T.TraitError):
-        g.nsegments = 1
+        g.nsegments = 0
 
     assert g.nsegments == 2

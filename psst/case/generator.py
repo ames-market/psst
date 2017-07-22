@@ -5,6 +5,7 @@ import numpy as np
 
 M = 1e10
 MAXIMUM_COST_CURVE_SEGMENTS = 50
+MINIMUM_COST_CURVE_SEGMENTS = 1
 
 
 class Generator(T.HasTraits):
@@ -39,9 +40,9 @@ class Generator(T.HasTraits):
     shutdown_time = T.CInt(default_value=0, min=0, help='Shutdown time (hrs)')
     initial_status = T.CBool(default_value=True, min=0, help='Initial status (bool)')
     initial_generation = T.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
-    nsegments = T.CInt(default_value=2, min=2, max=MAXIMUM_COST_CURVE_SEGMENTS, help='Number of data points for piecewise linear')
-    _points = T.List(T.Float(), default_value=[0, 0], minlen=2)
-    _values = T.List(T.Float(), default_value=[0, 0], minlen=2)
+    nsegments = T.CInt(default_value=2, min=MINIMUM_COST_CURVE_SEGMENTS, max=MAXIMUM_COST_CURVE_SEGMENTS, help='Number of data points for piecewise linear')
+    _points = T.List(T.Float(), default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
+    _values = T.List(T.Float(), default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
     inertia = T.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
     droop = T.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
 
@@ -69,6 +70,8 @@ class Generator(T.HasTraits):
 
         if self._values == [0.0] * self.nsegments:
             self._values = [self.startup_cost] * self.nsegments
+
+        return change['new']
 
     @T.validate('_points', '_values')
     def _validate_max_length(self, proposal):
