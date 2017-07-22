@@ -17,17 +17,32 @@ class Generator(T.HasTraits):
     ramp_up_rate = T.CFloat(default_value=0, min=0, help='Ramp up rate (MW/hr)')
     ramp_down_rate = T.CFloat(default_value=0, min=0, help='Ramp down rate (MW/hr)')
     minimum_generation = T.CFloat(default_value=0, min=0, help='Minimum generation (MW)')
-    generation_type = T.Enum([
-        'COAL',
-        'NATURALGAS',
-        'WIND'
-    ], default_value='COAL')
+    generation_type = T.Enum(
+        [
+            'COAL',
+            'NATURALGAS',
+            'WIND'
+        ],
+        default_value='COAL'
+    )
+    bid_offer_type = T.Enum(
+        [
+            'PIECEWISELINEAR',
+            'POLYNOMIAL'
+        ],
+        default_value='POLYNOMIAL'
+    )
     startup_time = T.CInt(default_value=0, min=0, help='Startup time (hrs)')
     shutdown_time = T.CInt(default_value=0, min=0, help='Shutdown time (hrs)')
     initial_status = T.CBool(default_value=True, min=0, help='Initial status (bool)')
     initial_generation = T.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
+    ncost = T.CInt(default_value=2, min=0, help='number of cost coefficients for polynomial cost function, or number of data points for piecewise linear')
     inertia = T.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
     droop = T.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
+
+    @T.observe('bid_offer_type')
+    def _callback_bid_offer_type(self, change):
+        print(change)
 
     @T.validate(
         'ramp_up_rate',
@@ -179,6 +194,13 @@ class GeneratorView(ipyw.Box):
             style={'description_width': 'initial'}
         )
 
+        self._bid_offer_type = ipyw.Dropdown(
+            value=self.model.bid_offer_type,
+            options=Generator.bid_offer_type.values,
+            description='Bid Offer Type:',
+            style={'description_width': 'initial'}
+        )
+
         children = [
             self._title,
             self._name,
@@ -194,7 +216,8 @@ class GeneratorView(ipyw.Box):
             self._startup_time,
             self._shutdown_time,
             self._noload_cost,
-            self._startup_cost
+            self._startup_cost,
+            self._bid_offer_type,
         ]
 
         self.children = children
@@ -212,6 +235,7 @@ class GeneratorView(ipyw.Box):
         T.link((self.model, 'initial_generation'), (self._initial_generation, 'value'), )
         T.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
         T.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
+        T.link((self.model, 'bid_offer_type'), (self._bid_offer_type, 'value'), )
 
 
 class GeneratorRowView(GeneratorView):
