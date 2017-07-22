@@ -29,7 +29,7 @@ class Generator(T.HasTraits):
     def _less_than_capacity_check(self, proposal):
         if proposal['value'] > self.capacity:
             raise T.TraitError(
-                '{class_name}().{trait_name} must be a less than or equal to capacity.'.format(
+                '{class_name}().{trait_name} must be a less than or equal to {class_name}().capacity.'.format(
                     class_name=proposal['owner'].__class__.__name__,
                     trait_name=proposal['trait'].name
                 )
