@@ -1,6 +1,8 @@
 import ipywidgets as ipyw
 import traitlets as T
 import numpy as np
+import bqplot as bq
+import traittypes as tt
 
 M = 1e10
 MAXIMUM_COST_CURVE_SEGMENTS = 50
@@ -33,8 +35,8 @@ class Generator(T.HasTraits):
     initial_status = T.CBool(default_value=True, min=0, help='Initial status (bool)')
     initial_generation = T.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
     nsegments = T.CInt(default_value=2, min=MINIMUM_COST_CURVE_SEGMENTS, max=MAXIMUM_COST_CURVE_SEGMENTS, help='Number of data points for piecewise linear')
-    _points = T.List(T.Float(), default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
-    _values = T.List(T.Float(), default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
+    _points = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
+    _values = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
     inertia = T.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
     droop = T.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
 
@@ -52,15 +54,15 @@ class Generator(T.HasTraits):
             self._values = self._values[:self._npoints]
 
         if len(self._points) < self._npoints:
-            self._points = self._points + [max(self._points)] * (self._npoints - len(self._points))
+            self._points = np.append(self._points, [max(self._points)] * (self._npoints - len(self._points)))
 
         if len(self._values) < self._npoints:
-            self._values = self._values + [max(self._values)] * (self._npoints - len(self._values))
+            self._values = np.append(self._values, [max(self._values)] * (self._npoints - len(self._values)))
 
-        if self._points == [0.0] * self._npoints:
-            self._points = list(np.linspace(self.minimum_generation, self.capacity, self._npoints))
+        if np.all(self._points == 0):
+            self._points = np.linspace(self.minimum_generation, self.capacity, self._npoints)
 
-        if self._values == [0.0] * self._npoints:
+        if np.all(self._values == 0):
             self._values = [self.startup_cost] * self._npoints
 
         return change['new']
@@ -74,7 +76,9 @@ class Generator(T.HasTraits):
                     trait_name=proposal['trait'].name
                 )
             )
-        if sorted(proposal['value']) != proposal['value']:
+
+        is_sorted = np.all(proposal['value'][:-1] <= proposal['value'][1:])
+        if not is_sorted:
             raise T.TraitError(
                 '{class_name}().{trait_name} must be a sorted list of floats.'.format(
                     class_name=proposal['owner'].__class__.__name__,
@@ -291,3 +295,55 @@ class GeneratorColumnView(GeneratorView):
     _model_name = T.Unicode('VBoxModel').tag(sync=True)
     _view_name = T.Unicode('VBoxView').tag(sync=True)
 
+
+class GeneratorCostView(ipyw.VBox):
+
+    model = T.Instance(Generator)
+
+    def __init__(self, model=None, *args, **kwargs):
+
+        super(GeneratorCostView, self).__init__(*args, **kwargs)
+
+        if model is not None:
+            self.model = model
+        else:
+            self.model = Generator()
+
+        sc_x = bq.LinearScale(
+            min=self.model.minimum_generation,
+            max=self.model.capacity
+        )
+
+        sc_y = bq.LinearScale(
+            min=0,
+            max=(max(self.model._values) * 1.5)
+        )
+
+        scales = {
+            'x': sc_x,
+            'y': sc_y,
+        }
+
+        s = bq.Scatter(
+            x=self.model._points,
+            y=self.model._values,
+            scales=scales
+        )
+
+        l = bq.Lines(
+            x=self.model._points,
+            y=self.model._values,
+            scales=scales
+        )
+
+        x = bq.Axis(scale=sc_x)
+        y = bq.Axis(scale=sc_y, orientation='vertical', padding_x=0.025)
+
+        f = bq.Figure(marks=[l, s], axes=[x, y])
+
+        children = [f]
+
+        self.children = children
+
+        T.link((s, 'x'), (self.model, '_points'))
+        T.link((s, 'y'), (self.model, '_values'))

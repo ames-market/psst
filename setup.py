@@ -19,7 +19,8 @@ requirements = [
     'pyomo',
     'pypower',
     'ipywidgets',
-    'bqplot'
+    'bqplot',
+    'traittypes',
 ]
 
 test_requirements = [
