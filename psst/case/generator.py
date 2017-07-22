@@ -29,13 +29,6 @@ class Generator(T.HasTraits):
         ],
         default_value='COAL'
     )
-    bid_offer_type = T.Enum(
-        [
-            'PIECEWISELINEAR',
-            'POLYNOMIAL'
-        ],
-        default_value='POLYNOMIAL'
-    )
     startup_time = T.CInt(default_value=0, min=0, help='Startup time (hrs)')
     shutdown_time = T.CInt(default_value=0, min=0, help='Shutdown time (hrs)')
     initial_status = T.CBool(default_value=True, min=0, help='Initial status (bool)')
@@ -95,13 +88,6 @@ class Generator(T.HasTraits):
             )
 
         return proposal['value']
-
-    @T.observe('bid_offer_type')
-    def _callback_bid_offer_type(self, change):
-        if change['new'] == 'POLYNOMIAL':
-            pass
-        else:
-            pass
 
     @T.validate(
         'ramp_up_rate',
@@ -253,13 +239,6 @@ class GeneratorView(ipyw.Box):
             style={'description_width': 'initial'}
         )
 
-        self._bid_offer_type = ipyw.Dropdown(
-            value=self.model.bid_offer_type,
-            options=Generator.bid_offer_type.values,
-            description='Bid Offer Type:',
-            style={'description_width': 'initial'}
-        )
-
         self._nsegments = ipyw.IntSlider(
             value=self.model.nsegments,
             min=2,
@@ -286,7 +265,6 @@ class GeneratorView(ipyw.Box):
             self._shutdown_time,
             self._noload_cost,
             self._startup_cost,
-            self._bid_offer_type,
             self._nsegments,
         ]
 
@@ -304,7 +282,6 @@ class GeneratorView(ipyw.Box):
         T.link((self.model, 'initial_generation'), (self._initial_generation, 'value'), )
         T.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
         T.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
-        T.link((self.model, 'bid_offer_type'), (self._bid_offer_type, 'value'), )
         T.link((self.model, 'nsegments'), (self._nsegments, 'value'), )
 
 
