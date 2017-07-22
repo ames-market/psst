@@ -14,14 +14,9 @@ class Generator(t.HasTraits):
     '''Generator Model'''
 
     name = t.CUnicode(default_value='GenCo0', help='Name of Generator (str)')
-    maximum_real_power = t.CFloat(default_value=0, min=0, help='Capacity of Generator (MW)')
-    noload_cost = t.CFloat(default_value=0, min=0, help='No-Load Cost of a Generator ($/hr)')
-    startup_cost = t.CFloat(default_value=0, min=0, help='Startup Cost of a Generator ($/hr)')
-    minimum_up_time = t.CInt(default_value=0, min=0, help='Minimum up time (hrs)')
-    minimum_down_time = t.CInt(default_value=0, min=0, help='Minimum down time (hrs)')
-    ramp_up_rate = t.CFloat(default_value=0, min=0, help='Ramp up rate (MW/hr)')
-    ramp_down_rate = t.CFloat(default_value=0, min=0, help='Ramp down rate (MW/hr)')
-    minimum_real_power = t.CFloat(default_value=0, min=0, help='Minimum generation (MW)')
+    generator_bus = t.CUnicode(default_value='Bus0', help='Bus of Generator (str)')
+    generator_voltage = t.CFloat(default_value=1.0, help='Nominal voltage of the generator (p.u.)')
+    base_power = t.CFloat(default_value=100.0, help='Base power of the generator (MVA)')
     generation_type = t.Enum(
         [
             'COAL',
@@ -30,15 +25,39 @@ class Generator(t.HasTraits):
         ],
         default_value='COAL'
     )
+    minimum_up_time = t.CInt(default_value=0, min=0, help='Minimum up time (hrs)')
+    minimum_down_time = t.CInt(default_value=0, min=0, help='Minimum down time (hrs)')
+    ramp_up_rate = t.CFloat(default_value=0, min=0, help='Ramp up rate (MW/hr)')
+    ramp_down_rate = t.CFloat(default_value=0, min=0, help='Ramp down rate (MW/hr)')
+    maximum_real_power = t.CFloat(default_value=0, min=0, help='Capacity of Generator (MW)')
+    minimum_real_power = t.CFloat(default_value=0, min=0, help='Minimum generation (MW)')
+    maximum_imag_power = t.CFloat(default_value=0, help='Maximum reactive generation (MVAR)')
+    minimum_imag_power = t.CFloat(default_value=0, help='Minimum reactive generation (MVAR)')
+    initial_real_power = t.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
+    initial_imag_power = t.CFloat(default_value=0, min=0, help='Initial power generation (MVAR)')
+    initial_status = t.CBool(default_value=True, min=0, help='Initial status (bool)')
     startup_time = t.CInt(default_value=0, min=0, help='Startup time (hrs)')
     shutdown_time = t.CInt(default_value=0, min=0, help='Shutdown time (hrs)')
-    initial_status = t.CBool(default_value=True, min=0, help='Initial status (bool)')
-    initial_generation = t.CFloat(default_value=0, min=0, help='Initial power generation (MW)')
-    nsegments = t.CInt(default_value=2, min=MINIMUM_COST_CURVE_SEGMENTS, max=MAXIMUM_COST_CURVE_SEGMENTS, help='Number of data points for piecewise linear')
+    nsegments = t.CInt(
+        default_value=2,
+        min=MINIMUM_COST_CURVE_SEGMENTS,
+        max=MAXIMUM_COST_CURVE_SEGMENTS,
+        help='Number of data points for piecewise linear'
+    )
     cost_curve_points = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
     cost_curve_values = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
+    noload_cost = t.CFloat(default_value=0, min=0, help='No-Load Cost of a Generator ($/hr)')
+    startup_cost = t.CFloat(default_value=0, min=0, help='Startup Cost of a Generator ($/hr)')
     inertia = t.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
     droop = t.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
+
+    @property
+    def capacity(self):
+        return self.maximum_real_power
+
+    @capacity.setter
+    def capacity(self, v):
+        self.maximum_real_power = v
 
     @property
     def _npoints(self):
@@ -75,7 +94,7 @@ class Generator(t.HasTraits):
 
     @t.validate('cost_curve_points', 'cost_curve_values')
     def _validate_max_length(self, proposal):
-        if len(proposal['value']) > self._npoints:
+        if not len(proposal['value']) == self._npoints:
             raise t.TraitError(
                 'len({class_name}().{trait_name}) must be equal to {class_name}().nsegments + 1.'.format(
                     class_name=proposal['owner'].__class__.__name__,
@@ -88,10 +107,11 @@ class Generator(t.HasTraits):
     @t.validate(
         'ramp_up_rate',
         'ramp_down_rate',
-        'initial_generation'
+        'initial_real_power',
+        'initial_reactive_power',
     )
     def _less_than_maximum_real_power_check(self, proposal):
-        if proposal['value'] > self.maximum_real_power:
+        if not proposal['value'] <= self.maximum_real_power:
             raise t.TraitError(
                 '{class_name}().{trait_name} must be a less than or equal to {class_name}().maximum_real_power.'.format(
                     class_name=proposal['owner'].__class__.__name__,
@@ -145,8 +165,8 @@ class GeneratorView(ipyw.Box):
             # style={'description_width': 'initial'}
         )
 
-        self._initial_generation = ipyw.BoundedFloatText(
-            value=self.model.initial_generation,
+        self._initial_real_power = ipyw.BoundedFloatText(
+            value=self.model.initial_real_power,
             min=0,
             max=0,
             description='Initial Generation (MW):',
@@ -252,7 +272,7 @@ class GeneratorView(ipyw.Box):
             self._generation_type,
             self._maximum_real_power,
             self._minimum_real_power,
-            self._initial_generation,
+            self._initial_real_power,
             self._minimum_up_time,
             self._minimum_down_time,
             self._nsegments,
@@ -266,7 +286,7 @@ class GeneratorView(ipyw.Box):
 
         self.children = children
 
-        t.link((self._maximum_real_power, 'value'), (self._initial_generation, 'max'), )
+        t.link((self._maximum_real_power, 'value'), (self._initial_real_power, 'max'), )
         t.link((self._maximum_real_power, 'value'), (self._minimum_real_power, 'max'), )
         t.link((self._maximum_real_power, 'value'), (self._ramp_up_rate, 'max'), )
         t.link((self._maximum_real_power, 'value'), (self._ramp_down_rate, 'max'), )
@@ -275,7 +295,7 @@ class GeneratorView(ipyw.Box):
         t.link((self.model, 'generation_type'), (self._generation_type, 'value'), )
         t.link((self.model, 'initial_status'), (self._initial_status, 'value'), )
         t.link((self.model, 'minimum_real_power'), (self._minimum_real_power, 'value'), )
-        t.link((self.model, 'initial_generation'), (self._initial_generation, 'value'), )
+        t.link((self.model, 'initial_real_power'), (self._initial_real_power, 'value'), )
         t.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
         t.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
         t.link((self.model, 'nsegments'), (self._nsegments, 'value'), )
