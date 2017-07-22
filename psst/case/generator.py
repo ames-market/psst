@@ -47,23 +47,8 @@ class Generator(T.HasTraits):
     @T.observe('nsegments')
     def _callback_nsegments(self, change):
 
-        if len(self._points) > self._npoints:
-            self._points = self._points[:self._npoints]
-
-        if len(self._values) > self._npoints:
-            self._values = self._values[:self._npoints]
-
-        if len(self._points) < self._npoints:
-            self._points = np.append(self._points, [max(self._points)] * (self._npoints - len(self._points)))
-
-        if len(self._values) < self._npoints:
-            self._values = np.append(self._values, [max(self._values)] * (self._npoints - len(self._values)))
-
-        if np.all(self._points == 0):
-            self._points = np.linspace(self.minimum_generation, self.capacity, self._npoints)
-
-        if np.all(self._values == 0):
-            self._values = [self.startup_cost] * self._npoints
+        self._points = np.linspace(self.minimum_generation, self.capacity, self._npoints)
+        self._values = [self.startup_cost] * self._npoints
 
         return change['new']
 
@@ -309,41 +294,49 @@ class GeneratorCostView(ipyw.VBox):
         else:
             self.model = Generator()
 
-        sc_x = bq.LinearScale(
+        self._scale_x = bq.LinearScale(
             min=self.model.minimum_generation,
             max=self.model.capacity
         )
 
-        sc_y = bq.LinearScale(
+        self._scale_y = bq.LinearScale(
             min=0,
             max=(max(self.model._values) * 1.5)
         )
 
-        scales = {
-            'x': sc_x,
-            'y': sc_y,
+        self._scales = {
+            'x': self._scale_x,
+            'y': self._scale_y,
         }
 
-        s = bq.Scatter(
+        self._scatter = bq.Scatter(
             x=self.model._points,
             y=self.model._values,
-            scales=scales
+            scales=self._scales
         )
 
-        l = bq.Lines(
+        self._lines = bq.Lines(
             x=self.model._points,
             y=self.model._values,
-            scales=scales
+            scales=self._scales
         )
 
-        x = bq.Axis(scale=sc_x)
-        y = bq.Axis(scale=sc_y, orientation='vertical', padding_x=0.025)
+        self._axes_x = bq.Axis(scale=self._scale_x)
+        self._axes_y = bq.Axis(scale=self._scale_y, orientation='vertical', padding_x=0.025)
 
-        f = bq.Figure(marks=[l, s], axes=[x, y])
+        f = bq.Figure(marks=[self._lines, self._scatter], axes=[self._axes_x, self._axes_y])
 
         children = [f]
 
         self.children = children
 
-        T.link((s, 'x'), (self.model, '_points'))
-        T.link((s, 'y'), (self.model, '_values'))
+        T.link((self.model, '_points'), (self._scatter, 'x'))
+        T.link((self.model, '_values'), (self._scatter, 'y'))
+        T.link((self.model, '_points'), (self._lines, 'x'))
+        T.link((self.model, '_values'), (self._lines, 'y'))
+
+        self._scatter.observe(self._callback_ydata, names=['y'])
+
+    def _callback_ydata(self, change):
+        self._scale_y.max = float(max(self._scatter.y))
+
