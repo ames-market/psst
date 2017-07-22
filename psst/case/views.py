@@ -165,3 +165,15 @@ class GeneratorView(ipyw.Box):
         T.link((self.model, 'initial_generation'), (self._initial_generation, 'value'), )
         T.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
         T.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
+
+
+class GeneratorRowView(GeneratorView):
+
+    _model_name = T.Unicode('HBoxModel').tag(sync=True)
+    _view_name = T.Unicode('HBoxView').tag(sync=True)
+
+
+class GeneratorColumnView(GeneratorView):
+
+    _model_name = T.Unicode('VBoxModel').tag(sync=True)
+    _view_name = T.Unicode('VBoxView').tag(sync=True)
