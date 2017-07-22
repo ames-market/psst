@@ -44,11 +44,19 @@ class Generator(T.HasTraits):
     def _npoints(self):
         return self.nsegments + 1
 
-    @T.observe('nsegments')
-    def _callback_nsegments(self, change):
+    @T.observe('capacity')
+    def _callback_capacity_update_points_values(self, change):
 
-        self._points = np.linspace(self.minimum_generation, self.capacity, self._npoints)
+        self._points = np.linspace(self.minimum_generation, change['new'], self._npoints)
         self._values = [self.startup_cost] * self._npoints
+
+        return change['new']
+
+    @T.observe('nsegments')
+    def _callback_nsegments_update_points_values(self, change):
+
+        self._points = np.linspace(self.minimum_generation, self.capacity, change['new'] + 1)
+        self._values = [self.startup_cost] * (change['new'] + 1)
 
         return change['new']
 
@@ -57,15 +65,6 @@ class Generator(T.HasTraits):
         if len(proposal['value']) > self._npoints:
             raise T.TraitError(
                 'len({class_name}().{trait_name}) must be equal to {class_name}().nsegments + 1.'.format(
-                    class_name=proposal['owner'].__class__.__name__,
-                    trait_name=proposal['trait'].name
-                )
-            )
-
-        is_sorted = np.all(proposal['value'][:-1] <= proposal['value'][1:])
-        if not is_sorted:
-            raise T.TraitError(
-                '{class_name}().{trait_name} must be a sorted list of floats.'.format(
                     class_name=proposal['owner'].__class__.__name__,
                     trait_name=proposal['trait'].name
                 )
@@ -301,7 +300,7 @@ class GeneratorCostView(ipyw.VBox):
 
         self._scale_y = bq.LinearScale(
             min=0,
-            max=(max(self.model._values) * 1.5)
+            max=(max(self.model._values) * 1.5 + 50)
         )
 
         self._scales = {
@@ -330,13 +329,19 @@ class GeneratorCostView(ipyw.VBox):
 
         self.children = children
 
+        T.link((self.model, 'capacity'), (self._scale_x, 'max'))
         T.link((self.model, '_points'), (self._scatter, 'x'))
         T.link((self.model, '_values'), (self._scatter, 'y'))
         T.link((self.model, '_points'), (self._lines, 'x'))
         T.link((self.model, '_values'), (self._lines, 'y'))
 
-        self._scatter.observe(self._callback_ydata, names=['y'])
+        # self._scatter.observe(self._callback_ydata, names=['y'])
+
+        with self._scatter.hold_sync():
+            self._scatter.enable_move = True
+            self._scatter.update_on_move = True
+            self._scatter.interactions = {'click': None}
 
     def _callback_ydata(self, change):
-        self._scale_y.max = float(max(self._scatter.y))
+        self._scale_y.max = float(max(self._scatter.y)) + 50
 
