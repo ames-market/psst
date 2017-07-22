@@ -21,7 +21,7 @@ class Generator(t.HasTraits):
     minimum_down_time = t.CInt(default_value=0, min=0, help='Minimum down time (hrs)')
     ramp_up_rate = t.CFloat(default_value=0, min=0, help='Ramp up rate (MW/hr)')
     ramp_down_rate = t.CFloat(default_value=0, min=0, help='Ramp down rate (MW/hr)')
-    minimum_generation = t.CFloat(default_value=0, min=0, help='Minimum generation (MW)')
+    minimum_real_power = t.CFloat(default_value=0, min=0, help='Minimum generation (MW)')
     generation_type = t.Enum(
         [
             'COAL',
@@ -51,8 +51,8 @@ class Generator(t.HasTraits):
 
         return change['new']
 
-    @t.observe('minimum_generation')
-    def _callback_minimum_generation_update_points_values(self, change):
+    @t.observe('minimum_real_power')
+    def _callback_minimum_real_power_update_points_values(self, change):
 
         self.cost_curve_points = np.linspace(change['new'], self.maximum_real_power, self._npoints)
 
@@ -61,14 +61,14 @@ class Generator(t.HasTraits):
     @t.observe('maximum_real_power')
     def _callback_maximum_real_power_update_points_values(self, change):
 
-        self.cost_curve_points = np.linspace(self.minimum_generation, change['new'], self._npoints)
+        self.cost_curve_points = np.linspace(self.minimum_real_power, change['new'], self._npoints)
 
         return change['new']
 
     @t.observe('nsegments')
     def _callback_nsegments_update_points_values(self, change):
 
-        self.cost_curve_points = np.linspace(self.minimum_generation, self.maximum_real_power, change['new'] + 1)
+        self.cost_curve_points = np.linspace(self.minimum_real_power, self.maximum_real_power, change['new'] + 1)
         self.cost_curve_values = [self.noload_cost] * (change['new'] + 1)
 
         return change['new']
@@ -172,8 +172,8 @@ class GeneratorView(ipyw.Box):
             # style={'description_width': 'initial'}
         )
 
-        self._minimum_generation = ipyw.BoundedFloatText(
-            value=self.model.minimum_generation,
+        self._minimum_real_power = ipyw.BoundedFloatText(
+            value=self.model.minimum_real_power,
             min=0,
             max=0,
             description='Minimum Generation (MW):',
@@ -251,7 +251,7 @@ class GeneratorView(ipyw.Box):
             self._initial_status,
             self._generation_type,
             self._maximum_real_power,
-            self._minimum_generation,
+            self._minimum_real_power,
             self._initial_generation,
             self._minimum_up_time,
             self._minimum_down_time,
@@ -267,14 +267,14 @@ class GeneratorView(ipyw.Box):
         self.children = children
 
         t.link((self._maximum_real_power, 'value'), (self._initial_generation, 'max'), )
-        t.link((self._maximum_real_power, 'value'), (self._minimum_generation, 'max'), )
+        t.link((self._maximum_real_power, 'value'), (self._minimum_real_power, 'max'), )
         t.link((self._maximum_real_power, 'value'), (self._ramp_up_rate, 'max'), )
         t.link((self._maximum_real_power, 'value'), (self._ramp_down_rate, 'max'), )
         t.link((self.model, 'maximum_real_power'), (self._maximum_real_power, 'value'), )
         t.link((self.model, 'name'), (self._name, 'value'), )
         t.link((self.model, 'generation_type'), (self._generation_type, 'value'), )
         t.link((self.model, 'initial_status'), (self._initial_status, 'value'), )
-        t.link((self.model, 'minimum_generation'), (self._minimum_generation, 'value'), )
+        t.link((self.model, 'minimum_real_power'), (self._minimum_real_power, 'value'), )
         t.link((self.model, 'initial_generation'), (self._initial_generation, 'value'), )
         t.link((self.model, 'minimum_up_time'), (self._minimum_up_time, 'value'), )
         t.link((self.model, 'minimum_down_time'), (self._minimum_down_time, 'value'), )
@@ -313,7 +313,7 @@ class GeneratorCostView(ipyw.VBox):
             self.model = Generator()
 
         self._scale_x = bq.LinearScale(
-            min=self.model.minimum_generation,
+            min=self.model.minimum_real_power,
             max=self.model.maximum_real_power
         )
 
