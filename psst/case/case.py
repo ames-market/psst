@@ -77,6 +77,7 @@ class Case(t.HasTraits):
 
         self.gen = pd.DataFrame(gen_list)
         self.gen['name'] = ['GenCo{i}'.format(i=i) for i in range(0, len(self.gen['name']))]
+        self.gen = self.gen.set_index('name')
 
 
 class CaseView(ipyw.VBox):

@@ -65,6 +65,7 @@ class Generator(t.HasTraits):
     @t.observe('noload_cost')
     def _callback_noload_cost_update_points_values(self, change):
 
+        self.cost_curve_points = np.linspace(self.minimum_real_power, self.maximum_real_power, self._npoints)
         self.cost_curve_values = [change['new']] * self._npoints
 
         return change['new']
@@ -73,6 +74,7 @@ class Generator(t.HasTraits):
     def _callback_minimum_real_power_update_points_values(self, change):
 
         self.cost_curve_points = np.linspace(change['new'], self.maximum_real_power, self._npoints)
+        self.cost_curve_values = [self.noload_cost] * self._npoints
 
         return change['new']
 
@@ -80,6 +82,7 @@ class Generator(t.HasTraits):
     def _callback_maximum_real_power_update_points_values(self, change):
 
         self.cost_curve_points = np.linspace(self.minimum_real_power, change['new'], self._npoints)
+        self.cost_curve_values = [self.noload_cost] * self._npoints
 
         return change['new']
 
