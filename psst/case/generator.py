@@ -51,13 +51,6 @@ class Generator(t.HasTraits):
     inertia = t.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
     droop = t.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
 
-    def __init__(self, *args, **kwargs):
-
-        super(Generator, self).__init__(*args, **kwargs)
-
-        self.ramp_down_rate = self.maximum_real_power
-        self.ramp_up_rate = self.maximum_real_power
-
     @property
     def _npoints(self):
         return self.nsegments + 1
@@ -83,6 +76,9 @@ class Generator(t.HasTraits):
 
         self.cost_curve_points = np.linspace(self.minimum_real_power, change['new'], self._npoints)
         self.cost_curve_values = [self.noload_cost] * self._npoints
+
+        self.ramp_down_rate = self.maximum_real_power
+        self.ramp_up_rate = self.maximum_real_power
 
         return change['new']
 
@@ -373,8 +369,9 @@ class GeneratorCostView(ipyw.VBox):
         t.link((self.model, 'maximum_real_power'), (self._scale_x, 'max'))
         t.link((self.model, 'cost_curve_points'), (self._scatter, 'x'))
         t.link((self.model, 'cost_curve_values'), (self._scatter, 'y'))
-        t.link((self.model, 'cost_curve_points'), (self._lines, 'x'))
-        t.link((self.model, 'cost_curve_values'), (self._lines, 'y'))
+
+        ipyw.jslink((self._lines, 'x'), (self._scatter, 'x'))
+        ipyw.jslink((self._lines, 'y'), (self._scatter, 'y'))
 
         # self._scatter.observe(self._callback_ydata, names=['y'])
 

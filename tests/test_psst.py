@@ -16,9 +16,29 @@ import psst
 from psst.case.generator import Generator
 
 
-def test_generator_input():
+def test_generator_constructor():
+
+    g = Generator(
+        name='GenCo1',
+        generator_bus='Bus1',
+        generation_type='NATURALGAS',
+        maximum_real_power=100,
+        nsegments=3,
+    )
+
+    assert g.ramp_up_rate == 100
+    assert g.ramp_down_rate == 100
+
+    assert len(g.cost_curve_points) == 4
+    assert len(g.cost_curve_values) == 4
+
+def test_generator_properties():
 
     g = Generator()
+
+    g.name='GenCo1'
+    g.generator_bus='Bus1'
+    g.generation_type='NATURALGAS'
 
     g.maximum_real_power = 100
 
@@ -28,14 +48,8 @@ def test_generator_input():
     with pt.raises(T.TraitError):
         g.ramp_down_rate = 100.5
 
-    assert g.ramp_up_rate == 0
-    assert g.ramp_down_rate == 0
-
-    g.ramp_down_rate = 100
-    g.ramp_up_rate = 100
-
-    assert g.ramp_down_rate == 100.0
-    assert g.ramp_up_rate == 100.0
+    assert g.ramp_up_rate == 100
+    assert g.ramp_down_rate == 100
 
     assert g.nsegments == 2
 
