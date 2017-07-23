@@ -51,13 +51,12 @@ class Generator(t.HasTraits):
     inertia = t.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
     droop = t.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
 
-    @property
-    def capacity(self):
-        return self.maximum_real_power
+    def __init__(self, *args, **kwargs):
 
-    @capacity.setter
-    def capacity(self, v):
-        self.maximum_real_power = v
+        super(Generator, self).__init__(*args, **kwargs)
+
+        self.ramp_down_rate = self.maximum_real_power
+        self.ramp_up_rate = self.maximum_real_power
 
     @property
     def _npoints(self):
