@@ -51,8 +51,10 @@ def test_generator_properties():
     assert g.ramp_up_rate == 100
     assert g.ramp_down_rate == 100
 
-    with pt.raises(AttributeError):
+    with pt.raises(AttributeError) as excinfo:
         g.ramp_rate
+
+    assert 'ramp_down_rate' in str(excinfo.value) and 'ramp_up_rate' in str(excinfo.value)
 
     g.ramp_rate = 50
 
