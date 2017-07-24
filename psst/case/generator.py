@@ -44,12 +44,15 @@ class Generator(t.HasTraits):
         max=MAXIMUM_COST_CURVE_SEGMENTS,
         help='Number of data points for piecewise linear'
     )
-    cost_curve_points = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
-    cost_curve_values = tt.Array(default_value=[0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
+    cost_curve_points = tt.Array(default_value=[0, 0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
+    cost_curve_values = tt.Array(default_value=[0, 0, 0], minlen=(MINIMUM_COST_CURVE_SEGMENTS + 1), maxlen=(MAXIMUM_COST_CURVE_SEGMENTS + 1))
     noload_cost = t.CFloat(default_value=0, min=0, help='No-Load Cost of a Generator ($/hr)')
     startup_cost = t.CFloat(default_value=0, min=0, help='Startup Cost of a Generator ($/hr)')
     inertia = t.CFloat(allow_none=True, default_value=None, min=0, help='Inertia of generator (NotImplemented)')
     droop = t.CFloat(allow_none=True, default_value=None, min=0, help='Droop of generator (NotImplemented)')
+
+    def __init__(self, *args, **kwargs):
+        super(Generator, self).__init__(*args, **kwargs)
 
     @property
     def _npoints(self):
@@ -106,9 +109,10 @@ class Generator(t.HasTraits):
     def _validate_max_length(self, proposal):
         if not len(proposal['value']) == self._npoints:
             raise t.TraitError(
-                'len({class_name}().{trait_name}) must be equal to {class_name}().nsegments + 1.'.format(
+                'len({class_name}().{trait_name}) must be equal to {class_name}().nsegments + 1. Proposed {trait_name} is {proposal}'.format(
                     class_name=proposal['owner'].__class__.__name__,
-                    trait_name=proposal['trait'].name
+                    trait_name=proposal['trait'].name,
+                    proposal=proposal['value']
                 )
             )
 
