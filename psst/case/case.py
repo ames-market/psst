@@ -5,39 +5,12 @@ import pandas as pd
 import traitlets as t
 import traittypes as tt
 import ipywidgets as ipyw
+from collections import OrderedDict
 
 from . import matpower
 from .generator import Generator
 
 logger = logging.getLogger(__name__)
-
-KEYS = (
-    'generator_bus',
-    'initial_real_power',
-    'initial_imag_power',
-    'maximum_imag_power',
-    'minimum_imag_power',
-    'generator_voltage',
-    'base_power',
-    'initial_status',
-    'maximum_real_power',
-    'maximum_imag_power',
-    # 'PC1',
-    # 'PC2',
-    # 'QC1MIN',
-    # 'QC1MAX',
-    # 'QC2MIN',
-    # 'QC2MAX',
-    # 'RAMP_AGC',
-    # 'RAMP_10',
-    # 'RAMP_30',
-    # 'RAMP_Q',
-    # 'APF',
-    # 'MU_PMAX',
-    # 'MU_PMIN',
-    # 'MU_QMAX',
-    # 'MU_QMIN'
-)
 
 
 class Case(t.HasTraits):
@@ -53,23 +26,12 @@ class Case(t.HasTraits):
     unique_gen_names = t.Bool(default_value=True)
     _attributes = t.List(t.Unicode())
 
-    @t.observe('gen')
-    def _callback_gen(self, change):
-
-        gen = change['new']
-
-        if self.unique_gen_names:
-
-            gen['name'] = ['GenCo{i}'.format(i=i) for i in range(0, len(gen['name']))]
-            gen = gen.set_index('name')
-
-        change['new'] = gen
-
-        return gen
-
     def __init__(self, filename=None, *args, **kwargs):
 
         super(Case, self).__init__(*args, **kwargs)
+
+        self.gen = pd.DataFrame(columns=list(Generator().traits().keys()))
+        self.gen = self.gen.set_index('name')
 
         if filename is None:
             self.load_default_case()
@@ -88,13 +50,17 @@ class Case(t.HasTraits):
 
     def load_default_case(self):
 
-        self.add_generator(maximum_real_power=100, generator_bus='Bus1')
-        self.add_generator(maximum_real_power=200, generator_bus='Bus2')
+        self.add_generator(name='GenCo0', maximum_real_power=100, generator_bus='Bus1')
+        self.add_generator(name='GenCo1', maximum_real_power=200, generator_bus='Bus2')
 
     def add_generator(self, **kwargs):
 
         model = Generator(**kwargs)
-        s = pd.Series(model._trait_values)
+        d = OrderedDict()
+        for i in model.traits().keys():
+            d[i] = getattr(model, i)
+        name = d.pop('name')
+        self.gen.loc[name] = d.values()
 
         return model
 
@@ -108,7 +74,7 @@ class Case(t.HasTraits):
             _list = matpower.parse_file(attribute, string)
             if attribute == 'gen':
                 for row in _list:
-                    model = Generator(**dict(zip(KEYS, row)))
+                    model = Generator(**dict(zip(row, row)))
                     s = pd.Series(model._trait_values)
                     gen_list.append(s)
 
