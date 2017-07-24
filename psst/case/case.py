@@ -71,12 +71,20 @@ class Case(t.HasTraits):
 
         super(Case, self).__init__(*args, **kwargs)
 
-        if filename.endswith('.m'):
+        if filename is None:
+            self.load_default_case()
+
+        elif filename.endswith('.m'):
             self._attributes = list()
             self.read_matpower(filename)
 
         else:
-            self.load_default_case()
+            raise NotImplementedError(
+                "Unsupported filetype .{fileextension} in {filename}. Please contact the developer".format(
+                    fileextension=filename.split('.')[-1],
+                    filename=filename
+                )
+            )
 
     def load_default_case(self):
 

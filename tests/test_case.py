@@ -20,4 +20,10 @@ def test_case(case_default):
     assert list(case.gen.index) == ['GenCo0', 'GenCo1']
 
 
+def test_unsupported_case():
+
+    with pt.raises(NotImplementedError) as excinfo:
+        c = Case(filename='name_of_file.extension')
+
+    assert '.extension' in str(excinfo.value) and 'name_of_file.extension' in str(excinfo.value) and 'please contact the developer' in str(excinfo.value).lower()
 
