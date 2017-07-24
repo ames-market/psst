@@ -55,6 +55,19 @@ class Generator(t.HasTraits):
     def _npoints(self):
         return self.nsegments + 1
 
+    @property
+    def ramp_rate(self):
+        raise AttributeError(
+            "'{class_name}' object has no attribute 'ramp_rate'. Try 'ramp_up_rate' or 'ramp_down_rate'.".format(
+                class_name=self.__class__.__name__
+            )
+        )
+
+    @ramp_rate.setter
+    def ramp_rate(self, v):
+        self.ramp_up_rate = v
+        self.ramp_down_rate = v
+
     @t.observe('noload_cost')
     def _callback_noload_cost_update_points_values(self, change):
 
@@ -77,8 +90,7 @@ class Generator(t.HasTraits):
         self.cost_curve_points = np.linspace(self.minimum_real_power, change['new'], self._npoints)
         self.cost_curve_values = [self.noload_cost] * self._npoints
 
-        self.ramp_down_rate = self.maximum_real_power
-        self.ramp_up_rate = self.maximum_real_power
+        self.ramp_rate = self.maximum_real_power
 
         return change['new']
 

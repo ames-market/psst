@@ -53,9 +53,12 @@ class Case(t.HasTraits):
     branch_name = t.List(t.Unicode())
     _attributes = t.List(t.Unicode())
 
-    def __init__(self, filename, *args, **kwargs):
+    def __init__(self, filename=None, *args, **kwargs):
 
         super(Case, self).__init__(*args, **kwargs)
+
+        if filename is None:
+            filename = './'
 
         if filename.endswith('.m'):
             self._attributes = list()

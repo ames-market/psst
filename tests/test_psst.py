@@ -51,6 +51,14 @@ def test_generator_properties():
     assert g.ramp_up_rate == 100
     assert g.ramp_down_rate == 100
 
+    with pt.raises(AttributeError):
+        g.ramp_rate
+
+    g.ramp_rate = 50
+
+    assert g.ramp_up_rate == 50
+    assert g.ramp_down_rate == 50
+
     assert g.nsegments == 2
 
     with pt.raises(T.TraitError):
