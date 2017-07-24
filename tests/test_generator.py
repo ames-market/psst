@@ -20,12 +20,23 @@ from psst.case.generator import Generator
 def default_generator():
 
     g = Generator()
-
     g.name='GenCo1'
     g.generator_bus='Bus1'
     g.generation_type='NATURALGAS'
 
     g.maximum_real_power = 100
+
+    return g
+
+
+def test_default_generator(default_generator):
+
+    g = default_generator
+    assert g.name == 'GenCo1'
+    assert g.generator_bus == 'Bus1'
+    assert g.generation_type == 'NATURALGAS'
+
+    assert g.maximum_real_power == 100
 
     with pt.raises(T.TraitError):
         g.ramp_up_rate = 100.5
@@ -40,8 +51,6 @@ def default_generator():
         g.ramp_rate
 
     assert 'ramp_down_rate' in str(excinfo.value) and 'ramp_up_rate' in str(excinfo.value)
-
-    return g
 
 
 def test_generator_constructor():
