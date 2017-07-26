@@ -38,6 +38,9 @@ class Case(t.HasTraits):
         self.bus = pd.DataFrame(columns=list(Bus().traits().keys()))
         self.bus = self.bus.set_index('name')
 
+        self.branch = pd.DataFrame(columns=list(Branch().traits().keys()))
+        self.branch = self.branch.set_index('name')
+
         if filename is None:
             self.load_default_case()
 
