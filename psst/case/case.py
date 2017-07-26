@@ -10,6 +10,7 @@ from collections import OrderedDict
 from . import matpower
 from .generator import Generator
 from .bus import Bus
+from .branch import Branch
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +80,17 @@ class Case(t.HasTraits):
             d[i] = getattr(model, i)
         name = d.pop('name')
         self.bus.loc[name] = d
+
+        return model
+
+    def add_branch(self, **kwargs):
+
+        model = Branch(**kwargs)
+        d = OrderedDict()
+        for i in sorted(model.traits().keys()):
+            d[i] = getattr(model, i)
+        name = d.pop('name')
+        self.branch.loc[name] = d
 
         return model
 
