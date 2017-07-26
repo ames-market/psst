@@ -119,7 +119,7 @@ class Generator(t.HasTraits):
         'ramp_up_rate',
         'ramp_down_rate',
         'initial_real_power',
-        'initial_reactive_power',
+        'initial_imag_power'
     )
     def _less_than_maximum_real_power_check(self, proposal):
         if not proposal['value'] <= self.maximum_real_power:
@@ -385,8 +385,8 @@ class GeneratorCostView(ipyw.VBox):
         t.link((self.model, 'cost_curve_points'), (self._scatter, 'x'))
         t.link((self.model, 'cost_curve_values'), (self._scatter, 'y'))
 
-        ipyw.jslink((self._lines, 'x'), (self._scatter, 'x'))
-        ipyw.jslink((self._lines, 'y'), (self._scatter, 'y'))
+        t.link((self._lines, 'x'), (self._scatter, 'x'))
+        t.link((self._lines, 'y'), (self._scatter, 'y'))
 
         # self._scatter.observe(self._callback_ydata, names=['y'])
 
