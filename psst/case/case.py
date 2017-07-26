@@ -56,6 +56,9 @@ class Case(t.HasTraits):
 
         self.add_generator(name='GenCo0', maximum_real_power=100, generator_bus='Bus1')
         self.add_generator(name='GenCo1', maximum_real_power=200, generator_bus='Bus2')
+        self.add_bus(name='Bus1', real_power_demand=50)
+        self.add_bus(name='Bus2', real_power_demand=250)
+        self.add_branch(from_bus='Bus1', to_bus='Bus2')
 
     def add_generator(self, **kwargs):
 
@@ -78,7 +81,6 @@ class Case(t.HasTraits):
         self.bus.loc[name] = d
 
         return model
-
 
     def read_matpower(self, filename, auto_assign_names=True, fill_loads=True, remove_empty=True, reset_generator_status=True):
 

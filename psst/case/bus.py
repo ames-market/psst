@@ -11,7 +11,7 @@ class Bus(t.HasTraits):
 
     '''Bus Model'''
 
-    name = t.CUnicode(default_value='GenCo0', help='Name of Generator (str)')
+    name = t.CUnicode(default_value='Bus1', help='Name of Generator (str)')
     bus_type = t.Enum(
         values=['SWING', 'PQ', 'PV'],
         default_value='PQ',
