@@ -9,6 +9,7 @@ from collections import OrderedDict
 
 from . import matpower
 from .generator import Generator
+from .bus import Bus
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,9 @@ class Case(t.HasTraits):
 
         self.gen = pd.DataFrame(columns=list(Generator().traits().keys()))
         self.gen = self.gen.set_index('name')
+
+        self.bus = pd.DataFrame(columns=list(Bus().traits().keys()))
+        self.bus = self.bus.set_index('name')
 
         if filename is None:
             self.load_default_case()
@@ -57,12 +61,24 @@ class Case(t.HasTraits):
 
         model = Generator(**kwargs)
         d = OrderedDict()
-        for i in model.traits().keys():
+        for i in sorted(model.traits().keys()):
             d[i] = getattr(model, i)
         name = d.pop('name')
-        self.gen.loc[name] = d.values()
+        self.gen.loc[name] = d
 
         return model
+
+    def add_bus(self, **kwargs):
+
+        model = Bus(**kwargs)
+        d = OrderedDict()
+        for i in sorted(model.traits().keys()):
+            d[i] = getattr(model, i)
+        name = d.pop('name')
+        self.bus.loc[name] = d
+
+        return model
+
 
     def read_matpower(self, filename, auto_assign_names=True, fill_loads=True, remove_empty=True, reset_generator_status=True):
 
