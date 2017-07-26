@@ -373,7 +373,16 @@ class GeneratorCostView(ipyw.VBox):
         self._axes_x = bq.Axis(scale=self._scale_x)
         self._axes_y = bq.Axis(scale=self._scale_y, orientation='vertical', padding_x=0.025)
 
-        f = bq.Figure(marks=[self._lines, self._scatter], axes=[self._axes_x, self._axes_y])
+        f = bq.Figure(
+            marks=[
+                self._lines,
+                self._scatter,
+            ],
+            axes=[
+                self._axes_x,
+                self._axes_y,
+            ]
+        )
 
         children = [
             f
