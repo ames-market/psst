@@ -57,7 +57,7 @@ class Case(t.HasTraits):
             )
 
     def __repr__(self):
-        name_string = 'name={name}'.format(name=self.name) if self.name != '' else ''
+        name_string = "name='{name}'".format(name=self.name) if self.name != '' else ''
         gen_string = 'Generators={number}'.format(number=len(self.gen_name))
         bus_string = 'Buses={number}'.format(number=len(self.bus_name))
         branch_string = 'Branches={number}'.format(number=len(self.branch_name))

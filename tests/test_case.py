@@ -11,6 +11,11 @@ def case_default():
 
     return c
 
+def test_case_name():
+
+    c = Case(name='case')
+
+    assert repr(c) == "<psst.case.Case(name='case', Generators=2, Buses=2, Branches=1)>"
 
 def test_case(case_default):
 
