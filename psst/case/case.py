@@ -74,7 +74,7 @@ class Case(t.HasTraits):
 
         self.add_generator(name='GenCo0', maximum_real_power=100, generator_bus='Bus1')
         self.add_generator(name='GenCo1', maximum_real_power=200, generator_bus='Bus2')
-        self.add_bus(name='Bus1', real_power_demand=50)
+        self.add_bus(name='Bus1', bus_type='SWING', real_power_demand=50)
         self.add_bus(name='Bus2', real_power_demand=250)
         self.add_branch(from_bus='Bus1', to_bus='Bus2')
 
@@ -137,6 +137,11 @@ class Case(t.HasTraits):
                     gen_list.append(s)
 
         self.gen = pd.DataFrame(gen_list)
+
+    @property
+    def swing_bus(self):
+        swing_bus = self.bus[self.bus['bus_type'] == 'SWING'].index[0]
+        return swing_bus
 
 
 class CaseView(ipyw.VBox):
