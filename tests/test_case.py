@@ -27,6 +27,10 @@ def test_case(case_default):
 
     assert c.gen_name == ['GenCo0', 'GenCo1']
 
+    assert c.bus_name == ['Bus1', 'Bus2']
+
+    assert c.swing_bus == 'Bus1'
+
     assert repr(c) == '<psst.case.Case(Generators=2, Buses=2, Branches=1)>'
 
 
