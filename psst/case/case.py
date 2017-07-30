@@ -56,6 +56,20 @@ class Case(t.HasTraits):
                 )
             )
 
+    def __repr__(self):
+        name_string = 'name={name}'.format(name=self.name) if self.name != '' else ''
+        gen_string = 'Generators={number}'.format(number=len(self.gen_name))
+        bus_string = 'Buses={number}'.format(number=len(self.bus_name))
+        branch_string = 'Branches={number}'.format(number=len(self.branch_name))
+        l = [s for s in [name_string, gen_string, bus_string, branch_string] if s != '']
+        repr_string = ', '.join(l)
+
+        return '<{}.{}({})>'.format(
+            self.__class__.__module__.replace('.case.case', '.case'),
+            self.__class__.__name__,
+            repr_string,
+        )
+
     def load_default_case(self):
 
         self.add_generator(name='GenCo0', maximum_real_power=100, generator_bus='Bus1')
@@ -73,6 +87,8 @@ class Case(t.HasTraits):
         name = d.pop('name')
         self.gen.loc[name] = d
 
+        self.fix_names()
+
         return model
 
     def add_bus(self, **kwargs):
@@ -83,6 +99,8 @@ class Case(t.HasTraits):
             d[i] = getattr(model, i)
         name = d.pop('name')
         self.bus.loc[name] = d
+
+        self.fix_names()
 
         return model
 
@@ -95,7 +113,14 @@ class Case(t.HasTraits):
         name = d.pop('name')
         self.branch.loc[name] = d
 
+        self.fix_names()
+
         return model
+
+    def fix_names(self):
+        self.gen_name = list(self.gen.index)
+        self.bus_name = list(self.bus.index)
+        self.branch_name = list(self.branch.index)
 
     def read_matpower(self, filename, auto_assign_names=True, fill_loads=True, remove_empty=True, reset_generator_status=True):
 

@@ -20,6 +20,15 @@ def test_case(case_default):
 
     assert list(c.gen.index) == ['GenCo0', 'GenCo1']
 
+    assert c.gen_name == ['GenCo0', 'GenCo1']
+
+    assert repr(c) == '<psst.case.Case(Generators=2, Buses=2, Branches=1)>'
+
+
+def test_case_generator(case_default):
+
+    c = case_default
+
     assert json.loads(c.gen.to_json()) == {
         'base_power': {
             'GenCo0': 100.0,
