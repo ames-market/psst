@@ -17,4 +17,3 @@ class Network(t.HasTraits):
     case = t.Instance(Case)
     positions = t.Dict()
     graph = t.Instance(nx.Graph)
-

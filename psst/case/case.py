@@ -74,8 +74,8 @@ class Case(t.HasTraits):
 
         self.add_generator(name='GenCo0', maximum_real_power=100, generator_bus='Bus1')
         self.add_generator(name='GenCo1', maximum_real_power=200, generator_bus='Bus2')
-        self.add_bus(name='Bus1', bus_type='SWING', real_power_demand=50)
-        self.add_bus(name='Bus2', real_power_demand=250)
+        self.add_bus(name='Bus1', bus_type='SWING', real_power_demand=50, imag_power_demand=0)
+        self.add_bus(name='Bus2', real_power_demand=250, imag_power_demand=0)
         self.add_branch(from_bus='Bus1', to_bus='Bus2')
 
     def add_generator(self, **kwargs):
