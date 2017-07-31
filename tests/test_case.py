@@ -5,7 +5,7 @@ import json
 from psst.case.case import Case
 
 
-@pt.fixture(scope="module")
+@pt.fixture()
 def case_default():
 
     c = Case()
