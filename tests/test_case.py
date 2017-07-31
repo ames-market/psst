@@ -38,6 +38,51 @@ def test_case_bus(case_default):
 
     c = case_default
 
+    np.testing.assert_equal(c.branch.to_dict(), {
+        'area': {
+            'Bus1': '0',
+            'Bus2': '0'
+        },
+        'base_voltage': {
+            'Bus1': 230.0, 'Bus2': 230.0
+        },
+        'bus_type': {
+            'Bus1': 'SWING', 'Bus2': 'PQ'
+        },
+        'imag_power_demand': {
+            'Bus1': array([0]),
+            'Bus2': array([0])
+        },
+        'maximum_voltage': {
+            'Bus1': 1.05, 'Bus2': 1.05
+        },
+        'minimum_voltage': {
+            'Bus1': 0.94999999999999996, 'Bus2': 0.94999999999999996
+        },
+        'real_power_demand': {
+            'Bus1': array([50]), 'Bus2': array([250])
+        },
+        'shunt_conductance': {
+            'Bus1': 0.0, 'Bus2': 0.0
+        },
+        'shunt_susceptance': {
+            'Bus1': 0.0, 'Bus2': 0.0
+        },
+        'voltage_angle': {
+            'Bus1': 0.0, 'Bus2': 0.0
+        },
+        'voltage_magnitude': {
+            'Bus1': 1.0, 'Bus2': 1.0
+        },
+        'zone': {
+            'Bus1': '0', 'Bus2': '0'
+        }
+    })
+
+def test_case_bus(case_default):
+
+    c = case_default
+
     np.testing.assert_equal(c.bus.to_dict(), {
         "area": {
             "Bus1": "0",
