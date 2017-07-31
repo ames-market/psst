@@ -38,7 +38,7 @@ def test_case_bus(case_default):
 
     c = case_default
 
-    assert c.bus.to_dict() == {
+    np.testing.assert_equal(c.bus.to_dict(), {
         "area": {
             "Bus1": "0",
             "Bus2": "0"
@@ -95,7 +95,7 @@ def test_case_bus(case_default):
             "Bus1": "0",
             "Bus2": "0"
         }
-    }
+    })
 
 def test_case_generator(case_default):
 

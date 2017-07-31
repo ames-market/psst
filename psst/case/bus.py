@@ -17,8 +17,8 @@ class Bus(t.HasTraits):
         default_value='PQ',
         help='Bus type',
     )
-    real_power_demand = t.List(default_value=[0.0], minlen=1, help='Active power demand (MW)')
-    imag_power_demand = t.List(default_value=[0.0], minlen=1, help='Reactive power demand (MVAR)')
+    real_power_demand = tt.Array(default_value=[0.0], minlen=1, help='Active power demand (MW)')
+    imag_power_demand = tt.Array(default_value=[0.0], minlen=1, help='Reactive power demand (MVAR)')
     shunt_conductance = t.CFloat(default_value=0, help='Shunt Conductance (TODO: units)')
     shunt_susceptance = t.CFloat(default_value=0, help='Shunt Susceptance (TODO: units)')
     area = t.CUnicode(default_value='0', help='Area the bus is located in')
