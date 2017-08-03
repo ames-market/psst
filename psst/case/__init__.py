@@ -1,11 +1,12 @@
 import os
 import logging
 
-from builtins import super
 import pandas as pd
 
-from .descriptors import (Name, Version, BaseMVA, BusName, Bus, Branch, BranchName,
-                        Gen, GenName, GenCost, Load, Period, _Attributes)
+from .descriptors import (
+    Name, Version, BaseMVA, BusName, Bus, Branch, BranchName,
+    Gen, GenName, GenCost, Load, Period, _Attributes
+)
 
 from . import matpower
 
@@ -61,10 +62,10 @@ class PSSTCase(object):
             repr_string = ''
 
         return '<{}.{}({})>'.format(
-                    self.__class__.__module__,
-                    self.__class__.__name__,
-                    repr_string,
-                )
+            self.__class__.__module__,
+            self.__class__.__name__,
+            repr_string,
+        )
 
     @classmethod
     def _read_matpower(cls, mpc, auto_assign_names=True, fill_loads=True, remove_empty=True, reset_generator_status=True):
@@ -79,7 +80,7 @@ class PSSTCase(object):
         for attribute in matpower.find_attributes(string):
             _list = matpower.parse_file(attribute, string)
             if _list is not None:
-                if len(_list) == 1 and (attribute=='version' or attribute=='baseMVA'):
+                if len(_list) == 1 and (attribute == 'version' or attribute == 'baseMVA'):
                     setattr(mpc, attribute, _list[0][0])
                 else:
                     cols = max([len(l) for l in _list])
@@ -93,7 +94,7 @@ class PSSTCase(object):
                     df = pd.DataFrame(_list, columns=columns)
 
                     if attribute == 'bus':
-                        df.set_index('BUS_I',inplace=True)
+                        df.set_index('BUS_I', inplace=True)
 
                     setattr(mpc, attribute, df)
                 mpc._attributes.append(attribute)
@@ -151,17 +152,22 @@ class PSSTCase(object):
 
         gencost = pd.read_excel(filename, sheetname='COST')
 
-        number_of_segments = int(len(gencost.columns)/2/2)
+        number_of_segments = int(len(gencost.columns) / 2 / 2)
 
-        mpc.gencost = convert_to_model_one(mpc.gencost, number_of_columns=number_of_segments*2)
+        mpc.gencost = convert_to_model_one(mpc.gencost, number_of_columns=number_of_segments * 2)
 
         for i, col in enumerate(gencost.columns):
             if gencost[col].isnull().all():
                 continue
             if 'COST' in col:
-                mpc.gencost['COST_{}'.format(i+1)] = gencost[col]
+                mpc.gencost['COST_{}'.format(i + 1)] = gencost[col]
             if 'MW' in col:
-                mpc.gencost['COST_{}'.format(i-1)] = gencost[col]
+                mpc.gencost['COST_{}'.format(i - 1)] = gencost[col]
+
+        for i, r in mpc.gencost.iterrows():
+            n = r['NCOST']
+            for i in range(0, n):
+                r['COST_{}'.format((i * 2) + 1)] = r['COST_{}'.format((i * 2) + 1)] * r['COST_{}'.format(i * 2)]
 
         genbus = pd.read_excel(filename, sheetname='GENBUS')
 
