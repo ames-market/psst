@@ -1,4 +1,3 @@
-=======
 Credits
 =======
 
@@ -10,4 +9,7 @@ Development Lead
 Contributors
 ------------
 
-None yet. Why not be the first?
+* Dustin Michels <https://github.com/dustinmichels>
+* Bing Huang
+* Xin Fang
+* Venkat Krishnan

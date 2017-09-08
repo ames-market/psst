@@ -1,6 +1,6 @@
 .. highlight:: shell
 
-============
+
 Contributing
 ============
 
@@ -62,13 +62,13 @@ Ready to contribute? Here's how to set up `psst` for local development.
 1. Fork the `psst` repo on GitHub.
 2. Clone your fork locally::
 
-    $ git clone git@github.com:your_name_here/psst.git
+    $ git clone https://github.com/your-username-here/bqplot.git
 
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
     $ mkvirtualenv psst
     $ cd psst/
-    $ python setup.py develop
+    $ pip install -e .
 
 4. Create a branch for local development::
 
@@ -101,7 +101,7 @@ Before you submit a pull request, check that it meets these guidelines:
 2. If the pull request adds functionality, the docs should be updated. Put
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
-3. The pull request should work for Python 2.6, 2.7, 3.3, 3.4 and 3.5, and for PyPy. Check
+3. The pull request should work for Python 2.7, 3.3, 3.4 and 3.5, and for PyPy. Check
    https://travis-ci.org/power-system-simulation-toolbox/psst/pull_requests
    and make sure that the tests pass for all supported Python versions.
 
