@@ -1,6 +1,5 @@
 .. highlight:: shell
 
-============
 Installation
 ============
 
@@ -14,7 +13,7 @@ To install psst, run this command in your terminal:
 
     $ pip install psst
 
-This is the preferred method to install psst, as it will always install the most recent stable release. 
+This is the preferred method to install psst, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -49,4 +48,3 @@ Once you have a copy of the source, you can install it with:
 
 .. _Github repo: https://github.com/power-system-simulation-toolbox/psst
 .. _tarball: https://github.com/power-system-simulation-toolbox/psst/tarball/master
-

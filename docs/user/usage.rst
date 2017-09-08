@@ -1,6 +1,5 @@
-=====
-Usage
-=====
+Basic Usage
+===========
 
 To use psst in a project::
 
@@ -8,7 +7,7 @@ To use psst in a project::
 
 
 Instantiate a model
-----------------
+-------------------
 
 First, choose a name for your model, create a model::
 
@@ -68,5 +67,4 @@ A detailed report can be generated
 by looking at the `results` attribute::
 
     >>> test_model.results
-
 
