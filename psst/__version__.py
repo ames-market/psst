@@ -1,0 +1,8 @@
+__title__ = 'psst'
+__description__ = 'Power System Simulation Toolbox'
+__url__ = 'https://psst.readthedocs.io'
+__version__ = '0.1.3'
+__author__ = 'Dheepak Krishnamurthy'
+__author_email__ = 'kdheepak89@gmail.com'
+__license__ = 'MIT License'
+__copyright__ = 'Copyright 2017 Dheepak Krishnamurthy'
