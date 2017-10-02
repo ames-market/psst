@@ -13,14 +13,6 @@ Release v\ |version|
    :target: https://pypi.python.org/pypi/psst
    :alt: Python version compatibility status
 
-.. image:: https://img.shields.io/travis/power-system-simulation-toolbox/psst.svg
-   :target: https://travis-ci.org/power-system-simulation-toolbox/psst
-   :alt: Build status
-
-.. image:: https://readthedocs.org/projects/psst/badge/?version=latest
-   :target: https://psst.readthedocs.io/
-   :alt: Documentation Status
-
 `psst` is a Power System Simulation Toolbox written entirely in Python. It is free software, under
 an MIT license.
 
@@ -37,6 +29,13 @@ Features
 * A Security Constrained Unit Commitment with Look Ahead
 * A Security Constrained Economic Dispatch
 * DAM and Hourly RTM
+
+Credits
+-------
+
+This work was developed as an extension to work done supported by Advanced Research Projects Agency-Energy (ARPA-E) and Iowa State University, in collaboration with Sandia National Laboratories, UC Davis and ISO-NE.
+We also acknowledge the U.S. Department of Energy’s (DOE) Wind and Water Power Technology Office (WWPTO) under the office of Energy Efficiency and Renewable Energy (EERE) for funding the development of this open source power system market clearing tool.
+
 
 Contents
 --------
