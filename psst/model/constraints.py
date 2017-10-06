@@ -105,13 +105,13 @@ def enforce_zonal_reserve_requirement_rule(m, rz, t):
     return sum(m.RegulatingReserveUpAvailable[g,t] for g in m.GeneratorsInReserveZone[rz]) >= m.ZonalReserveRequirement[rz, t]
 
 def enforce_generator_output_limits_rule_part_a(m, g, t):
-   return m.MinimumPowerOutput[g] * m.UnitOn[g, t] <= m.PowerGenerated[g,t]
+   return m.MinimumPowerOutput[g, t] * m.UnitOn[g, t] <= m.PowerGenerated[g,t]
 
 def enforce_generator_output_limits_rule_part_b(m, g, t):
    return m.PowerGenerated[g,t] <= m.MaximumPowerAvailable[g, t]
 
 def enforce_generator_output_limits_rule_part_c(m, g, t):
-   return m.MaximumPowerAvailable[g,t] <= m.MaximumPowerOutput[g] * m.UnitOn[g, t]
+   return m.MaximumPowerAvailable[g,t] <= m.MaximumPowerOutput[g, t] * m.UnitOn[g, t]
 
 def enforce_max_available_ramp_up_rates_rule(m, g, t):
    # 4 cases, split by (t-1, t) unit status (RHS is defined as the delta from m.PowerGenerated[g, t-1])
@@ -123,12 +123,12 @@ def enforce_max_available_ramp_up_rates_rule(m, g, t):
       return m.MaximumPowerAvailable[g, t] <= m.PowerGeneratedT0[g] + \
                                               m.NominalRampUpLimit[g] * m.UnitOnT0[g] + \
                                               m.StartupRampLimit[g] * (m.UnitOn[g, t] - m.UnitOnT0[g]) + \
-                                              m.MaximumPowerOutput[g] * (1 - m.UnitOn[g, t])
+                                              m.MaximumPowerOutput[g, t] * (1 - m.UnitOn[g, t])
    else:
       return m.MaximumPowerAvailable[g, t] <= m.PowerGenerated[g, t-1] + \
                                               m.NominalRampUpLimit[g] * m.UnitOn[g, t-1] + \
                                               m.StartupRampLimit[g] * (m.UnitOn[g, t] - m.UnitOn[g, t-1]) + \
-                                              m.MaximumPowerOutput[g] * (1 - m.UnitOn[g, t])
+                                              m.MaximumPowerOutput[g, t] * (1 - m.UnitOn[g, t])
 
 def enforce_max_available_ramp_down_rates_rule(m, g, t):
     # 4 cases, split by (t, t+1) unit status
@@ -149,12 +149,12 @@ def enforce_max_available_ramp_down_rates_rule(m, g, t):
     if t == 0:
         # Not 100% sure of this one since there is no MaximumPowerAvailableT0
         return m.PowerGeneratedT0[g] <= \
-                m.MaximumPowerOutput[g] * m.UnitOn[g,t] + \
+                m.MaximumPowerOutput[g, t] * m.UnitOn[g,t] + \
                 m.ShutdownRampLimit[g] * (m.UnitOnT0[g] - m.UnitOn[g,t])
 
     else:
         return m.MaximumPowerAvailable[g, t-1] <= \
-                m.MaximumPowerOutput[g] * m.UnitOn[g, t] + \
+                m.MaximumPowerOutput[g, t] * m.UnitOn[g, t] + \
                 m.ShutdownRampLimit[g] * (m.UnitOn[g, t-1] - m.UnitOn[g, t])
 
 def enforce_ramp_down_limits_rule(m, g, t):
@@ -168,12 +168,12 @@ def enforce_ramp_down_limits_rule(m, g, t):
         return m.PowerGeneratedT0[g] - m.PowerGenerated[g, t] <= \
                 m.NominalRampDownLimit[g] * m.UnitOn[g, t] + \
                 m.ShutdownRampLimit[g]  * (m.UnitOnT0[g] - m.UnitOn[g, t]) + \
-                m.MaximumPowerOutput[g] * (1 - m.UnitOnT0[g])
+                m.MaximumPowerOutput[g, t] * (1 - m.UnitOnT0[g])
     else:
        return m.PowerGenerated[g, t-1] - m.PowerGenerated[g, t] <= \
                m.NominalRampDownLimit[g]  * m.UnitOn[g, t] + \
                m.ShutdownRampLimit[g]  * (m.UnitOn[g, t-1] - m.UnitOn[g, t]) + \
-               m.MaximumPowerOutput[g] * (1 - m.UnitOn[g, t-1])
+               m.MaximumPowerOutput[g, t] * (1 - m.UnitOn[g, t-1])
 
 def enforce_ramp_up_limits_rule(m, g, t):
     # 4 cases, split by (t-1, t) unit status:
@@ -186,12 +186,12 @@ def enforce_ramp_up_limits_rule(m, g, t):
         return m.PowerGeneratedT0[g] - m.PowerGenerated[g, t] >= \
                 -1 * ( m.NominalRampUpLimit[g] * m.UnitOn[g, t] ) + \
                 -1 * ( m.StartupRampLimit[g]  * (m.UnitOnT0[g] - m.UnitOn[g, t]) ) + \
-                -1 * ( m.MaximumPowerOutput[g] * (1 - m.UnitOnT0[g]) )
+                -1 * ( m.MaximumPowerOutput[g, t] * (1 - m.UnitOnT0[g]) )
     else:
        return m.PowerGenerated[g, t-1] - m.PowerGenerated[g, t] >= \
                -1 * ( m.NominalRampUpLimit[g]  * m.UnitOn[g, t] ) + \
                -1 * ( m.StartupRampLimit[g]  * (m.UnitOn[g, t-1] - m.UnitOn[g, t]) ) + \
-               -1 * ( m.MaximumPowerOutput[g] * (1 - m.UnitOn[g, t-1]) )
+               -1 * ( m.MaximumPowerOutput[g, t] * (1 - m.UnitOn[g, t-1]) )
 
 
 # compute startup costs for each generator, for each time period
@@ -286,7 +286,7 @@ def enforce_down_time_constraints_subsequent(m, g, t):
 
 
 def commitment_in_stage_st_cost_rule(m, st):
-    return m.CommitmentStageCost[st] == (sum(m.StartupCost[g,t] + m.ShutdownCost[g,t] for g in m.Generators for t in m.CommitmentTimeInStage[st]) + sum(sum(m.UnitOn[g,t] for t in m.CommitmentTimeInStage[st]) * m.MinimumProductionCost[g] * m.TimePeriodLength for g in m.Generators))
+    return m.CommitmentStageCost[st] == (sum(m.StartupCost[g,t] + m.ShutdownCost[g,t] for g in m.Generators for t in m.CommitmentTimeInStage[st]) + sum(sum(m.UnitOn[g,t] * m.MinimumProductionCost[g, t] for t in m.CommitmentTimeInStage[st]) * m.TimePeriodLength for g in m.Generators))
 
 def generation_in_stage_st_cost_rule(m, st):
     return m.GenerationStageCost[st] == sum(m.ProductionCost[g, t] for g in m.Generators for t in m.GenerationTimeInStage[st]) + m.LoadMismatchPenalty * \

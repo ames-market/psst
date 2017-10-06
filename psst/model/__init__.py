@@ -39,6 +39,8 @@ def build_model(case,
                 branch_df=None,
                 bus_df=None,
                 previous_unit_commitment_df=None,
+                timeseries_pmax=None,
+                timeseries_pmin=None,
                 base_MVA=None,
                 base_KV=1,
                 config=None):
@@ -81,6 +83,12 @@ def build_model(case,
 
     generator_df['RAMP'] = generator_df['RAMP_10'] * 6
 
+    if timeseries_pmax is None:
+        timeseries_pmax = generator_df["PMAX"].to_dict(orient="list")
+
+    if timeseries_pmin is None:
+        timeseries_pmin = generator_df["PMIN"].to_dict(orient="list")
+
     # Build model information
 
     model = create_model()
@@ -109,14 +117,39 @@ def build_model(case,
     for i, g in generator_df.iterrows():
         generator_at_bus[g['GEN_BUS']].append(i)
 
-    initialize_generators(model,
-                        generator_names=generator_df.index,
-                        generator_at_bus=generator_at_bus)
+    initialize_generators(
+        model,
+        generator_names=generator_df.index,
+        generator_at_bus=generator_at_bus
+    )
     fuel_cost(model)
 
-    maximum_minimum_power_output_generators(model,
-                                        minimum_power_output=generator_df['PMIN'].to_dict(),
-                                        maximum_power_output=generator_df['PMAX'].to_dict())
+    def initialize_maximum_power_output(m, g, t):
+        number_of_hours = len(load_df.index)
+        v = timeseries_pmax[g]
+        try:
+            len(v)
+        except:
+            v = [v for i in range(0, number_of_hours)]
+
+        assert len(v) == number_of_hours, "Expected number of elements for generator {g} = {number_of_hours} but found {l}".format(g=g, number_of_hours=number_of_hours, l=len(v))
+        return v[t]
+
+    def initialize_minimum_power_output(m, g, t):
+        number_of_hours = len(load_df.index)
+        v = timeseries_pmin[g]
+        try:
+            len(v)
+        except:
+            v = [v for i in range(0, number_of_hours)]
+
+        assert len(v) == number_of_hours, "Expected number of elements for generator {g} = {number_of_hours} but found {l}".format(g=g, number_of_hours=number_of_hours, l=len(v))
+        return v[t]
+
+    maximum_minimum_power_output_generators(
+        model,
+        minimum_power_output=initialize_minimum_power_output,
+        maximum_power_output=initialize_maximum_power_output)
 
     ramp_up_ramp_down_limits(model, ramp_up_limits=generator_df['RAMP'].to_dict(), ramp_down_limits=generator_df['RAMP'].to_dict())
 
@@ -163,7 +196,6 @@ def build_model(case,
     # TODO : Add segments to config
 
     for i, g in generator_df.iterrows():
-
 
         if g['MODEL'] == 2:
 
