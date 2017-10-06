@@ -1,6 +1,8 @@
 Validation Notebooks
 ====================
 
+.. image:: validation.png
+
 .. toctree::
    :maxdepth: 1
 
