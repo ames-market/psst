@@ -1,7 +1,7 @@
 Validation and Examples
 =======================
 
-This is a comparison of MATPOWER and PSST solver results [open_kdheepak].
+This is a comparison of MATPOWER and PSST solver results [1].
 
 .. image:: ../notebooks/validation.png
 
@@ -12,4 +12,4 @@ This is a comparison of MATPOWER and PSST solver results [open_kdheepak].
    ../notebooks/validation_notebooks_index
 
 
-.. [open_kdheepak] Open Source Test Bed and Test Case Development for Power System Research, Dheepak Krishnamurthy
+.. [1] Open Source Test Bed and Test Case Development for Power System Research, Dheepak Krishnamurthy
