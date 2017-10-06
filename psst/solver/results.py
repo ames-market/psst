@@ -24,7 +24,7 @@ class PSSTResults(object):
     def noload_cost(self):
         m = self._model
         st = 'FirstStage'
-        return sum([sum([m.UnitOn[g, t].value for t in m.CommitmentTimeInStage[st] if t < self._maximum_hours]) * m.MinimumProductionCost[g].value * m.TimePeriodLength.value for g in m.Generators])
+        return sum([sum([m.UnitOn[g, t].value * m.MinimumProductionCost[g, t].value for t in m.CommitmentTimeInStage[st] if t < self._maximum_hours]) * m.TimePeriodLength.value for g in m.Generators])
 
     @property
     def expected_profit(self):
