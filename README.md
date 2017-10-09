@@ -8,7 +8,7 @@
 *psst* is a Power System Simulation Toolbox written completely in Python. It is:
 
 * Free software: MIT license
-* Documentation: https://psst.readthedocs.io.
+* Documentation: https://nrel.github.io/psst.
 
 ## Features
 
@@ -36,4 +36,4 @@ cd psst
 pip install -e .
 ```
 
-For full instructions, see: https://psst.readthedocs.io
+For full instructions, see: https://nrel.github.io/psst.
