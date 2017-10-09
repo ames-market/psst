@@ -1,0 +1,43 @@
+.document {
+  display: flex;
+}
+
+div.body {
+  background-color: transparent;
+}
+
+div.body h1 {
+  margin-top: 10px;
+  border-bottom: 2px groove;
+}
+
+.sphinxsidebar {
+  background-color: lightblue;
+  border-radius: 10px;
+}
+
+div.sphinxsidebar .caption-text {
+  font-size: 120%;
+  font-style: italic;
+}
+
+div.sphinxsidebar ul li.toctree-l1 > a {
+  font-size: 110%
+}
+
+a.current.reference.internal {
+  font-weight: bold;
+  color: #0e84b5;
+  background-color: #EEE;
+  border-bottom: None;
+}
+
+@media screen and (max-width: 870px) {
+  .document {
+    display: inline;
+  }
+
+  .bodywrapper {
+    border: None;
+  }
+}

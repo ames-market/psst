@@ -1,0 +1,1641 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Validation 10 - Timeseries Minimum Up Time &#8212; psst 0.1.3 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Validation 11 - Global Reserves" href="Validation11-GlobalReserves.html" />
+    <link rel="prev" title="Validation 09 - Timeseries Startup Ramp Rates" href="Validation09-TimeseriesStartupRampRates.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="Validation-10---Timeseries-Minimum-Up-Time">
+<h1>Validation 10 - Timeseries Minimum Up Time<a class="headerlink" href="#Validation-10---Timeseries-Minimum-Up-Time" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">psst</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">psst.case</span> <span class="kn">import</span> <span class="n">read_matpower</span>
+<span class="kn">from</span> <span class="nn">psst.network</span> <span class="kn">import</span> <span class="n">create_network</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Validation-of-case-1">
+<h2>Validation of case 1<a class="headerlink" href="#Validation-of-case-1" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span> <span class="o">=</span> <span class="n">read_matpower</span><span class="p">(</span><span class="s1">&#39;./cases/case7.m&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span><span class="o">.</span><span class="n">load</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./cases/case7.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">network</span> <span class="o">=</span> <span class="n">create_network</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;neato&#39;</span><span class="p">)</span>
+<span class="n">network</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/notebooks_validation_Validation10-TimeseriesMinimumUpTime_7_0.png" src="../../_images/notebooks_validation_Validation10-TimeseriesMinimumUpTime_7_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[7]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;psst.case.PSSTCase(name=casematpower, Generators=2, Buses=2, Branches=1)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span><span class="o">.</span><span class="n">bus</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>TYPE</th>
+      <th>PD</th>
+      <th>QD</th>
+      <th>GS</th>
+      <th>BS</th>
+      <th>AREA</th>
+      <th>VM</th>
+      <th>VA</th>
+      <th>BASEKV</th>
+      <th>ZONE</th>
+      <th>VMAX</th>
+      <th>VMIN</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Bus1</th>
+      <td>3</td>
+      <td>0</td>
+      <td>131.47</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>230</td>
+      <td>1</td>
+      <td>1.1</td>
+      <td>0.9</td>
+    </tr>
+    <tr>
+      <th>Bus2</th>
+      <td>2</td>
+      <td>100</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>230</td>
+      <td>1</td>
+      <td>1.1</td>
+      <td>0.9</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span><span class="o">.</span><span class="n">branch</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>F_BUS</th>
+      <th>T_BUS</th>
+      <th>BR_R</th>
+      <th>BR_X</th>
+      <th>BR_B</th>
+      <th>RATE_A</th>
+      <th>RATE_B</th>
+      <th>RATE_C</th>
+      <th>TAP</th>
+      <th>SHIFT</th>
+      <th>BR_STATUS</th>
+      <th>ANGMIN</th>
+      <th>ANGMAX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Bus1</td>
+      <td>Bus2</td>
+      <td>0.00281</td>
+      <td>0.0281</td>
+      <td>0.00712</td>
+      <td>800</td>
+      <td>800</td>
+      <td>800</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>-360</td>
+      <td>360</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span><span class="o">.</span><span class="n">gen</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;GenCo1&#39;</span><span class="p">,</span> <span class="s1">&#39;MINIMUM_UP_TIME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span><span class="o">.</span><span class="n">gen</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[33]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GEN_BUS</th>
+      <th>PG</th>
+      <th>QG</th>
+      <th>QMAX</th>
+      <th>QMIN</th>
+      <th>VG</th>
+      <th>MBASE</th>
+      <th>GEN_STATUS</th>
+      <th>PMAX</th>
+      <th>PMIN</th>
+      <th>PC1</th>
+      <th>PC2</th>
+      <th>QC1MIN</th>
+      <th>QC1MAX</th>
+      <th>QC2MIN</th>
+      <th>QC2MAX</th>
+      <th>RAMP_AGC</th>
+      <th>RAMP_10</th>
+      <th>RAMP_30</th>
+      <th>RAMP_Q</th>
+      <th>APF</th>
+      <th>STARTUP_RAMP</th>
+      <th>SHUTDOWN_RAMP</th>
+      <th>MINIMUM_UP_TIME</th>
+      <th>MINIMUM_DOWN_TIME</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>GenCo0</th>
+      <td>Bus1</td>
+      <td>200</td>
+      <td>0</td>
+      <td>30</td>
+      <td>-30</td>
+      <td>1</td>
+      <td>100</td>
+      <td>1</td>
+      <td>200</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>200</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>200</td>
+      <td>200</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>GenCo1</th>
+      <td>Bus2</td>
+      <td>500</td>
+      <td>0</td>
+      <td>30</td>
+      <td>-30</td>
+      <td>1</td>
+      <td>100</td>
+      <td>1</td>
+      <td>500</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>500</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>500</td>
+      <td>500</td>
+      <td>5</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span><span class="o">.</span><span class="n">gencost</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[34]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MODEL</th>
+      <th>STARTUP</th>
+      <th>SHUTDOWN</th>
+      <th>NCOST</th>
+      <th>COST_1</th>
+      <th>COST_0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>GenCo0</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>10</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>GenCo1</th>
+      <td>1</td>
+      <td>5000</td>
+      <td>1000</td>
+      <td>2</td>
+      <td>14</td>
+      <td>2000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span>
+<span class="n">case</span><span class="o">.</span><span class="n">load</span><span class="p">[</span><span class="s1">&#39;Bus2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/notebooks_validation_Validation10-TimeseriesMinimumUpTime_15_0.png" src="../../_images/notebooks_validation_Validation10-TimeseriesMinimumUpTime_15_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">psst.model</span> <span class="kn">import</span> <span class="n">build_model</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">model</span> <span class="o">=</span> <span class="n">build_model</span><span class="p">(</span><span class="n">case</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">model</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[39]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>&lt;psst.model.PSSTModel(status=None)&gt;
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;cbc&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Welcome to the CBC MILP Solver
+Version: 2.9.6
+Build Date: May 27 2016
+
+command line - /usr/local/bin/cbc -mipgap 0.01 -printingOptions all -import /var/folders/wk/lcf0vgd90bx0vq1873tn04knk_djr3/T/tmpuYJYwx.pyomo.lp -import -stat=1 -solve -solu /var/folders/wk/lcf0vgd90bx0vq1873tn04knk_djr3/T/tmpuYJYwx.pyomo.soln (default strategy 1)
+No match for mipgap - ? for list of commands
+No match for 0.01 - ? for list of commands
+Option for printingOptions changed from normal to all
+Current default (if $ as parameter) for import is /var/folders/wk/lcf0vgd90bx0vq1873tn04knk_djr3/T/tmpuYJYwx.pyomo.lp
+Presolve 284 (-638) rows, 383 (-370) columns and 1027 (-1387) elements
+Statistics for presolved model
+Original problem has 48 integers (48 of which binary)
+Presolved problem has 24 integers (24 of which binary)
+==== 190 zero objective 3 different
+190 variables have objective of 0
+49 variables have objective of 1
+144 variables have objective of 1e+06
+==== absolute objective values 3 different
+190 variables have objective of 0
+49 variables have objective of 1
+144 variables have objective of 1e+06
+==== for integers 24 zero objective 1 different
+24 variables have objective of 0
+==== for integers absolute objective values 1 different
+24 variables have objective of 0
+===== end objective counts
+
+
+Problem has 284 rows, 383 columns (193 with objective) and 1027 elements
+There are 193 singletons with objective
+Column breakdown:
+287 of type 0.0-&gt;inf, 48 of type 0.0-&gt;up, 0 of type lo-&gt;inf,
+24 of type lo-&gt;up, 0 of type free, 0 of type fixed,
+0 of type -inf-&gt;0.0, 0 of type -inf-&gt;up, 24 of type 0.0-&gt;1.0
+Row breakdown:
+24 of type E 0.0, 0 of type E 1.0, 0 of type E -1.0,
+48 of type E other, 2 of type G 0.0, 0 of type G 1.0,
+0 of type G other, 139 of type L 0.0, 0 of type L 1.0,
+71 of type L other, 0 of type Range 0.0-&gt;1.0, 0 of type Range other,
+0 of type Free
+Continuous objective value is 47068 - 0.00 seconds
+Cgl0003I 0 fixed, 0 tightened bounds, 23 strengthened rows, 0 substitutions
+Cgl0004I processed model has 260 rows, 382 columns (24 integer (24 of which binary)) and 886 elements
+Cbc0038I Initial state - 4 integers unsatisfied sum - 1.15
+Cbc0038I Pass   1: suminf.    0.00000 (0) obj. 6.00037e+08 iterations 19
+Cbc0038I Solution found of 6.00037e+08
+Cbc0038I Relaxing continuous gives 6.00037e+08
+Cbc0038I Before mini branch and bound, 20 integers at bound fixed and 263 continuous
+Cbc0038I Full problem 260 rows 382 columns, reduced to 17 rows 13 columns
+Cbc0038I Mini branch and bound did not improve solution (0.02 seconds)
+Cbc0038I Round again with cutoff of 5.40038e+08
+Cbc0038I Pass   2: suminf.    0.08727 (4) obj. 5.40038e+08 iterations 19
+Cbc0038I Pass   3: suminf.    0.25000 (1) obj. 5.40038e+08 iterations 13
+Cbc0038I Pass   4: suminf.    0.50000 (1) obj. 5.40038e+08 iterations 5
+Cbc0038I Pass   5: suminf.    0.35417 (3) obj. 5.40038e+08 iterations 38
+Cbc0038I Pass   6: suminf.    0.25000 (1) obj. 5.40038e+08 iterations 11
+Cbc0038I Pass   7: suminf.    0.25000 (1) obj. 5.40038e+08 iterations 3
+Cbc0038I Pass   8: suminf.    1.64258 (5) obj. 5.40038e+08 iterations 23
+Cbc0038I Pass   9: suminf.    0.62500 (2) obj. 5.40038e+08 iterations 17
+Cbc0038I Pass  10: suminf.    0.00000 (0) obj. 5.40038e+08 iterations 5
+Cbc0038I Solution found of 5.40038e+08
+Cbc0038I Relaxing continuous gives 84700
+Cbc0038I Before mini branch and bound, 5 integers at bound fixed and 247 continuous
+Cbc0038I Full problem 260 rows 382 columns, reduced to 62 rows 42 columns
+Cbc0038I Mini branch and bound improved solution from 84700 to 58700 (0.03 seconds)
+Cbc0038I Round again with cutoff of 56440
+Cbc0038I Pass  11: suminf.    1.14997 (4) obj. 56440 iterations 7
+Cbc0038I Pass  12: suminf.    0.25000 (1) obj. 56440 iterations 19
+Cbc0038I Pass  13: suminf.    0.50000 (1) obj. 56440 iterations 5
+Cbc0038I Pass  14: suminf.    1.58625 (5) obj. 56440 iterations 23
+Cbc0038I Pass  15: suminf.    0.40556 (5) obj. 56440 iterations 13
+Cbc0038I Pass  16: suminf.    1.24998 (4) obj. 56440 iterations 30
+Cbc0038I Pass  17: suminf.    1.14997 (4) obj. 56440 iterations 5
+Cbc0038I Pass  18: suminf.    0.25000 (1) obj. 56440 iterations 18
+Cbc0038I Pass  19: suminf.    0.50000 (1) obj. 56440 iterations 2
+Cbc0038I Pass  20: suminf.    0.97800 (5) obj. 56440 iterations 23
+Cbc0038I Pass  21: suminf.    0.65000 (3) obj. 56440 iterations 16
+Cbc0038I Pass  22: suminf.    0.95667 (3) obj. 56440 iterations 13
+Cbc0038I Pass  23: suminf.    1.29364 (5) obj. 56440 iterations 4
+Cbc0038I Pass  24: suminf.    0.95667 (3) obj. 56440 iterations 6
+Cbc0038I Pass  25: suminf.    1.66229 (6) obj. 56440 iterations 16
+Cbc0038I Pass  26: suminf.    1.58326 (6) obj. 56440 iterations 22
+Cbc0038I Pass  27: suminf.    1.15000 (4) obj. 56440 iterations 23
+Cbc0038I Pass  28: suminf.    0.28000 (2) obj. 56440 iterations 14
+Cbc0038I Pass  29: suminf.    0.25000 (1) obj. 56440 iterations 5
+Cbc0038I Pass  30: suminf.    0.50000 (1) obj. 56440 iterations 3
+Cbc0038I Pass  31: suminf.    0.28000 (3) obj. 56440 iterations 27
+Cbc0038I Pass  32: suminf.    1.42000 (6) obj. 56440 iterations 68
+Cbc0038I Pass  33: suminf.    1.42000 (6) obj. 56440 iterations 8
+Cbc0038I Pass  34: suminf.    1.14997 (4) obj. 56440 iterations 28
+Cbc0038I Pass  35: suminf.    1.86249 (6) obj. 56440 iterations 14
+Cbc0038I Pass  36: suminf.    1.86249 (6) obj. 56440 iterations 4
+Cbc0038I Pass  37: suminf.    0.29000 (3) obj. 56440 iterations 28
+Cbc0038I Pass  38: suminf.    0.25000 (1) obj. 56440 iterations 14
+Cbc0038I Pass  39: suminf.    0.50000 (1) obj. 56440 iterations 5
+Cbc0038I Pass  40: suminf.    1.10464 (5) obj. 56440 iterations 26
+Cbc0038I No solution found this major pass
+Cbc0038I Before mini branch and bound, 11 integers at bound fixed and 243 continuous
+Cbc0038I Full problem 260 rows 382 columns, reduced to 21 rows 21 columns
+Cbc0038I Mini branch and bound did not improve solution (0.05 seconds)
+Cbc0038I After 0.05 seconds - Feasibility pump exiting with objective of 58700 - took 0.04 seconds
+Cbc0012I Integer solution of 58700 found by feasibility pump after 0 iterations and 0 nodes (0.05 seconds)
+Cbc0038I Full problem 260 rows 382 columns, reduced to 143 rows 260 columns - 5 fixed gives 128, 245 - still too large
+Cbc0038I Full problem 260 rows 382 columns, reduced to 128 rows 245 columns - too large
+Cbc0031I 3 added rows had average density of 8
+Cbc0013I At root node, 16 cuts changed objective from 47400 to 58700 in 3 passes
+Cbc0014I Cut generator 0 (Probing) - 28 row cuts average 4.4 elements, 3 column cuts (3 active)  in 0.001 seconds - new frequency is 1
+Cbc0014I Cut generator 1 (Gomory) - 6 row cuts average 9.8 elements, 0 column cuts (0 active)  in 0.000 seconds - new frequency is 1
+Cbc0014I Cut generator 2 (Knapsack) - 3 row cuts average 2.3 elements, 0 column cuts (0 active)  in 0.001 seconds - new frequency is 1
+Cbc0014I Cut generator 3 (Clique) - 0 row cuts average 0.0 elements, 0 column cuts (0 active)  in 0.000 seconds - new frequency is -100
+Cbc0014I Cut generator 4 (MixedIntegerRounding2) - 5 row cuts average 5.4 elements, 0 column cuts (0 active)  in 0.000 seconds - new frequency is 1
+Cbc0014I Cut generator 5 (FlowCover) - 0 row cuts average 0.0 elements, 0 column cuts (0 active)  in 0.001 seconds - new frequency is -100
+Cbc0014I Cut generator 6 (TwoMirCuts) - 9 row cuts average 6.0 elements, 0 column cuts (0 active)  in 0.001 seconds - new frequency is 1
+Cbc0001I Search completed - best objective 58700, took 22 iterations and 0 nodes (0.07 seconds)
+Cbc0035I Maximum depth 0, 15 variables fixed on reduced cost
+Cuts at root node changed objective from 47400 to 58700
+Probing was tried 3 times and created 31 cuts of which 0 were active after adding rounds of cuts (0.001 seconds)
+Gomory was tried 3 times and created 6 cuts of which 0 were active after adding rounds of cuts (0.000 seconds)
+Knapsack was tried 3 times and created 3 cuts of which 0 were active after adding rounds of cuts (0.001 seconds)
+Clique was tried 3 times and created 0 cuts of which 0 were active after adding rounds of cuts (0.000 seconds)
+MixedIntegerRounding2 was tried 3 times and created 5 cuts of which 0 were active after adding rounds of cuts (0.000 seconds)
+FlowCover was tried 3 times and created 0 cuts of which 0 were active after adding rounds of cuts (0.001 seconds)
+TwoMirCuts was tried 3 times and created 9 cuts of which 0 were active after adding rounds of cuts (0.001 seconds)
+
+Result - Optimal solution found
+
+Objective value:                58700.00000000
+Enumerated nodes:               0
+Total iterations:               22
+Time (CPU seconds):             0.08
+Time (Wallclock seconds):       0.08
+
+Total time (CPU seconds):       0.09   (Wallclock seconds):       0.10
+
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Input-data">
+<h2>Input data<a class="headerlink" href="#Input-data" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">case</span><span class="o">.</span><span class="n">gen</span><span class="p">[</span><span class="s1">&#39;PMAX&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[42]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PMAX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>GenCo0</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>GenCo1</th>
+      <td>500</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span><span class="o">.</span><span class="n">load</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[43]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Bus1</th>
+      <th>Bus2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.0</td>
+      <td>120.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.0</td>
+      <td>120.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.0</td>
+      <td>120.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.0</td>
+      <td>150.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.0</td>
+      <td>150.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.0</td>
+      <td>150.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.0</td>
+      <td>200.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>0.0</td>
+      <td>200.0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.0</td>
+      <td>200.0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0.0</td>
+      <td>300.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>0.0</td>
+      <td>400.0</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.0</td>
+      <td>300.0</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>0.0</td>
+      <td>200.0</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>0.0</td>
+      <td>200.0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>0.0</td>
+      <td>200.0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>0.0</td>
+      <td>150.0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>0.0</td>
+      <td>150.0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>0.0</td>
+      <td>150.0</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>0.0</td>
+      <td>150.0</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>0.0</td>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>0.0</td>
+      <td>100.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</div>
+<div class="section" id="Model-Results">
+<h2>Model Results<a class="headerlink" href="#Model-Results" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">unit_commitment</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[44]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GenCo0</th>
+      <th>GenCo1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">power_generated</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[45]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GenCo0</th>
+      <th>GenCo1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>100</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>100</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>100</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>120</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>120</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>120</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>150</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>150</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>150</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>200</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>200</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>200</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>200</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>200</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>200</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>200</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>200</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>200</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>150</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>150</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>150</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>150</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>100</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>100</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">commitment_cost</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[46]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>6000
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">production_cost</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[47]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>42700
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">noload_cost</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[48]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>10000.0
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">line_power</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[49]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>120</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>120</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>120</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>150</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>150</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>150</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>150</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>150</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>150</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>150</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>100</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">psst.plot</span> <span class="kn">import</span> <span class="n">line_power</span><span class="p">,</span> <span class="n">stacked_power_generation</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [52]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">stacked_power_generation</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/notebooks_validation_Validation10-TimeseriesMinimumUpTime_32_0.png" src="../../_images/notebooks_validation_Validation10-TimeseriesMinimumUpTime_32_0.png" />
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">A Power System Simulation Toolbox written entirely in Python</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../user/installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../user/examples.html">Validation and Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../validation_notebooks_index.html">Validation Notebooks</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Validation01-SingleGenerator.html">Validation 01 - Single Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation02-SingleGeneratorTwoBus.html">Validation 02 - Single Generator, Two Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation03-TwoGeneratorTwoBusTwoLoadOneBranch.html">Validation 03 - Two Generator, Two Bus, Two Load, One Branch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation04-TwoGeneratorTwoBusTwoLoadOneBranchLMPChange.html">Validation 04 - Two Generator, Two Bus, Two Load, One Branch, LMP Change</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation05-TwoGeneratorTwoBusTwoLoadOneBranchLineConstraint.html">Validation 05 - Two Generator, Two Bus, Two Load, One Branch, Line Constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation06-SingleSnapshotUnitCommitment.html">Validation 06 - Single Snapshot Unit Commitment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation07-Timeseries.html">Validation 07 - Timeseries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation08-TimeseriesRampRates.html">Validation 08 - Timeseries Ramp Rates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation09-TimeseriesStartupRampRates.html">Validation 09 - Timeseries Startup Ramp Rates</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Validation 10 - Timeseries Minimum Up Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation11-GlobalReserves.html">Validation 11 - Global Reserves</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation12-GlobalReserves.html">Validation 12 - Global Reserves</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation13-5Bus.html">Validation 13 - 5 Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation13-MATPOWERCASES.html">Validation 13 - Matpower Cases</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Contributor Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/installation.html">Developer Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/contributing.html">Contributing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../more/authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../more/changelog.html">Release History</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../user/examples.html">Validation and Examples</a><ul>
+  <li><a href="../validation_notebooks_index.html">Validation Notebooks</a><ul>
+      <li>Previous: <a href="Validation09-TimeseriesStartupRampRates.html" title="previous chapter">Validation 09 - Timeseries Startup Ramp Rates</a></li>
+      <li>Next: <a href="Validation11-GlobalReserves.html" title="next chapter">Validation 11 - Global Reserves</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Dheepak Krishnamurthy.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/power-system-simulation-toolbox/psst" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

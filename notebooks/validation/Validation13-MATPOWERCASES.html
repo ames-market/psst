@@ -1,0 +1,520 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Validation 13 - Matpower Cases &#8212; psst 0.1.3 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Developer Installation" href="../../dev/installation.html" />
+    <link rel="prev" title="Validation 13 - 5 Bus" href="Validation13-5Bus.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="Validation-13---Matpower-Cases">
+<h1>Validation 13 - Matpower Cases<a class="headerlink" href="#Validation-13---Matpower-Cases" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">psst.case</span> <span class="kn">import</span> <span class="n">read_matpower</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">psst.model</span> <span class="kn">import</span> <span class="n">build_model</span>
+
+<span class="n">mpc_files</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">root</span><span class="o">=</span> <span class="s1">&#39;./../../../matpower/&#39;</span>
+
+<span class="k">for</span> <span class="n">mpc</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">mpc</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;case&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">mpc</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.m&#39;</span><span class="p">):</span>
+        <span class="n">mpc_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">mpc</span><span class="p">)))</span>
+
+<span class="kn">import</span> <span class="nn">getpass</span>
+
+<span class="n">USER</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getuser</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">mpc_files</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;/Users/{}/Documents/GitRepos/matpower/case5.m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">USER</span><span class="p">),</span>
+ <span class="s1">&#39;/Users/{}/Documents/GitRepos/matpower/case30.m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">USER</span><span class="p">),</span>
+ <span class="s1">&#39;/Users/{}/Documents/GitRepos/matpower/case6ww.m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">USER</span><span class="p">),</span>
+ <span class="s1">&#39;/Users/{}/Documents/GitRepos/matpower/case9.m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">USER</span><span class="p">),</span>
+ <span class="s1">&#39;/Users/{}/Documents/GitRepos/matpower/case9target.m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">USER</span><span class="p">),</span>
+<span class="p">]</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+
+<span></span><span class="n">mpc_case</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">mpc_results</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">mpc</span> <span class="ow">in</span> <span class="n">mpc_files</span><span class="p">:</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">case</span> <span class="o">=</span> <span class="n">read_matpower</span><span class="p">(</span><span class="n">mpc</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">build_model</span><span class="p">(</span><span class="n">case</span><span class="p">)</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;xpress&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="n">s1</span> <span class="o">=</span> <span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">angles</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">pd</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">360</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">case_name</span> <span class="o">=</span> <span class="n">mpc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.m&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">mpc_case</span><span class="p">[</span><span class="n">case_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">power_generated</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">mpc_results</span><span class="p">[</span><span class="n">case_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">mpc_results</span><span class="p">[</span><span class="n">case_name</span><span class="p">][</span><span class="s1">&#39;line_power&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">line_power</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">mpc_results</span><span class="p">[</span><span class="n">case_name</span><span class="p">][</span><span class="s1">&#39;angles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">angles</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="mi">360</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">pd</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Unable to solve {}</span><span class="se">\n</span><span class="s1">{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mpc</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">mpc_case</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">mpc_case</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+case6ww
+case9
+case30
+case5
+case9target
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">loadmat</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">matpower</span> <span class="o">=</span> <span class="n">loadmat</span><span class="p">(</span><span class="s1">&#39;/Users/{}/Documents/GitRepos/matpower/results.mat&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">USER</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">rmse</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">targets</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">predictions</span> <span class="o">-</span> <span class="n">targets</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="s1">&#39;case30&#39;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">(</span><span class="n">mpc_results</span><span class="p">[</span><span class="s1">&#39;case30&#39;</span><span class="p">][</span><span class="s1">&#39;angles&#39;</span><span class="p">],</span> <span class="n">matpower</span><span class="p">[</span><span class="s1">&#39;a30&#39;</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;case9&#39;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">(</span><span class="n">mpc_results</span><span class="p">[</span><span class="s1">&#39;case9&#39;</span><span class="p">][</span><span class="s1">&#39;angles&#39;</span><span class="p">],</span> <span class="n">matpower</span><span class="p">[</span><span class="s1">&#39;a9&#39;</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;case6ww&#39;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">(</span><span class="n">mpc_results</span><span class="p">[</span><span class="s1">&#39;case6ww&#39;</span><span class="p">][</span><span class="s1">&#39;angles&#39;</span><span class="p">],</span> <span class="n">matpower</span><span class="p">[</span><span class="s1">&#39;a6ww&#39;</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;case5&#39;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">(</span><span class="n">mpc_results</span><span class="p">[</span><span class="s1">&#39;case5&#39;</span><span class="p">][</span><span class="s1">&#39;angles&#39;</span><span class="p">],</span> <span class="n">matpower</span><span class="p">[</span><span class="s1">&#39;a5&#39;</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;case9target&#39;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">(</span><span class="n">mpc_results</span><span class="p">[</span><span class="s1">&#39;case9target&#39;</span><span class="p">][</span><span class="s1">&#39;angles&#39;</span><span class="p">],</span> <span class="n">matpower</span><span class="p">[</span><span class="s1">&#39;a9target&#39;</span><span class="p">]))</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&#39;case30&#39;, 4.0528596704901583)
+(&#39;case9&#39;, 6.8282476828978767e-15)
+(&#39;case6ww&#39;, 1.8831566595121686e-15)
+(&#39;case5&#39;, 1.7406087768693023e-15)
+(&#39;case9target&#39;, 0.6548200235238163)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="s1">&#39;case30&#39;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">(</span><span class="n">mpc_results</span><span class="p">[</span><span class="s1">&#39;case30&#39;</span><span class="p">][</span><span class="s1">&#39;line_power&#39;</span><span class="p">],</span> <span class="n">matpower</span><span class="p">[</span><span class="s1">&#39;lp30&#39;</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;case9&#39;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">(</span><span class="n">mpc_results</span><span class="p">[</span><span class="s1">&#39;case9&#39;</span><span class="p">][</span><span class="s1">&#39;line_power&#39;</span><span class="p">],</span> <span class="n">matpower</span><span class="p">[</span><span class="s1">&#39;lp9&#39;</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;case6ww&#39;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">(</span><span class="n">mpc_results</span><span class="p">[</span><span class="s1">&#39;case6ww&#39;</span><span class="p">][</span><span class="s1">&#39;line_power&#39;</span><span class="p">],</span> <span class="n">matpower</span><span class="p">[</span><span class="s1">&#39;lp6ww&#39;</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;case5&#39;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">(</span><span class="n">mpc_results</span><span class="p">[</span><span class="s1">&#39;case5&#39;</span><span class="p">][</span><span class="s1">&#39;line_power&#39;</span><span class="p">],</span> <span class="n">matpower</span><span class="p">[</span><span class="s1">&#39;lp5&#39;</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;case9target&#39;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">(</span><span class="n">mpc_results</span><span class="p">[</span><span class="s1">&#39;case9target&#39;</span><span class="p">][</span><span class="s1">&#39;line_power&#39;</span><span class="p">],</span> <span class="n">matpower</span><span class="p">[</span><span class="s1">&#39;lp9target&#39;</span><span class="p">]))</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&#39;case30&#39;, 5.7540935602070547e-14)
+(&#39;case9&#39;, 2.5646338774393149e-14)
+(&#39;case6ww&#39;, 2.3228879851839006e-14)
+(&#39;case5&#39;, 2.4123597344804154e-13)
+(&#39;case9target&#39;, 5.4935306698989068)
+</pre></div></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">A Power System Simulation Toolbox written entirely in Python</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../user/installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../user/examples.html">Validation and Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../validation_notebooks_index.html">Validation Notebooks</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Validation01-SingleGenerator.html">Validation 01 - Single Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation02-SingleGeneratorTwoBus.html">Validation 02 - Single Generator, Two Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation03-TwoGeneratorTwoBusTwoLoadOneBranch.html">Validation 03 - Two Generator, Two Bus, Two Load, One Branch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation04-TwoGeneratorTwoBusTwoLoadOneBranchLMPChange.html">Validation 04 - Two Generator, Two Bus, Two Load, One Branch, LMP Change</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation05-TwoGeneratorTwoBusTwoLoadOneBranchLineConstraint.html">Validation 05 - Two Generator, Two Bus, Two Load, One Branch, Line Constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation06-SingleSnapshotUnitCommitment.html">Validation 06 - Single Snapshot Unit Commitment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation07-Timeseries.html">Validation 07 - Timeseries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation08-TimeseriesRampRates.html">Validation 08 - Timeseries Ramp Rates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation09-TimeseriesStartupRampRates.html">Validation 09 - Timeseries Startup Ramp Rates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation10-TimeseriesMinimumUpTime.html">Validation 10 - Timeseries Minimum Up Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation11-GlobalReserves.html">Validation 11 - Global Reserves</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation12-GlobalReserves.html">Validation 12 - Global Reserves</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation13-5Bus.html">Validation 13 - 5 Bus</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Validation 13 - Matpower Cases</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Contributor Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/installation.html">Developer Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/contributing.html">Contributing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../more/authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../more/changelog.html">Release History</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../user/examples.html">Validation and Examples</a><ul>
+  <li><a href="../validation_notebooks_index.html">Validation Notebooks</a><ul>
+      <li>Previous: <a href="Validation13-5Bus.html" title="previous chapter">Validation 13 - 5 Bus</a></li>
+      <li>Next: <a href="../../dev/installation.html" title="next chapter">Developer Installation</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Dheepak Krishnamurthy.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/power-system-simulation-toolbox/psst" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

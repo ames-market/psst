@@ -1,0 +1,379 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Developer Installation &#8212; psst 0.1.3 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="prev" title="Validation 13 - Matpower Cases" href="../notebooks/validation/Validation13-MATPOWERCASES.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="Developer-Installation">
+<h1>Developer Installation<a class="headerlink" href="#Developer-Installation" title="Permalink to this headline">¶</a></h1>
+<p>Though we plan to bundle all this together in the future, for now, to
+use PSST, you must install:</p>
+<ol class="arabic simple">
+<li><code class="docutils literal"><span class="pre">Python</span></code> 2.7 or 3.5+ (preferably the distribution from Continuum
+Analytics)</li>
+<li><code class="docutils literal"><span class="pre">Git</span></code></li>
+<li><code class="docutils literal"><span class="pre">PSST</span></code> source code</li>
+<li>The additional Python packages <code class="docutils literal"><span class="pre">Graphviz</span></code> and <code class="docutils literal"><span class="pre">Scipy</span></code></li>
+<li>A mixed-integer solver like CBC</li>
+</ol>
+<div class="section" id="Installing-the-proper-Python">
+<h2>Installing the proper Python<a class="headerlink" href="#Installing-the-proper-Python" title="Permalink to this headline">¶</a></h2>
+<p>Python is a free, open source language that can be downloaded from
+<a class="reference external" href="https://www.python.org/downloads/">Python.org</a>. Python comes with a
+package manager called <code class="docutils literal"><span class="pre">Pip</span></code> which allows you to download pacages to
+gain extended functionality.</p>
+<p><strong>However, we recomend</strong> that you do not use the default distribution of
+Python, but rather, install the Miniconda (or Anaconda) distribution
+from Continuum Analytics.</p>
+<blockquote>
+<div>Why? Many of the Python packages used for scientific applications,
+like Numpy and Scipy, are written in a mixture of pure Python plus
+other, lower-level languages, like C or Fortran. Anaconda comes with
+many of these packages already installed. You don’t need all of
+them, which is why we recomend Miniconda instead of Anaconda. Both
+Anaconda and Miniconda come with an alternative package manager,
+<code class="docutils literal"><span class="pre">conda,</span></code> which lets you install them with greater ease and
+reliability than when using <code class="docutils literal"><span class="pre">pip.</span></code> For packages written entirely
+in Python, you should still use <code class="docutils literal"><span class="pre">pip</span></code> to install.</div></blockquote>
+<p><strong>Python 2 or Python 3?</strong></p>
+<blockquote>
+<div>PSST should be fully compatible with Python 2.7, but we recomend
+Python 3 as it is faster, cleaner, more robust, and, well, the
+future!</div></blockquote>
+<div class="section" id="Download-the-Miniconda-distribution-of-Python-3">
+<h3>Download the Miniconda distribution of Python 3<a class="headerlink" href="#Download-the-Miniconda-distribution-of-Python-3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Find the download <a class="reference external" href="https://conda.io/miniconda.html">here</a></li>
+<li>During installation, mark that you do want to add Miniconda to your
+path</li>
+<li><em>On Windows,</em> we recomend installing Miniconda directly under your
+C:&nbsp;directory</li>
+</ul>
+</div>
+<div class="section" id="Verify-your-installation.">
+<h3>Verify your installation.<a class="headerlink" href="#Verify-your-installation." title="Permalink to this headline">¶</a></h3>
+<p>Open a command line console (“command prompt” on Windows or “Terminal”
+on Mac/ Ubuntu) and type:</p>
+<ul class="simple">
+<li>macOs and Linux – <code class="docutils literal"><span class="pre">which</span> <span class="pre">python</span></code></li>
+<li>Windows – <code class="docutils literal"><span class="pre">where</span> <span class="pre">python</span></code></li>
+</ul>
+<p>You should see output like:</p>
+<ul class="simple">
+<li>macOs and Linux – <code class="docutils literal"><span class="pre">/home/username/miniconda3/bin/python</span></code></li>
+<li>Windows – <code class="docutils literal"><span class="pre">C:\Miniconda3\python.exe</span></code></li>
+</ul>
+<p>You should also be able trun python from the command line by simply
+typing <code class="docutils literal"><span class="pre">python</span></code> or <code class="docutils literal"><span class="pre">python3.</span></code></p>
+<p>You should see something like this:</p>
+<div class="figure" id="id1">
+<img alt="python REPL screenshot" src="../_images/open_python.png" />
+<p class="caption"><span class="caption-text">python REPL screenshot</span></p>
+</div>
+</div>
+<div class="section" id="Troubleshooting">
+<h3>Troubleshooting<a class="headerlink" href="#Troubleshooting" title="Permalink to this headline">¶</a></h3>
+<p>If this isn’t working, you might still need to add the Miniconda
+distribution to your system “Path” or place it before an existing
+installation of Python in your path.</p>
+<p>Look at your path from the command line by typing:</p>
+<ul class="simple">
+<li>macOs and Linux – <code class="docutils literal"><span class="pre">echo</span> <span class="pre">$PATH</span></code></li>
+<li>Windows – <code class="docutils literal"><span class="pre">echo</span> <span class="pre">%PATH%</span></code></li>
+</ul>
+<p>Here are some tips from
+<a class="reference external" href="https://docs.continuum.io/anaconda/user-guide/troubleshooting#id35">docs.continuum.io/</a>:</p>
+<div class="figure" id="id2">
+<img alt="Screenshot of Anaconda help page" src="../_images/miniconda_help.png" />
+<p class="caption"><span class="caption-text">Screenshot of Anaconda help page</span></p>
+</div>
+<p>The process is similar if you’re on Windows. Try uninstalling and
+reinstalling, or manually add the Miniconda executable to your path, by
+going into
+<code class="docutils literal"><span class="pre">Computer</span> <span class="pre">&gt;</span> <span class="pre">Properties</span> <span class="pre">&gt;</span> <span class="pre">Advanced</span> <span class="pre">System</span> <span class="pre">Settings</span> <span class="pre">&gt;</span> <span class="pre">Environment</span> <span class="pre">Variables</span></code>
+and then adding the path to your miniconda installation (something like
+<code class="docutils literal"><span class="pre">c:\.....\anaconda</span></code>) near the front of your PATH variable.</p>
+</div>
+</div>
+<div class="section" id="Installing-Git">
+<h2>Installing Git<a class="headerlink" href="#Installing-Git" title="Permalink to this headline">¶</a></h2>
+<p>If you don’t already have Git installed on your computer, you should
+install it. This is version control software, which will make it easier
+to install and update your version of PSST.</p>
+<p><em>On Windows</em></p>
+<ul>
+<li><p class="first">Install <a class="reference external" href="https://git-for-windows.github.io/">Git Bash</a>, and then
+launch this application from the start menu.</p>
+<blockquote>
+<div><p>You can use this application in place of the default command line
+console, ‘Command Prompt.’ It gives you access not only to git
+commands (like <code class="docutils literal"><span class="pre">git</span> <span class="pre">clone</span></code> and <code class="docutils literal"><span class="pre">git</span> <span class="pre">bash</span></code> but also to most
+folder navigation commands that macOS/linux users have access to.
+That is, <code class="docutils literal"><span class="pre">pwd</span></code> to see the current directory, <code class="docutils literal"><span class="pre">cd</span></code> to change
+directory, <code class="docutils literal"><span class="pre">ls</span></code> to see the files and folders you can access from
+your current directory, <a class="reference external" href="http://cheatsheetworld.com/programming/unix-linux-cheat-sheet/">and
+more</a>.</p>
+</div></blockquote>
+</li>
+</ul>
+<p><em>On macOS/ Linux</em></p>
+<ul class="simple">
+<li>You should already have git installed. If you wish, you could follow
+<a class="reference external" href="https://confluence.atlassian.com/bitbucketserver/installing-and-upgrading-git-776640906.html">these
+steps</a>
+to upgrade it.</li>
+</ul>
+</div>
+<div class="section" id="Installing-PSST">
+<h2>Installing PSST<a class="headerlink" href="#Installing-PSST" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Open your command prompt console (<code class="docutils literal"><span class="pre">Terminal</span></code> on linux/macOS or
+<code class="docutils literal"><span class="pre">Git</span> <span class="pre">Bash</span></code> on Windows)</p>
+</li>
+<li><p class="first">Navigate to the directory in which you want to store the code. You
+may wish to create a <code class="docutils literal"><span class="pre">GitRepos</span></code> directory in an easy-to-reach
+directory. For instance:</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~
+mkdir GitRepos
+<span class="nb">cd</span> GitRepos
+</pre></div>
+</div>
+</li>
+<li><p class="first">Enter following to clone the project, then install it.</p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>git clone https://github.com/power-system-simulation-toolbox/psst.git
+<span class="nb">cd</span> psst
+pip install -e .
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="Installing-Additional-Libraries">
+<h2>Installing Additional Libraries<a class="headerlink" href="#Installing-Additional-Libraries" title="Permalink to this headline">¶</a></h2>
+<p>A few packages/libraries don’t get installed with the previous command,
+you will have to add them manaully. These code include:</p>
+<div class="section" id="Scipy">
+<h3>Scipy<a class="headerlink" href="#Scipy" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>conda install scipy
+</pre></div>
+</div>
+</div>
+<div class="section" id="Jupyter">
+<h3>Jupyter<a class="headerlink" href="#Jupyter" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>conda install jupyter
+</pre></div>
+</div>
+</div>
+<div class="section" id="GraphViz">
+<h3>GraphViz<a class="headerlink" href="#GraphViz" title="Permalink to this headline">¶</a></h3>
+<p><em>On Windows</em></p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>pip install graphviz
+</pre></div>
+</div>
+<p><em>On Mac</em></p>
+<ul class="simple">
+<li><a class="reference external" href="https://brew.sh/">Install homebrew</a></li>
+</ul>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>brew install graphviz --with-gts
+pip install graphviz
+pip install pygraphviz
+</pre></div>
+</div>
+<p><em>On Ubuntu</em></p>
+<p>To install Graphviz with gts:</p>
+<ol class="arabic simple">
+<li>Remove any existing installation with <code class="docutils literal"><span class="pre">conda</span> <span class="pre">uninstall</span> <span class="pre">graphviz</span></code>.
+(If you did not install with Conda, you might need to do
+<code class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">purge</span> <span class="pre">graphviz</span></code> and/or <code class="docutils literal"><span class="pre">pip</span> <span class="pre">uninstall</span> <span class="pre">graphviz</span></code>).</li>
+<li>run <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">libgts-dev</span></code></li>
+<li>run <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">pkg-config</span> <span class="pre">--libs</span> <span class="pre">gts</span></code></li>
+<li>run <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">pkg-config</span> <span class="pre">--cflags</span> <span class="pre">gts</span></code></li>
+<li>Download graphviz-2.40.1.tar.gz from
+<a class="reference external" href="http://www.graphviz.org/Download_source.php">here</a></li>
+<li>Navigate to directory containing download, and extract with
+<code class="docutils literal"><span class="pre">tar</span> <span class="pre">-xvf</span> <span class="pre">graphviz-2.40.1.tar.gz</span></code> (or newer whatever the download
+is named.)</li>
+<li><code class="docutils literal"><span class="pre">cd</span></code> into extracted folder (ie <code class="docutils literal"><span class="pre">cd</span> <span class="pre">graphviz-2.40.1</span></code>) and run
+<code class="docutils literal"><span class="pre">sudo</span> <span class="pre">./configure</span> <span class="pre">--with-gts</span></code></li>
+<li>Run <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">make</span></code> in the folder</li>
+<li>Run <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">make</span> <span class="pre">install</span></code> in the folder</li>
+<li>Reinstall library using <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">graphviz</span></code></li>
+</ol>
+<p><strong>Note:</strong> It is possible you will get an error pertaining to strings vs.
+bytes. If so, you can edit a file in the graphviz pacakge by hand.</p>
+<ul class="simple">
+<li>See <a class="reference external" href="https://github.com/pygraphviz/pygraphviz/issues/117">this github
+issue.</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="Installing-a-solver">
+<h2>Installing a solver<a class="headerlink" href="#Installing-a-solver" title="Permalink to this headline">¶</a></h2>
+<p>Finally, you need a linear programming (LP) and mixed integer
+programming (MIP) solver to solve optimization problems. Any one will
+due. You can install multiple, and specify which you want to use in the
+psst code.</p>
+<div class="section" id="Installing-COIN/CBC-solver">
+<h3>Installing COIN/CBC solver<a class="headerlink" href="#Installing-COIN/CBC-solver" title="Permalink to this headline">¶</a></h3>
+<p>There are some install instructions
+<a class="reference external" href="https://projects.coin-or.org/Cbc">here</a>. These procedures seem to
+work best:</p>
+<p><em>On Windows</em></p>
+<ol class="arabic simple">
+<li>Install the most recent binary of COIN-OR from <a class="reference external" href="https://www.coin-or.org/download/binary/CoinAll/">this
+list</a>, ie
+<img alt="screenshot of binary download list" src="../_images/COIN.png" /></li>
+<li>Add <code class="docutils literal"><span class="pre">:/c/Program</span> <span class="pre">Files</span> <span class="pre">(x86)/COIN-OR/1.8.0/win32-msvc12/bin</span></code> to the
+computer’s path.</li>
+<li>You may need to restart your computer.</li>
+</ol>
+<p><em>On MacOS</em></p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>brew tap coin-or-tools/coinor
+brew install cbc
+</pre></div>
+</div>
+<p><em>On Ubuntu</em></p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>conda install -c conda-forge coincbc
+</pre></div>
+</div>
+</div>
+<div class="section" id="Installing-GLPK-solver">
+<h3>Installing GLPK solver<a class="headerlink" href="#Installing-GLPK-solver" title="Permalink to this headline">¶</a></h3>
+<p><em>On Ubuntu</em></p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>sudo apt-get install glpk-doc glpk-utils libglpk-dev
+</pre></div>
+</div>
+<p><em>On MacOS</em></p>
+<div class="highlight-shell"><div class="highlight"><pre><span></span>brew install glpk
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">A Power System Simulation Toolbox written entirely in Python</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/examples.html">Validation and Examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Contributor Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Installing-the-proper-Python">Installing the proper Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Installing-Git">Installing Git</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Installing-PSST">Installing PSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Installing-Additional-Libraries">Installing Additional Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Installing-a-solver">Installing a solver</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../more/authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../more/changelog.html">Release History</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../notebooks/validation/Validation13-MATPOWERCASES.html" title="previous chapter">Validation 13 - Matpower Cases</a></li>
+      <li>Next: <a href="contributing.html" title="next chapter">Contributing</a></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Dheepak Krishnamurthy.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/power-system-simulation-toolbox/psst" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

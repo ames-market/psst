@@ -1,0 +1,1209 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Validation 13 - 5 Bus &#8212; psst 0.1.3 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Validation 13 - Matpower Cases" href="Validation13-MATPOWERCASES.html" />
+    <link rel="prev" title="Validation 12 - Global Reserves" href="Validation12-GlobalReserves.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+</style>
+<div class="section" id="Validation-13---5-Bus">
+<h1>Validation 13 - 5 Bus<a class="headerlink" href="#Validation-13---5-Bus" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">psst.case</span> <span class="kn">import</span> <span class="n">read_matpower</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span> <span class="o">=</span> <span class="n">read_matpower</span><span class="p">(</span><span class="s1">&#39;./../../psst/cases/case5.m&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span><span class="o">.</span><span class="n">gen</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GEN_BUS</th>
+      <th>PG</th>
+      <th>QG</th>
+      <th>QMAX</th>
+      <th>QMIN</th>
+      <th>VG</th>
+      <th>MBASE</th>
+      <th>GEN_STATUS</th>
+      <th>PMAX</th>
+      <th>PMIN</th>
+      <th>PC1</th>
+      <th>PC2</th>
+      <th>QC1MIN</th>
+      <th>QC1MAX</th>
+      <th>QC2MIN</th>
+      <th>QC2MAX</th>
+      <th>RAMP_AGC</th>
+      <th>RAMP_10</th>
+      <th>RAMP_30</th>
+      <th>RAMP_Q</th>
+      <th>APF</th>
+      <th>STARTUP_RAMP</th>
+      <th>SHUTDOWN_RAMP</th>
+      <th>MINIMUM_UP_TIME</th>
+      <th>MINIMUM_DOWN_TIME</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>GenCo0</th>
+      <td>Bus1</td>
+      <td>40.00</td>
+      <td>0</td>
+      <td>30.0</td>
+      <td>-30.0</td>
+      <td>1</td>
+      <td>100</td>
+      <td>1</td>
+      <td>40</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>40</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>GenCo1</th>
+      <td>Bus1</td>
+      <td>170.00</td>
+      <td>0</td>
+      <td>127.5</td>
+      <td>-127.5</td>
+      <td>1</td>
+      <td>100</td>
+      <td>1</td>
+      <td>170</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>170</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>170</td>
+      <td>170</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>GenCo2</th>
+      <td>Bus3</td>
+      <td>323.49</td>
+      <td>0</td>
+      <td>390.0</td>
+      <td>-390.0</td>
+      <td>1</td>
+      <td>100</td>
+      <td>1</td>
+      <td>520</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>520</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>520</td>
+      <td>520</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>GenCo3</th>
+      <td>Bus4</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>150.0</td>
+      <td>-150.0</td>
+      <td>1</td>
+      <td>100</td>
+      <td>1</td>
+      <td>200</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>200</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>200</td>
+      <td>200</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>GenCo4</th>
+      <td>Bus5</td>
+      <td>466.51</td>
+      <td>0</td>
+      <td>450.0</td>
+      <td>-450.0</td>
+      <td>1</td>
+      <td>100</td>
+      <td>1</td>
+      <td>600</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>600</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>600</td>
+      <td>600</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span><span class="o">.</span><span class="n">gencost</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MODEL</th>
+      <th>STARTUP</th>
+      <th>SHUTDOWN</th>
+      <th>NCOST</th>
+      <th>COST_2</th>
+      <th>COST_1</th>
+      <th>COST_0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>GenCo0</th>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0.005</td>
+      <td>14</td>
+      <td>56.90</td>
+    </tr>
+    <tr>
+      <th>GenCo1</th>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0.006</td>
+      <td>15</td>
+      <td>0.11</td>
+    </tr>
+    <tr>
+      <th>GenCo2</th>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0.010</td>
+      <td>25</td>
+      <td>2267.53</td>
+    </tr>
+    <tr>
+      <th>GenCo3</th>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0.012</td>
+      <td>30</td>
+      <td>5.19</td>
+    </tr>
+    <tr>
+      <th>GenCo4</th>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0.007</td>
+      <td>10</td>
+      <td>1391.16</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span><span class="o">.</span><span class="n">branch</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>F_BUS</th>
+      <th>T_BUS</th>
+      <th>BR_R</th>
+      <th>BR_X</th>
+      <th>BR_B</th>
+      <th>RATE_A</th>
+      <th>RATE_B</th>
+      <th>RATE_C</th>
+      <th>TAP</th>
+      <th>SHIFT</th>
+      <th>BR_STATUS</th>
+      <th>ANGMIN</th>
+      <th>ANGMAX</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Bus1</td>
+      <td>Bus2</td>
+      <td>0.00281</td>
+      <td>0.0281</td>
+      <td>0.00712</td>
+      <td>400</td>
+      <td>400</td>
+      <td>400</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>-360</td>
+      <td>360</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Bus1</td>
+      <td>Bus4</td>
+      <td>0.00304</td>
+      <td>0.0304</td>
+      <td>0.00658</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>-360</td>
+      <td>360</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Bus1</td>
+      <td>Bus5</td>
+      <td>0.00064</td>
+      <td>0.0064</td>
+      <td>0.03126</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>-360</td>
+      <td>360</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Bus2</td>
+      <td>Bus3</td>
+      <td>0.00108</td>
+      <td>0.0108</td>
+      <td>0.01852</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>-360</td>
+      <td>360</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Bus3</td>
+      <td>Bus4</td>
+      <td>0.00297</td>
+      <td>0.0297</td>
+      <td>0.00674</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>-360</td>
+      <td>360</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Bus4</td>
+      <td>Bus5</td>
+      <td>0.00297</td>
+      <td>0.0297</td>
+      <td>0.00674</td>
+      <td>240</td>
+      <td>240</td>
+      <td>240</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>-360</td>
+      <td>360</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">psst.case.utils</span> <span class="kn">import</span> <span class="n">solve_pf</span>
+
+<span class="n">results</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">solve_pf</span><span class="p">(</span><span class="n">case</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;branch&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>10</th>
+      <th>11</th>
+      <th>12</th>
+      <th>13</th>
+      <th>14</th>
+      <th>15</th>
+      <th>16</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>0.00281</td>
+      <td>0.0281</td>
+      <td>0.00712</td>
+      <td>400.0</td>
+      <td>400.0</td>
+      <td>400.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>-360.0</td>
+      <td>360.0</td>
+      <td>249.773373</td>
+      <td>21.599095</td>
+      <td>-248.006760</td>
+      <td>-4.637368</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1.0</td>
+      <td>4.0</td>
+      <td>0.00304</td>
+      <td>0.0304</td>
+      <td>0.00658</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>-360.0</td>
+      <td>360.0</td>
+      <td>186.500142</td>
+      <td>-13.612148</td>
+      <td>-185.437396</td>
+      <td>23.581606</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1.0</td>
+      <td>5.0</td>
+      <td>0.00064</td>
+      <td>0.0064</td>
+      <td>0.03126</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>-360.0</td>
+      <td>360.0</td>
+      <td>-226.273515</td>
+      <td>22.738212</td>
+      <td>226.604972</td>
+      <td>-22.549636</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>0.00108</td>
+      <td>0.0108</td>
+      <td>0.01852</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>-360.0</td>
+      <td>360.0</td>
+      <td>-51.993240</td>
+      <td>-93.972632</td>
+      <td>52.118657</td>
+      <td>93.394588</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3.0</td>
+      <td>4.0</td>
+      <td>0.00297</td>
+      <td>0.0297</td>
+      <td>0.00674</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>-360.0</td>
+      <td>360.0</td>
+      <td>-28.628657</td>
+      <td>2.650132</td>
+      <td>28.653264</td>
+      <td>-3.078060</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>4.0</td>
+      <td>5.0</td>
+      <td>0.00297</td>
+      <td>0.0297</td>
+      <td>0.00674</td>
+      <td>240.0</td>
+      <td>240.0</td>
+      <td>240.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>-360.0</td>
+      <td>360.0</td>
+      <td>-238.188688</td>
+      <td>32.149384</td>
+      <td>239.905028</td>
+      <td>-15.659987</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;bus&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>10</th>
+      <th>11</th>
+      <th>12</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.000000</td>
+      <td>3.273361</td>
+      <td>230.0</td>
+      <td>1.0</td>
+      <td>1.1</td>
+      <td>0.9</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>300.0</td>
+      <td>98.61</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.989261</td>
+      <td>-0.759269</td>
+      <td>230.0</td>
+      <td>1.0</td>
+      <td>1.1</td>
+      <td>0.9</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3.0</td>
+      <td>2.0</td>
+      <td>300.0</td>
+      <td>98.61</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.000000</td>
+      <td>-0.492259</td>
+      <td>230.0</td>
+      <td>1.0</td>
+      <td>1.1</td>
+      <td>0.9</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>400.0</td>
+      <td>131.47</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>230.0</td>
+      <td>1.0</td>
+      <td>1.1</td>
+      <td>0.9</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.000000</td>
+      <td>4.112031</td>
+      <td>230.0</td>
+      <td>1.0</td>
+      <td>1.1</td>
+      <td>0.9</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">psst.model</span> <span class="kn">import</span> <span class="n">build_model</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">model</span> <span class="o">=</span> <span class="n">build_model</span><span class="p">(</span><span class="n">case</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;xpress&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+FICO Xpress-Optimizer 64-bit v29.01.10 (Hyper capacity)
+(c) Copyright Fair Isaac Corporation 1983-2016. All rights reserved
+Using Xpress-Optimizer [/Users/dkrishna/opt/xpressmp/lib/libxprs.dylib]
+
+Reading Problem /tmpgRr1VC.pyomo
+Problem Statistics
+         106 (      0 spare) rows
+          87 (      0 spare) structural columns
+         239 (      0 spare) non-zero elements
+Global Statistics
+           5 entities        0 sets        0 set members
+Minimizing MILP /tmpgRr1VC.pyomo
+Original problem has:
+       106 rows           87 cols          239 elements         5 globals
+Presolved problem has:
+        16 rows           31 cols           61 elements         5 globals
+Will try to keep branch and bound tree memory usage below 5.5Gb
+Starting concurrent solve with dual
+
+ Concurrent-Solve,   0s
+            Dual
+    objective   dual inf
+ D  20013.800   .0000000
+------- optimal --------
+Concurrent statistics:
+      Dual: 13 simplex iterations, 0.00s
+Optimal solution found
+
+   Its         Obj Value      S   Ninf  Nneg   Sum Dual Inf  Time
+    13       20013.80036      D      0     0        .000000     0
+Dual solved problem
+  13 simplex iterations in 0s
+
+Final objective                         : 2.001380036213346e+04
+  Max primal violation      (abs / rel) : 2.274e-13 / 2.274e-13
+  Max dual violation        (abs / rel) :       0.0 /       0.0
+  Max complementarity viol. (abs / rel) :       0.0 /       0.0
+All values within tolerances
+
+Starting root cutting &amp; heuristics
+
+ Its Type    BestSoln    BestBound   Sols    Add    Del     Gap     GInf   Time
+k         22255.36973  20013.80036      1                 10.07%       0      0
+ *** Search completed ***     Time:     0 Nodes:          1
+Number of integer feasible solutions found is 1
+Best integer solution found is  22255.36973
+Best bound is  22255.36973
+Uncrunching matrix
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">s1</span> <span class="o">=</span> <span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">angles</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">pd</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">360</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">case</span><span class="o">.</span><span class="n">gen</span><span class="p">[</span><span class="s1">&#39;PG&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">power_generated</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">psst.case.utils</span> <span class="kn">import</span> <span class="n">solve_pf</span>
+
+<span class="n">results</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">solve_pf</span><span class="p">(</span><span class="n">case</span><span class="p">)</span>
+
+<span class="n">s2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;bus&#39;</span><span class="p">])[</span><span class="mi">8</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">np</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">np</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">rms</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>In [46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2"><div class="highlight"><pre>
+<span></span><span class="n">rms</span><span class="p">(</span><span class="n">s1</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="n">s2</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none"><div class="highlight"><pre>
+<span></span>Out[46]:
+</pre></div>
+</div>
+<div class="output_area highlight-none"><div class="highlight"><pre>
+<span></span>0.052620045089577835
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../index.html">
+    <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">A Power System Simulation Toolbox written entirely in Python</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../user/installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../user/examples.html">Validation and Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../validation_notebooks_index.html">Validation Notebooks</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Validation01-SingleGenerator.html">Validation 01 - Single Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation02-SingleGeneratorTwoBus.html">Validation 02 - Single Generator, Two Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation03-TwoGeneratorTwoBusTwoLoadOneBranch.html">Validation 03 - Two Generator, Two Bus, Two Load, One Branch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation04-TwoGeneratorTwoBusTwoLoadOneBranchLMPChange.html">Validation 04 - Two Generator, Two Bus, Two Load, One Branch, LMP Change</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation05-TwoGeneratorTwoBusTwoLoadOneBranchLineConstraint.html">Validation 05 - Two Generator, Two Bus, Two Load, One Branch, Line Constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation06-SingleSnapshotUnitCommitment.html">Validation 06 - Single Snapshot Unit Commitment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation07-Timeseries.html">Validation 07 - Timeseries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation08-TimeseriesRampRates.html">Validation 08 - Timeseries Ramp Rates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation09-TimeseriesStartupRampRates.html">Validation 09 - Timeseries Startup Ramp Rates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation10-TimeseriesMinimumUpTime.html">Validation 10 - Timeseries Minimum Up Time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation11-GlobalReserves.html">Validation 11 - Global Reserves</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation12-GlobalReserves.html">Validation 12 - Global Reserves</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Validation 13 - 5 Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Validation13-MATPOWERCASES.html">Validation 13 - Matpower Cases</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Contributor Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/installation.html">Developer Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/contributing.html">Contributing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../more/authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../more/changelog.html">Release History</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../../user/examples.html">Validation and Examples</a><ul>
+  <li><a href="../validation_notebooks_index.html">Validation Notebooks</a><ul>
+      <li>Previous: <a href="Validation12-GlobalReserves.html" title="previous chapter">Validation 12 - Global Reserves</a></li>
+      <li>Next: <a href="Validation13-MATPOWERCASES.html" title="next chapter">Validation 13 - Matpower Cases</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Dheepak Krishnamurthy.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/power-system-simulation-toolbox/psst" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
