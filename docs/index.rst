@@ -49,7 +49,6 @@ Use the navigation table on the sidebar to find documentation for users, develop
    :hidden:
 
    user/installation
-   user/usage
    user/examples
 
 .. toctree::
