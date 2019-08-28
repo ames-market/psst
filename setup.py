@@ -27,6 +27,7 @@ requirements = [
     'ipywidgets',
     'bqplot',
     'traittypes',
+    'pytest',
 ]
 
 # TODO: put package test requirements here
