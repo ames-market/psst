@@ -30,7 +30,9 @@ requirements = [
 ]
 
 # TODO: put package test requirements here
-test_requirements = []
+test_requirements = [
+    'pytest', 
+]
 
 about = {}
 with open(os.path.join(here, 'psst', '__version__.py'), 'r', encoding='utf-8') as f:
