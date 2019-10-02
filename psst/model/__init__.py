@@ -84,10 +84,10 @@ def build_model(case,
     generator_df['RAMP'] = generator_df['RAMP_10'] * 6
 
     if timeseries_pmax is None:
-        timeseries_pmax = generator_df["PMAX"].to_dict(orient="list")
+        timeseries_pmax = generator_df["PMAX"].to_dict()#orient="list")
 
     if timeseries_pmin is None:
-        timeseries_pmin = generator_df["PMIN"].to_dict(orient="list")
+        timeseries_pmin = generator_df["PMIN"].to_dict()#orient="list")
 
     # Build model information
 
