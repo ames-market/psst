@@ -127,11 +127,11 @@ class PSSTNetwork(object):
         return self._draw_nodes(nodelist, **kwargs)
 
     def draw_branches(self, **kwargs):
-        edgelist = kwargs.pop('edgelist', [(f, t) for f, t, e in self._G.edges(data=True) if e['kind'] == 'branch'])
+        edgelist = kwargs.pop('edgelist', [(f, t) for f, t, e in self._G.edges(data=True) if 'kind' in e and e['kind'] == 'branch'])
         return self._draw_edges(edgelist, **kwargs)
 
     def draw_connections(self, connection_kind, **kwargs):
-        edgelist = kwargs.pop('edgelist', [(f, t) for f, t, e in self._G.edges(data=True) if e['kind'] == connection_kind])
+        edgelist = kwargs.pop('edgelist', [(f, t) for f, t, e in self._G.edges(data=True) if 'kind' in e and  e['kind'] == connection_kind])
         return self._draw_edges(edgelist, **kwargs)
 
     def _draw_nodes(self, nodelist, **kwargs):
