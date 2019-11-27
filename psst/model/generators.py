@@ -47,7 +47,6 @@ def maximum_minimum_power_output_generators(model, minimum_power_output=None, ma
 
 
     # TODO add validation that maximum power output is greater than minimum power output
-    print('Changed model.MinimumPowerOutput to use within=Reals')
     model.MinimumPowerOutput = Param(model.Generators, model.TimePeriods, initialize=minimum_power_output, within=Reals, default=0.0)
     model.MaximumPowerOutput = Param(model.Generators, model.TimePeriods, initialize=maximum_power_output, within=NonNegativeReals, default=0.0)
 
