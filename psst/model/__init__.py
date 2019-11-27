@@ -61,10 +61,14 @@ def build_model(case,
         reserve_factor = config.pop('reserve_factor', 0)
 
     # Get case data
-    generator_df = generator_df or pd.merge(case.gen, case.gencost, left_index=True, right_index=True)
-    load_df = load_df or case.load
-    branch_df = branch_df or case.branch
-    bus_df = bus_df or case.bus
+    if generator_df is None:
+        generator_df = pd.merge(case.gen, case.gencost, left_index=True, right_index=True)
+    if load_df is None:
+        load_df = case.load
+    if branch_df is None:
+        branch_df = case.branch
+    if bus_df is None:
+        bus_df = case.bus
 
     branch_df.index = branch_df.index.astype(object)
     generator_df.index = generator_df.index.astype(object)
@@ -84,10 +88,10 @@ def build_model(case,
     generator_df['RAMP'] = generator_df['RAMP_10'] * 6
 
     if timeseries_pmax is None:
-        timeseries_pmax = generator_df["PMAX"].to_dict(orient="list")
+        timeseries_pmax = generator_df["PMAX"].to_dict()#orient="list")
 
     if timeseries_pmin is None:
-        timeseries_pmin = generator_df["PMIN"].to_dict(orient="list")
+        timeseries_pmin = generator_df["PMIN"].to_dict()#orient="list")
 
     # Build model information
 
