@@ -99,6 +99,7 @@ def enforce_reserve_requirements_rule(m, t, has_storage=False,
     return constraint
 
 def calculate_regulating_reserve_up_available_per_generator(m, g, t):
+    # TODO: Add new constraint such that RegulatingReserveUpAvailable <= MaximumPowerAvailable
     return m.RegulatingReserveUpAvailable[g, t] == m.MaximumPowerAvailable[g,t] - m.PowerGenerated[g,t]
 
 def enforce_zonal_reserve_requirement_rule(m, rz, t):

@@ -157,8 +157,11 @@ def _minimum_production_cost_fn(m, g, t):
     # Minimum production cost (needed because Piecewise constraint on ProductionCost
     # has to have lower bound of 0, so the unit can cost 0 when off -- this is added
     # back in to the objective if a unit is on
+    if m.MinimumPowerOutput[g, t] <= 0:
+        # TODO: Fix so that PMIN < 0 works
+        raise NotImplementedError("Negative PMin is currently not supported")
     if len(m.CostPiecewisePoints[g]) > 1:
-        return m.CostPiecewiseValues[g].first() * m.FuelCost[g]
+        return max(0, m.CostPiecewiseValues[g].first() * m.FuelCost[g])
     elif len(m.CostPiecewisePoints[g]) == 1:
         # If there's only one piecewise point given, that point should be (MaxPower, MaxCost) -- i.e. the cost function is linear through (0,0),
         # so we can find the slope of the line and use that to compute the cost of running at minimum generation
@@ -214,6 +217,7 @@ def production_cost(model):
 
 def power_generation_piecewise_points_rule(m, g, t):
     minimum_production_cost = value(m.MinimumProductionCost[g, t])
+
     if len(m.CostPiecewisePoints[g]) > 0:
         m.PowerGenerationPiecewisePoints[g,t] = list(m.CostPiecewisePoints[g])
         temp = list(m.CostPiecewiseValues[g])
@@ -221,9 +225,12 @@ def power_generation_piecewise_points_rule(m, g, t):
         for i in range(len(m.CostPiecewisePoints[g])):
             m.PowerGenerationPiecewiseValues[g,t][m.PowerGenerationPiecewisePoints[g,t][i]] = temp[i] - minimum_production_cost
         # MinimumPowerOutput will be one of our piecewise points, so it is safe to add (0,0)
-        if m.PowerGenerationPiecewisePoints[g,t][0] != 0:
-            m.PowerGenerationPiecewisePoints[g,t].insert(0,0)
-        m.PowerGenerationPiecewiseValues[g,t][0] = 0
+        # If PMin is less than zero, don't do anything since 0,0 is already covered.
+        if min(k for k in m.PowerGenerationPiecewisePoints[g,t].keys()) > 0:
+            if m.PowerGenerationPiecewisePoints[g,t][0] != 0:
+                m.PowerGenerationPiecewisePoints[g,t].insert(0,0)
+            m.PowerGenerationPiecewiseValues[g,t][0] = 0
+
     elif value(m.ProductionCostA2[g]) == 0:
         # If cost is linear, we only need two points -- (0,CostA0-MinCost) and (MaxOutput, MaxCost)
         m.PowerGenerationPiecewisePoints[g, t] = [0, value(m.MaximumPowerOutput[g])]
@@ -252,8 +259,8 @@ def power_generation_piecewise_points_rule(m, g, t):
         for i in range(n+1):
             m.PowerGenerationPiecewiseValues[g,t][m.PowerGenerationPiecewisePoints[g,t][i]] = \
                        value(m.ProductionCostA0[g]) + \
-                       value(m.ProductionCostA1[g]) * m.PowerGenerationPiecewisePoints[g, t][i] + \
-                       value(m.ProductionCostA2[g]) * m.PowerGenerationPiecewisePoints[g, t][i]**2 \
+                       value(m.ProductionCostA1[g]) * m.PowerGenerationPiecewisePoints[g,t][i] + \
+                       value(m.ProductionCostA2[g]) * m.PowerGenerationPiecewisePoints[g,t][i]**2 \
                        - minimum_production_cost
         if m.PowerGenerationPiecewisePoints[g, t][0] != 0:
             m.PowerGenerationPiecewisePoints[g, t].insert(0,0)

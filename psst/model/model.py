@@ -69,8 +69,8 @@ def initialize_model(model,
 
     # amount of power produced by each generator, at each time period.
     def power_bounds_rule(m, g, t):
-        return (0, m.MaximumPowerOutput[g, t])
-    model.PowerGenerated = Var(model.Generators, model.TimePeriods, within=NonNegativeReals, bounds=power_bounds_rule)
+        return (m.MinimumPowerOutput[g,t], m.MaximumPowerOutput[g, t])
+    model.PowerGenerated = Var(model.Generators, model.TimePeriods, within=Reals, bounds=power_bounds_rule)
 
     # maximum power output for each generator, at each time period.
     model.MaximumPowerAvailable = Var(model.Generators, model.TimePeriods, within=NonNegativeReals, bounds=power_bounds_rule)
