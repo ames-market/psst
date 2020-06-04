@@ -1,3 +1,6 @@
+# Copyright (c) 2020, Battelle Memorial Institute
+# Copyright 2007 - present: numerous others credited in AUTHORS.rst
+
 import numpy as np
 from functools import partial
 import click

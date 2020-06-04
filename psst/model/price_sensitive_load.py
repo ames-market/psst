@@ -1,3 +1,6 @@
+# Copyright (c) 2020, Battelle Memorial Institute
+# Copyright 2007 - present: numerous others credited in AUTHORS.rst
+
 from pyomo.environ import *
 
 def initialize_price_senstive_load(model,

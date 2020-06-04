@@ -1,3 +1,6 @@
+# Copyright (c) 2020, Battelle Memorial Institute
+# Copyright 2007 - present: numerous others credited in AUTHORS.rst
+
 from pyomo.environ import *
 import click
 # def _zone_generator_map(m, g):

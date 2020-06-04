@@ -1,3 +1,6 @@
+# Copyright (c) 2020, Battelle Memorial Institute
+# Copyright 2007 - present: numerous others credited in AUTHORS.rst
+
 from __future__ import print_function, absolute_import
 
 import re
