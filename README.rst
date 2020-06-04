@@ -4,7 +4,7 @@ Agent-Based Modeling of Electricity Systems (AMES) - Market
 
 Copyright (c) 2020, Battelle Memorial Institute
 
-Copyright 2007 - present: numerous others credited in `<AUTHORS.rst>`
+Copyright 2007 - present: numerous others credited in `<AUTHORS.rst>`_
 
 Summary
 -------
@@ -51,7 +51,7 @@ facilitate long-term viability and broader use of AMES, this repository
 has been created to consolidate the development efforts from different 
 organizations.  
 
-LICENSE
+License
 -------
 
 :doc:`LICENSE`
