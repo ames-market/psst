@@ -4,22 +4,18 @@ Agent-Based Modeling of Electricity Systems (AMES) - Market
 
 Copyright (c) 2020, Battelle Memorial Institute
 
-Copyright 2007 - present: numerous others credited in :doc:`AUTHORS.rst`
+Copyright 2007 - present: numerous others credited in `<AUTHORS.rst>`
 
 Summary
 -------
 
 The key features of AMES include:
 
-* Simulation of **day-ahead** security-constrained unit commitment (SCUC) /
-security-constrained economic dispatch (SCED) and **real-time** SCED optimizations,
-running in tandem over successive days of operation, with continually updated initial state conditions.
+* Simulation of **day-ahead** security-constrained unit commitment (SCUC) / security-constrained economic dispatch (SCED) and **real-time** SCED optimizations, running in tandem over successive days of operation, with continually updated initial state conditions.
 
-* Agent-based computational platform designed for federation with other domain simulators, thus 
-permitting the study of larger systems such as integrated transmission and distribution systems.
+* Agent-based computational platform designed for federation with other domain simulators, thus permitting the study of larger systems such as integrated transmission and distribution systems.
 
-* Implementation in Python and open-source solver `CBC <https://github.com/coin-or/Cbc>`_, 
-with an option to use a commercial solver on large problems.
+* Implementation in Python and open-source solver `CBC <https://github.com/coin-or/Cbc>`_, with an option to use a commercial solver on large problems.
 
 Acknowledgement
 ---------------
