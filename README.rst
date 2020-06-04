@@ -54,5 +54,5 @@ organizations.
 License
 -------
 
-:doc:`LICENSE`
+`<LICENSE>`_
 
