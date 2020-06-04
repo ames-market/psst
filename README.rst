@@ -6,6 +6,21 @@ Copyright (c) 2020, Battelle Memorial Institute
 
 Copyright 2007 - present: numerous others credited in :doc:`AUTHORS.rst`
 
+Summary
+-------
+
+The key features of AMES include:
+
+* Simulation of **day-ahead** security-constrained unit commitment (SCUC) /
+security-constrained economic dispatch (SCED) and **real-time** SCED optimizations,
+running in tandem over successive days of operation, with continually updated initial state conditions.
+
+* Agent-based computational platform designed for federation with other domain simulators, thus 
+permitting the study of larger systems such as integrated transmission and distribution systems.
+
+* Implementation in Python and open-source solver `CBC <https://github.com/coin-or/Cbc>`_, 
+with an option to use a commercial solver on large problems.
+
 Acknowledgement
 ---------------
 
@@ -32,11 +47,16 @@ A brief summary of the version history follows:
 
 * Version 5.x (May 2020) by Swathi Battula and Leigh Tesfatsion, with support from PNNL (Tom McDermott, Mitch Pelton, Qiuhua Huang, Sarmad Hanif). This version consolidates features from previous versions and continues the main development in PSST. It adds support for the submission of price-sensitive demand bids into daily DAM SCUC/SCED and RTM SCED optimizations formulated as MILP problems with a comprehensive set of system constraints.  It permits continual updating of initial state conditions to permit market operations to run over successive days.  The package includes an 8-bus test system based on data, operations, and market timing for the Electric Reliability Council of Texas (ERCOT).
 
-More detail is provided in the original release notes and list of 
-publications .  The original contributors to AMES have now spread out 
+More detail is provided in the `original release notes <http://www2.econ.iastate.edu/tesfatsi/AMESVersionReleaseHistory.htm>`_ 
+and `list of publications <http://www2.econ.iastate.edu/tesfatsi/AMESMarketHome.htm>`_.  
+The original contributors to AMES have now spread out 
 through several organizations in the electric power industry.  In order to 
 facilitate long-term viability and broader use of AMES, this repository 
 has been created to consolidate the development efforts from different 
 organizations.  
 
+LICENSE
+-------
+
+:doc:`LICENSE`
 
