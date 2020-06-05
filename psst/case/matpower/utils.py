@@ -1,3 +1,6 @@
+# Copyright (c) 2020, Battelle Memorial Institute
+# Copyright 2007 - present: numerous others credited in AUTHORS.rst
+
 COLUMNS = {
         'bus': ['BUS_I', 'TYPE', 'PD', 'QD', 'GS', 'BS', 'AREA',
                 'VM', 'VA', 'BASEKV', 'ZONE', 'VMAX', 'VMIN',
