@@ -54,7 +54,7 @@ organizations.
 License and Disclaimer
 ----------------------
 
-`<LICENSE>`_
+`<LICENSE.rst>`_
 
-`<DISCLAIMER>`_
+`<DISCLAIMER.rst>`_
 
