@@ -51,8 +51,10 @@ facilitate long-term viability and broader use of AMES, this repository
 has been created to consolidate the development efforts from different 
 organizations.  
 
-License
--------
+License and Disclaimer
+----------------------
 
 `<LICENSE>`_
+
+`<DISCLAIMER>`_
 
