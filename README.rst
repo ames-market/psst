@@ -45,8 +45,7 @@ A brief summary of the version history follows:
 
 * Version 5.x (May 2020) by Swathi Battula and Leigh Tesfatsion, with support from PNNL (Tom McDermott, Mitch Pelton, Qiuhua Huang, Sarmad Hanif). This version consolidates features from previous versions and continues the main development in PSST. It adds support for the submission of price-sensitive demand bids into daily DAM SCUC/SCED and RTM SCED optimizations formulated as MILP problems with a comprehensive set of system constraints.  It permits continual updating of initial state conditions to permit market operations to run over successive days.  The package includes an 8-bus test system based on data, operations, and market timing for the Electric Reliability Council of Texas (ERCOT).
 
-More detail is provided in the `original release notes <http://www2.econ.iastate.edu/tesfatsi/AMESVersionReleaseHistory.htm>`_ 
-and `list of publications <http://www2.econ.iastate.edu/tesfatsi/AMESMarketHome.htm>`_.  
+More detail is provided in the `original release notes <http://www2.econ.iastate.edu/tesfatsi/AMESVersionReleaseHistory.htm>`_.  
 The original contributors to AMES have now spread out 
 through several organizations in the electric power industry.  In order to 
 facilitate long-term viability and broader use of AMES, this repository 
@@ -62,11 +61,17 @@ License and Disclaimer
 
 .. _documentation:
 
+Documentation
+-------------
+
 - Leigh Tesfatsion and Swathi Battula (2020), "Analytical SCUC/SCED Optimization Formulation for AMES V5.0," Economics Working Paper #20014, Iowa State University, Ames, IA. Available online: https://lib.dr.iastate.edu/econ_workingpapers/109/
 
 .. _publications:
 
-- Swathi Battula, Leigh Tesfatsion, and Thomas E. McDermott (2020), "An ERCOT Test System for Market Design Studies" (WP Preprint,pdf,3.5MB), Applied Energy, to appear.
+Publications
+------------
+
+- Swathi Battula, Leigh Tesfatsion, and Thomas E. McDermott (2020), "An ERCOT Test System for Market Design Studies" (`WP Preprint,pdf,3.5MB <https://lib.dr.iastate.edu/econ_workingpapers/79>`_), Applied Energy, to appear.
 - Charles Gieseler (2005), "A Java Reinforcement Learning Module for the Repast Toolkit: Facilitating Study and Implementation with Reinforcement Learning in Social Science Multi-Agent Simulations" (pdf,1.1MB), (ppt,1.1MB), Department of Computer Science, Iowa State University, M.S. Thesis.
 - Deddy Koesrindartoto and Leigh Tesfatsion (2004), "Testing the Reliability of FERC's Wholesale Power Market Platform: An Agent-Based Computational Economics Approach" (pdf,45KB), Energy, Environment, and Economics in a New Era, Proceedings of the 24th USAEE/IAEE North American Conference, Washington, D.C., July 8-10.
 - Deddy Koesrindartoto, Junie Sun, and Leigh Tesfatsion (2005), "An Agent-Based Computational Laboratory for Testing the Economic Reliability of Wholesale Power Market Designs" (pdf,112KB), Proceedings of the IEEE Power and Energy Society General Meeting, San Francisco, California, June 12-16, pp. 931-936.
