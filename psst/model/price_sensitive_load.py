@@ -19,8 +19,8 @@ def maximum_minimum_power_demand_loads(model, minimum_power_demand=None, maximum
 
 def piece_wise_linear_benefit(model, points=None, values=None):
     # benefits associated with each price-sensitive load, for each time period.
-    model.BenefitPiecewisePoints = Param(model.PriceSensitiveLoads,model.TimePeriods, initialize=points)
-    model.BenefitPiecewiseValues = Param(model.PriceSensitiveLoads,model.TimePeriods, initialize=values)
+    model.BenefitPiecewisePoints = Param(model.PriceSensitiveLoads,model.TimePeriods, within=Any, initialize=points)
+    model.BenefitPiecewiseValues = Param(model.PriceSensitiveLoads,model.TimePeriods, within=Any, initialize=values)
 
 def quadratic_benefit_coefficients(model, coefficient_c0=None, coefficient_c1=None, coefficient_c2=None):
     ##################################################################################################################
