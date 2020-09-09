@@ -75,6 +75,8 @@ def power_balance(m, b, t, StorageFlag=False, NDGFlag=False, PriceSenLoadFlag=Fa
 
 ##  This function defines m.NetPowerInjectionAtBus[b, t] constraint
 def net_power_at_bus_rule(m, b, t, StorageFlag=False, NDGFlag=False, PriceSenLoadFlag=False):
+    if b not in m.GeneratorsAtBus:
+        return Constraint.Skip
     constraint = sum((1 - m.GeneratorForcedOutage[g,t]) * m.GeneratorBusContributionFactor[g, b] * m.PowerGenerated[g, t] for g in m.GeneratorsAtBus[b])
 
     if StorageFlag is True:
