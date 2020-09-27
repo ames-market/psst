@@ -1,6 +1,5 @@
 AUTHORS.rst
 CONTRIBUTING.rst
-LICENSE
 MANIFEST.in
 README.rst
 setup.cfg
