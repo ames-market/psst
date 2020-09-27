@@ -18,17 +18,21 @@ PSST_WARNING = os.getenv('PSST_WARNING', 'ignore')
 def solve_model(model, solver='glpk', solver_io=None, keepfiles=True, verbose=True, symbolic_solver_labels=True, is_mip=True, mipgap=0.01):
     #click.echo("solver  "+str(solver))
     if solver == 'xpress':
-        solver = SolverFactory(solver, solver_io=solver_io, is_mip=is_mip)
+        engine = SolverFactory(solver, solver_io=solver_io, is_mip=is_mip)
     else:
-        solver = SolverFactory(solver, solver_io=solver_io)
+        engine = SolverFactory(solver, solver_io=solver_io)
     model.preprocess()
     if is_mip:
-        solver.options['mipgap'] = mipgap
-    #solver.options['seconds'] = 10 # Maximum Time Limit
+        if solver == 'cbc':
+            engine.options['ratioGap'] = mipgap
+        else:
+            engine.options['mipgap'] = mipgap
+    #engine.options['seconds'] = 10 # Maximum Time Limit
 
     with warnings.catch_warnings():
         warnings.simplefilter(PSST_WARNING)
-        resultsPSST = solver.solve(model, suffixes=['dual'], tee=verbose, keepfiles=True, symbolic_solver_labels=symbolic_solver_labels)
+        resultsPSST = engine.solve(model, suffixes=['dual'], tee=verbose, keepfiles=True, 
+                                   symbolic_solver_labels=symbolic_solver_labels)
         #click.echo("solver msg 1 " + str(resultsPSST.solver))
         #click.echo("solver msg 2 " + str(resultsPSST.solver.status))
         #click.echo("solver msg 3 " + str(resultsPSST.solver.termination_condition))
