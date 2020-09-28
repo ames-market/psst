@@ -36,20 +36,14 @@ class PSSTCase(object):
     load = Load()
     period = Period()
     _attributes = _Attributes()
-    #click.echo("PSSTCase Hi: ")
 
     def __init__(self, filename=None, mode='r'):
-        #click.echo("PSSTCase __init__ Hi: ")
         self._attributes = list()
         if filename is not None:
-            #click.echo("if filename: "+filename)
             self._filename = filename
         else:
-            #click.echo("else filename: "+filename)
             self._filename = os.path.join(current_directory, '..', 'cases', 'case.m')
-            #click.echo("else filename: "+filename)
         if mode == 'r' or mode == 'read':
-            #click.echo("mode: "+mode)
             self._read_matpower(self)
 
     def __repr__(self):
@@ -79,26 +73,16 @@ class PSSTCase(object):
     def _read_matpower(cls, mpc, auto_assign_names=True, fill_loads=True, remove_empty=True, reset_generator_status=True):
 
         if not isinstance(mpc, cls):
-            #click.echo("1 _read_matpower: ")
             filename = mpc
             mpc = cls(filename, mode=None)
 
         with open(os.path.abspath(mpc._filename)) as f:
-            #click.echo("2 _read_matpower: ")
-            #click.echo("mpc: "+ str(mpc))
-            #click.echo("mpc: "+ mpc._filename)
-            #click.echo("f: "+ str(f))
             string = f.read()
-            #click.echo("string: "+ string)
 
         for attribute in matpower.find_attributes(string):
-            #click.echo(" mpc: "+ str(mpc))
-            #click.echo("3 _read_matpower attribute: "+ attribute)
             _list = matpower.parse_file(attribute, string)
-            #click.echo(" _list: "+ str(_list))
             if _list is not None:
                 if len(_list) == 1 and (attribute=='version' or attribute=='baseMVA'):
-                    #click.echo(" _list[0][0]: "+ str(_list[0][0]))
                     setattr(mpc, attribute, _list[0][0])
                 else:
                     cols = max([len(l) for l in _list])
@@ -113,27 +97,16 @@ class PSSTCase(object):
                     if attribute == 'bus':
                         df.set_index('BUS_I',inplace=True)
 
-                    #click.echo(" df: "+ str(df))
                     setattr(mpc, attribute, df)
                 mpc._attributes.append(attribute)
 
-        #click.echo(" mpc: "+ str(mpc.bus))
         mpc.name = matpower.find_name(string)
 
-        #click.echo(" mpc.gencost['NCOST']: "+ str(mpc.gencost))
         if auto_assign_names is True:
-            #click.echo(" 1 checking: ")
-            #click.echo(" mpc.bus_name: "+ str(mpc.bus_name))
-            #click.echo(" mpc.bus_name: "+ str(mpc.gen_name))
-            #click.echo(" mpc.bus_name: "+ str(mpc.branch_name))
             mpc.bus_name = mpc.bus_name
             mpc.gen_name = mpc.gen_name
             mpc.branch_name = mpc.branch_name
-            #click.echo(" mpc.bus_name: "+ str(mpc.bus_name))
-            #click.echo(" mpc.bus_name: "+ str(mpc.gen_name))
-            #click.echo(" mpc.bus_name: "+ str(mpc.branch_name))
 
-        #click.echo(" mpc.gencost['NCOST']: "+ str(mpc.gencost))
         if fill_loads is True:
             for i, row in mpc.bus.iterrows():
                 mpc.load.loc[:, i] = row['PD']
@@ -157,8 +130,6 @@ class PSSTCase(object):
         if reset_generator_status:
             mpc.gen_status.loc[:, :] = np.nan
 
-        #click.echo(" mpc.gencost['NCOST']: "+ str(mpc.gencost))
-        #click.echo("End _read_matpower: ")
         return mpc
 
 

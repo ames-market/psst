@@ -57,8 +57,6 @@ def build_model(case,
     if base_MVA is None:
         base_MVA = case.baseMVA
 
-    #click.echo("args: " + str(generator_df) + str(load_df) + str(branch_df) + str(bus_df) + str(previous_unit_commitment_df) + str(base_MVA) + str(base_KV) + str(config))
-
     # Configuration
     if config is None:
         config = dict()
@@ -72,9 +70,6 @@ def build_model(case,
     # Get configuration parameters from dictionary
     use_ptdf = config.pop('use_ptdf', False)
 
-    # Get case data
-    #click.echo("case.gen: "+ str(case.gen))
-    #click.echo("case.gencost: "+ str(case.gencost))
     generator_df = generator_df or pd.merge(case.gen, case.gencost, left_index=True, right_index=True)
     load_df = load_df or case.load
     branch_df = branch_df or case.branch
@@ -82,23 +77,16 @@ def build_model(case,
     ReserveDownSystemPercent = case.ReserveDownSystemPercent
     ReserveUpSystemPercent = case.ReserveUpSystemPercent
 
-    #click.echo("generator_df: "+ str(generator_df))
-    #click.echo("load_df: "+ str(load_df))
 
     branch_df.index = branch_df.index.astype(object)
     generator_df.index = generator_df.index.astype(object)
     bus_df.index = bus_df.index.astype(object)
     load_df.index = load_df.index.astype(object)
-    #click.echo("printing load_df.index:" + str(load_df.index))
-    #click.echo("printing generator_df.index:" + str(generator_df.index))
 
     branch_df = branch_df.astype(object)
     generator_df = generator_df.astype(object)
     bus_df = bus_df.astype(object)
     load_df = load_df.astype(object)
-
-    #click.echo("printing load_df:" + str(load_df))
-    #click.echo("generator_df: "+ str(generator_df))
 
     # Build model information
 
@@ -128,9 +116,6 @@ def build_model(case,
     for i, g in generator_df.iterrows():
         generator_at_bus[g['GEN_BUS']].append(i)
 
-    #click.echo("printing generator_at_bus:" + str(generator_at_bus))
-
-    #print('generator_at_bus',generator_at_bus)
     initialize_generators(model,
                         generator_names=generator_df.index,
                         generator_at_bus=generator_at_bus)
@@ -153,7 +138,6 @@ def build_model(case,
 
     generator_bus_contribution_factor(model)
 
-    #print("previous_unit_commitment_df 1 :", previous_unit_commitment_df, flush=True)
     
     if previous_unit_commitment_df is None:
         previous_unit_commitment = dict()
@@ -162,34 +146,24 @@ def build_model(case,
         previous_unit_commitment_df = pd.DataFrame(previous_unit_commitment)
         previous_unit_commitment_df.index = load_df.index
 
-    #print("previous_unit_commitment_df 2 :", previous_unit_commitment_df, flush=True)
-    
     diff = previous_unit_commitment_df.diff()
-    #print("diff?:", diff, flush=True)
 
     initial_state_dict = dict()
     for col in diff.columns:
         s = diff[col].dropna()
         diff_s = s[s!=0]
         if diff_s.empty:
-            ##print("Checking 1:", flush=True)
             check_row = previous_unit_commitment_df[col].head(1)
-            #print("check_row: ", check_row, flush=True)
         else:
-            ##print("Checking 2:", flush=True)
             check_row = diff_s.tail(1)
 
         if check_row.values == -1 or check_row.values == 0:
-            ##print("Checking 3:", flush=True)
             initial_state_dict[col] = -1 * (len(load_df) - int(check_row.index.values))
-            #print("initial_state_dict[col]: len(load_df): int(check_row.index.values): ", initial_state_dict[col], len(load_df), int(check_row.index.values), flush=True)
         else:
-            ##print("Checking 4:", flush=True)
             initial_state_dict[col] = len(load_df) - int(check_row.index.values)
 
     logger.debug("Initial State of generators is {}".format(initial_state_dict))
     initial_state_dict = generator_df['UnitOnT0State'].to_dict()
-    #print("Gen initial_state_dict:", initial_state_dict, flush=True)
 
     initial_state(model, initial_state=initial_state_dict)
 
@@ -212,19 +186,12 @@ def build_model(case,
             points[i] = np.linspace(g['PMIN'], g['PMAX'], num=int(g['NS'])+1)
             values[i] = g['COST_0'] + g['COST_1'] * points[i] + g['COST_2'] * points[i] ** 2
 
-    #click.echo("printing points: " + str(points))
-    #click.echo("printing values: " + str(values))
-
     for k, v in points.items():
         points[k] = [float(i) for i in v]
     for k, v in values.items():
         values[k] = [float(i) for i in v]
 
-    #click.echo("Again printing points: " + str(points))
-    #click.echo("Again printing values: " + str(values))
     piece_wise_linear_cost(model, points, values)
-
-
 
     minimum_production_cost(model)
     production_cost(model)
@@ -232,13 +199,9 @@ def build_model(case,
     # setup start up and shut down costs for generators
 
     cold_start_hours = case.gencost['COLD_START_HOURS'].astype(int).to_dict()
-    #click.echo("In build_model - printing cold_start_hours:" + str(cold_start_hours))
     hot_start_costs = case.gencost['STARTUP_HOT'].to_dict()
-    #click.echo("In build_model - printing hot_start_costs:" + str(hot_start_costs))
     cold_start_costs = case.gencost['STARTUP_COLD'].to_dict()
-    #click.echo("In build_model - printing cold_start_costs:" + str(cold_start_costs))
     shutdown_coefficient = case.gencost['SHUTDOWN_COEFFICIENT'].to_dict()
-    #click.echo("In build_model - printing shutdown_coefficient:" + str(shutdown_coefficient))
 
     hot_start_cold_start_costs(model, hot_start_costs=hot_start_costs, cold_start_costs=cold_start_costs, cold_start_hours=cold_start_hours, shutdown_cost_coefficient=shutdown_coefficient)
 
@@ -248,7 +211,6 @@ def build_model(case,
     for i, t in load_df.iterrows():
         for col in columns:
             load_dict[(col, i)] = t[col]
-    #click.echo('load_dict, load_df ' +str(load_dict))
 
     initialize_demand(model, demand=load_dict)
 
@@ -262,12 +224,10 @@ def build_model(case,
     else:
         PriceSenLoadFlag = True
 
-
     # adding segments for price sensitive loads
     segments = config.pop('segments', 5)
     psl_points = dict()
     psl_values = dict()
-    #print(PriceSenLoadData)
 
     pmin_values = dict()
     pmax_values = dict()
@@ -276,7 +236,7 @@ def build_model(case,
     coefficient_d_values = dict()
     coefficient_f_values = dict()
 
-    #print('segments=',segments)
+    # print('segments=',segments)
     if PriceSenLoadFlag is True:
         if PriceSenLoadData is not None:
             psl_names =[]
@@ -305,8 +265,6 @@ def build_model(case,
                 psl_points[k] = [float(i) for i in v]
             for k, v in psl_values.items():
                 psl_values[k] = [float(i) for i in v]
-            #print('psl_names:',psl_names)
-            #print('psl_at_buses:', psl_at_buses)
             initialize_price_senstive_load(model,
                                            price_sensitive_load_names=psl_names,
                                            price_sensitive_load_at_bus=psl_at_buses)
@@ -317,15 +275,10 @@ def build_model(case,
 
             initialize_load_demand(model)
 
-            #print('d =', coefficient_d_values)
-            #print('e =', coefficient_e_values)
-            #print('f =', coefficient_f_values)
             quadratic_benefit_coefficients(model,
                                            coefficient_c0=coefficient_d_values,
                                            coefficient_c1=coefficient_e_values,
                                            coefficient_c2=coefficient_f_values)
-            #print ('psl points:',psl_points)
-            #print('psl values:', psl_values)
             piece_wise_linear_benefit(model, psl_points, psl_values)
             load_benefit(model)
             constraint_for_benefit(model)
@@ -407,8 +360,9 @@ class PSSTModel(object):
         return string
 
     def solve(self, solver='glpk', verbose=False, keepfiles=True, **kwargs):
-        solve_model(self._model, solver=solver, verbose=verbose, keepfiles=keepfiles, **kwargs)
+        TC = solve_model(self._model, solver=solver, verbose=verbose, keepfiles=keepfiles, **kwargs)
         self._results = PSSTResults(self._model)
+        return TC
 
     @property
     def results(self):

@@ -119,8 +119,3 @@ def maximum_minimum_storage_power_output(model,
     model.StoragePowerInputOnT0  = Param(model.Storage, within=NonNegativeIntegers, validate=t0_storage_power_input_validator, default=0)
     #SOC_S(0)
     model.StorageSocOnT0         = Param(model.Storage, within=PercentFraction, default=0.5)
-
-
-    #########################################
-    # penalty costs for constraint violation #
-    #########################################

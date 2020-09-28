@@ -46,25 +46,16 @@ def load_benefit(model):
 
     model.LoadDemandPiecewisePoints = {}
     model.LoadDemandPiecewiseValues = {}
-    #click.echo("In generators.py production_cost ")
     for l in model.PriceSensitiveLoads:
         for t in model.TimePeriods:
             load_demand_piecewise_points_rule(model, l, t)
-    #print ('m.LoadDemandPiecewisePoints: ',model.LoadDemandPiecewisePoints)
-    #print ('m.LoadDemandPiecewiseValues: ',model.LoadDemandPiecewiseValues)
 
 def load_demand_piecewise_points_rule(m, l, t):
-    #click.echo("In generators.py power_generation_piecewise_points_rule ")
-    #maximum_demand_benefit = value(m.MinimumProductionCost[g])
     if len(m.BenefitPiecewisePoints[l,t]) > 0:
-        #click.echo("In model generator.py power_generation_piecewise_points_rule - printing list(m.CostPiecewisePoints[g]): " + str(list(m.CostPiecewisePoints[g])))
         m.LoadDemandPiecewisePoints[l,t] = list(m.BenefitPiecewisePoints[l,t])
-        #m.LoadDemandPiecewiseValues[l,t] = list(m.BenefitPiecewiseValues[l,t])
         temp = list(m.BenefitPiecewiseValues[l,t])
-        #click.echo("In model generator.py power_generation_piecewise_points_rule - printing list(m.CostPiecewiseValues[g]): " + str(temp))
         m.LoadDemandPiecewiseValues[l,t] = {}
         for i in range(len(m.BenefitPiecewisePoints[l,t])):
-            #print ('m.LoadDemandPiecewisePoints[l,t][i] ',m.LoadDemandPiecewisePoints[l,t][i])
             m.LoadDemandPiecewiseValues[l,t][m.LoadDemandPiecewisePoints[l,t][i]] = temp[i]
         # MinimumPowerOutput will be one of our piecewise points, so it is safe to add (0,0)
         # TODO: we need to check if this applies to price sensitive loads

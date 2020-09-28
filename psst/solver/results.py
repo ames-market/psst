@@ -111,5 +111,7 @@ class PSSTResults(object):
                     else:
                         _dict[s1].append(getattr(model, attribute)[s1, s2].value)
 
-            return pd.DataFrame(_dict)
+            pd_unsorted = pd.DataFrame(_dict)
+            pd_sorted = pd_unsorted.reindex(sorted(pd_unsorted.columns),axis=1)
+            return pd_sorted
 
