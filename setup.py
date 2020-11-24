@@ -29,6 +29,7 @@ setup(
     version='0.1.7',
     description="Power System Simulation Toolbox",
     long_description=readme,
+    long_description_content_type='text/markdown',
     author="Dheepak Krishnamurthy",
     author_email='kdheepak89@gmail.com',
     url='https://github.com/power-system-simulation-toolbox/psst',
