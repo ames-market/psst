@@ -42,7 +42,7 @@ class PSSTCase(object):
         if filename is not None:
             self._filename = filename
         else:
-            self._filename = os.path.join(current_directory, '..', 'cases', 'case.m')
+            self._filename = os.path.join(current_directory, 'blank.m')
         if mode == 'r' or mode == 'read':
             self._read_matpower(self)
 

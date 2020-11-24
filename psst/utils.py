@@ -124,8 +124,8 @@ def read_model(model_data, base_file=None):
     if base_file:
         c = PSSTCase(base_file)
     else:
-        c = PSSTCase(os.path.join(current_directory, '../cases/case.m'))
-    #click.echo("printing file path: " + os.path.join(current_directory, '../cases/case.m'))
+        c = PSSTCase(os.path.join(current_directory, './case/blank.m'))
+    #click.echo("printing file path: " + os.path.join(current_directory, './case/blank.m'))
     #click.echo("printing c: " + str(c))
 
     ag = find_generators(data)
