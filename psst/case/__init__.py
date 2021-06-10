@@ -9,8 +9,7 @@ from builtins import super
 import pandas as pd
 import numpy as np
 
-from .descriptors import (Name, Version, BaseMVA, BusName, Bus, Branch, BranchName,
-                        Gen, GenName, GenCost, Load, Period, _Attributes)
+from .descriptors import Name, Version, BaseMVA, BusName, Bus, Branch, BranchName, Gen, GenName, GenCost, GenType, GenFuel, Load, Period, _Attributes
 
 from . import matpower
 
@@ -32,6 +31,8 @@ class PSSTCase(object):
     branch_name = BranchName()
     gen = Gen()
     gencost = GenCost()
+    gentype = GenType()
+    genfuel = GenFuel()
     gen_name = GenName()
     load = Load()
     period = Period()
@@ -108,8 +109,11 @@ class PSSTCase(object):
             mpc.branch_name = mpc.branch_name
 
         if fill_loads is True:
-            for i, row in mpc.bus.iterrows():
-                mpc.load.loc[:, i] = row['PD']
+            mpc.load = pd.DataFrame(mpc.bus["PD"]).T
+            mpc.load.index = pd.Index([0])
+            mpc.load.columns.name = ""
+            # for i, row in mpc.bus.iterrows():
+            #     mpc.load.loc[:, i] = row['PD']
 
         if mpc.bus_name.intersection(mpc.gen_name).values.size != 0:
             logger.warning('Bus and Generator names may be identical. This could cause issues when plotting.')

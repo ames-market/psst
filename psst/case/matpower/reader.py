@@ -50,8 +50,8 @@ def search_file(attribute, string):
         pattern = r'mpc\.{}\s*=\s*\[[\n]?(?P<data>.*?)[\n]?\];'.format(attribute)
     elif attribute in ['version', 'baseMVA']:
         pattern = r'mpc\.{}\s*=\s*(?P<data>.*?);'.format(attribute)
-    elif attribute == 'bus_name':
-        pattern = r'mpc\.{}\s*=\s*\{{[\n]?(?P<data>.*?)[\n]?\}};'.format('bus_name')
+    elif attribute in ['bus_name', 'gentype', 'genfuel']:
+        pattern = r'mpc\.{}\s*=\s*\{{[\n]?(?P<data>.*?)[\n]?\}};'.format(attribute)
     else:
         logger.warning('Unable to parse mpc.%s. Please contact the developer.', attribute)
         return None
