@@ -164,6 +164,19 @@ class GenCost(Descriptor):
     ty = pd.DataFrame
 
 
+# TODO: setattributeindex should change index to gen name
+class GenType(Descriptor):
+    ''' GenType Descriptor for a case '''
+    name = 'gentype'
+    ty = pd.DataFrame
+
+# TODO: setattributeindex should change index to gen name
+class GenFuel(Descriptor):
+    ''' GenFuel Descriptor for a case '''
+    name = 'genfuel'
+    ty = pd.DataFrame
+
+
 class GenName(IndexDescriptor):
     ''' Gen Name for a case '''
     name = 'gen_name'
