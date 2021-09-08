@@ -9,7 +9,7 @@ from builtins import super
 import pandas as pd
 import numpy as np
 
-from .descriptors import Name, Version, BaseMVA, BusName, Bus, Branch, BranchName, Gen, GenName, GenCost, GenType, GenFuel, Load, Period, _Attributes
+from .descriptors import Name, Version, BaseMVA, BusName, Bus, BusString, Branch, BranchName, Gen, GenName, GenCost, GenType, GenFuel, Load, Period, _Attributes
 
 from . import matpower
 
@@ -97,6 +97,8 @@ class PSSTCase(object):
 
                     if attribute == 'bus':
                         df.set_index('BUS_I',inplace=True)
+                    if attribute == 'bus_name':
+                        attribute = 'bus_string'
 
                     setattr(mpc, attribute, df)
                 mpc._attributes.append(attribute)

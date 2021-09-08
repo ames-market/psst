@@ -96,6 +96,10 @@ class Bus(Descriptor):
     name = 'bus'
     ty = pd.DataFrame
 
+class BusString(Descriptor):
+    ''' BusString Descriptor for a case '''
+    name = 'bus_string'
+    ty = pd.DataFrame
 
 class BusName(IndexDescriptor):
     ''' Bus Name Descriptor for a case
@@ -124,6 +128,10 @@ class BusName(IndexDescriptor):
             instance.load = pd.DataFrame(0, index=range(0, 1), columns=value, dtype='float')
 
         instance.bus.index = value
+        try:
+            instance.bus_string.index = value
+        except AttributeError:
+            print('no attribute named bus_string')
 
         if isinstance(instance.bus_name, pd.RangeIndex) or isinstance(instance.bus_name, pd.Int64Index):
             logger.debug('Forcing string types for all bus names')
@@ -197,7 +205,7 @@ class GenName(IndexDescriptor):
         instance.gen.index = value
         instance.gencost.index = value
 
-        if isinstance(instance.gen_name, pd.RangeIndex) or isinstance(instance.bus_name, pd.Int64Index):
+        if isinstance(instance.gen_name, pd.RangeIndex) or isinstance(instance.gen_name, pd.Int64Index):
             instance.gen_name = ['GenCo{}'.format(g) for g in instance.gen_name]
 
 
@@ -235,4 +243,3 @@ class Period(IndexDescriptor):
 class _Attributes(Descriptor):
     name = '_attributes'
     ty = list
-
