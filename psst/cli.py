@@ -116,7 +116,7 @@ def _scuc(data, output, solver):
             for t in sorted(instance.TimePeriods):
                 outfile.write(" %6.2f \n" % (SlackVariablePower[(b, t)].value))
 
-    if len(priceSenLoadData) is not 0:
+    if len(priceSenLoadData) != 0:
         with open("./SCUCPriceSensitiveLoad.dat", "w") as outfile:
             instance = model._model
             PriceSenLoadDemand = {}
