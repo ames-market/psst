@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2020, Battelle Memorial Institute
 # Copyright 2007 - present: numerous others credited in AUTHORS.rst
 
@@ -9,7 +10,24 @@ from builtins import super
 import pandas as pd
 import numpy as np
 
-from .descriptors import Name, Version, BaseMVA, BusName, Bus, BusString, Branch, BranchName, Gen, GenName, GenCost, GenType, GenFuel, Load, Period, _Attributes
+from .descriptors import (
+    Name,
+    Version,
+    BaseMVA,
+    BusName,
+    Bus,
+    BusString,
+    Branch,
+    BranchName,
+    Gen,
+    GenName,
+    GenCost,
+    GenType,
+    GenFuel,
+    Load,
+    Period,
+    _Attributes,
+)
 
 from . import matpower
 
@@ -27,6 +45,7 @@ class PSSTCase(object):
     baseMVA = BaseMVA()
     bus = Bus()
     bus_name = BusName()
+    bus_string = BusString()
     branch = Branch()
     branch_name = BranchName()
     gen = Gen()
@@ -38,37 +57,33 @@ class PSSTCase(object):
     period = Period()
     _attributes = _Attributes()
 
-    def __init__(self, filename=None, mode='r'):
+    def __init__(self, filename=None, mode="r"):
         self._attributes = list()
         if filename is not None:
             self._filename = filename
         else:
-            self._filename = os.path.join(current_directory, 'blank.m')
-        if mode == 'r' or mode == 'read':
+            self._filename = os.path.join(current_directory, "blank.m")
+        if mode == "r" or mode == "read":
             self._read_matpower(self)
 
     def __repr__(self):
-        name = getattr(self, 'name', None)
-        gen_name = getattr(self, 'gen_name', None)
-        bus_name = getattr(self, 'bus_name', None)
-        branch_name = getattr(self, 'branch_name', None)
-        name_string = 'name={}'.format(name) if name is not None else ''
-        gen_string = 'Generators={}'.format(len(gen_name)) if gen_name is not None else ''
-        bus_string = 'Buses={}'.format(len(bus_name)) if bus_name is not None else ''
-        branch_string = 'Branches={}'.format(len(branch_name)) if branch_name is not None else ''
-        l = [s for s in [name_string, gen_string, bus_string, branch_string] if s != '']
+        name = getattr(self, "name", None)
+        gen_name = getattr(self, "gen_name", None)
+        bus_name = getattr(self, "bus_name", None)
+        branch_name = getattr(self, "branch_name", None)
+        name_string = "name={}".format(name) if name is not None else ""
+        gen_string = "Generators={}".format(len(gen_name)) if gen_name is not None else ""
+        bus_string = "Buses={}".format(len(bus_name)) if bus_name is not None else ""
+        branch_string = "Branches={}".format(len(branch_name)) if branch_name is not None else ""
+        l = [s for s in [name_string, gen_string, bus_string, branch_string] if s != ""]
         if len(l) > 1:
-            repr_string = ', '.join(l)
+            repr_string = ", ".join(l)
         elif len(l) == 1:
             repr_string = l[0]
         else:
-            repr_string = ''
+            repr_string = ""
 
-        return '<{}.{}({})>'.format(
-                    self.__class__.__module__,
-                    self.__class__.__name__,
-                    repr_string,
-                )
+        return "<{}.{}({})>".format(self.__class__.__module__, self.__class__.__name__, repr_string,)
 
     @classmethod
     def _read_matpower(cls, mpc, auto_assign_names=True, fill_loads=True, remove_empty=True, reset_generator_status=True):
@@ -83,22 +98,25 @@ class PSSTCase(object):
         for attribute in matpower.find_attributes(string):
             _list = matpower.parse_file(attribute, string)
             if _list is not None:
-                if len(_list) == 1 and (attribute=='version' or attribute=='baseMVA'):
+                if len(_list) == 1 and (attribute == "version" or attribute == "baseMVA"):
                     setattr(mpc, attribute, _list[0][0])
                 else:
                     cols = max([len(l) for l in _list])
                     columns = matpower.COLUMNS.get(attribute, [i for i in range(0, cols)])
                     columns = columns[:cols]
                     if cols > len(columns):
-                        if attribute != 'gencost':
-                            logger.warning('Number of columns greater than expected number.')
-                        columns = columns[:-1] + ['{}_{}'.format(columns[-1], i) for i in range(cols - len(columns), -1, -1)]
+                        if attribute != "gencost":
+                            logger.warning("Number of columns greater than expected number.")
+                        columns = columns[:-1] + ["{}_{}".format(columns[-1], i) for i in range(cols - len(columns), -1, -1)]
                     df = pd.DataFrame(_list, columns=columns)
 
-                    if attribute == 'bus':
-                        df.set_index('BUS_I',inplace=True)
-                    if attribute == 'bus_name':
-                        attribute = 'bus_string'
+                    if attribute == "bus":
+                        df.set_index("BUS_I", inplace=True)
+                    if attribute == "bus_name":
+                        attribute = "bus_string"
+
+                    if attribute == "bus_name":
+                        mpc.bus.index = df[0]
 
                     setattr(mpc, attribute, df)
                 mpc._attributes.append(attribute)
@@ -118,20 +136,20 @@ class PSSTCase(object):
             #     mpc.load.loc[:, i] = row['PD']
 
         if mpc.bus_name.intersection(mpc.gen_name).values.size != 0:
-            logger.warning('Bus and Generator names may be identical. This could cause issues when plotting.')
+            logger.warning("Bus and Generator names may be identical. This could cause issues when plotting.")
 
-        mpc.gen.loc[mpc.gen['RAMP_10'] == 0, 'RAMP_10'] = mpc.gen['PMAX']
-        mpc.gen['STARTUP_RAMP'] = mpc.gen['PMAX']
-        mpc.gen['SHUTDOWN_RAMP'] = mpc.gen['PMAX']
-        mpc.gen['MINIMUM_UP_TIME'] = 0
-        mpc.gen['MINIMUM_DOWN_TIME'] = 0
-        #click.echo(" mpc.gencost['NCOST']: "+ str(mpc.gencost))
+        mpc.gen.loc[mpc.gen["RAMP_10"] == 0, "RAMP_10"] = mpc.gen["PMAX"]
+        mpc.gen["STARTUP_RAMP"] = mpc.gen["PMAX"]
+        mpc.gen["SHUTDOWN_RAMP"] = mpc.gen["PMAX"]
+        mpc.gen["MINIMUM_UP_TIME"] = 0
+        mpc.gen["MINIMUM_DOWN_TIME"] = 0
+        # click.echo(" mpc.gencost['NCOST']: "+ str(mpc.gencost))
         try:
-            mpc.gencost.loc[mpc.gencost['COST_2'] == 0, 'NCOST'] = 2
+            mpc.gencost.loc[mpc.gencost["COST_2"] == 0, "NCOST"] = 2
         except KeyError as e:
             logger.warning(e)
 
-        mpc.gen_status = pd.DataFrame([mpc.gen['GEN_STATUS'] for i in mpc.load.index])
+        mpc.gen_status = pd.DataFrame([mpc.gen["GEN_STATUS"] for i in mpc.load.index])
         mpc.gen_status.index = mpc.load.index
         if reset_generator_status:
             mpc.gen_status.loc[:, :] = np.nan
