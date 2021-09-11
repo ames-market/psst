@@ -13,6 +13,7 @@ COLUMNS = {
             'RATE_C', 'TAP', 'SHIFT', 'BR_STATUS', 'ANGMIN', 'ANGMAX', 'PF', 'QF',
             'PT', 'QT', 'MU_SF', 'MU_ST', 'MU_ANGMIN', 'MU_ANGMAX'],
         'gencost': ['MODEL', 'STARTUP', 'SHUTDOWN', 'NCOST', 'COST'],
+        'bus_name': ['BUS_NAME_STRING']
        }
 
 ATTRIBUTES = ['version', 'baseMVA', 'areas', 'bus', 'gen', 'gencost', 'branch']
